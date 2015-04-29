@@ -1,0 +1,15 @@
+{% extends '../layouts/lobbyStub.html' %}
+
+{% block main %}
+    <h1>Pre Game Lobby</h1>
+{% endblock %}
+
+{% block content %}
+    <div id="users"></div>
+    <div id="content" style="width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;"></div>
+    <div id="controls">
+        <input type="hidden" id="name" value="{{ userName }}">
+        <input style="width:350px;" id="field">
+        <input type="button" value="send" id="send">
+    </div>
+{% endblock %}
