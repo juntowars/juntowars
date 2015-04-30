@@ -8,50 +8,49 @@
     "passport",
     "demo"
   ],
-  "version": "4.0.0",
+  "version": "0.0.1",
   "private": false,
-  "author": "Madhusudhan Srinivasa <madhums8@gmail.com> (http://madhums.github.com)",
+  "author": "junto developement",
   "repository": {
     "type": "git",
-    "url": "https://github.com/madhums/node-express-mongoose-demo.git"
+    "url": "https://github.com/juntowars/juntowars"
   },
   "engines": {
-    "node": "0.11.13"
+    "node": "*"
   },
   "scripts": {
     "start": "NODE_PATH=./config:./app/controllers NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "test": "NODE_PATH=./config:./app/controllers NODE_ENV=test ./node_modules/.bin/mocha --reporter spec --timeout 10000 test/test-*.js"
   },
   "dependencies": {
-    "async": "0.9.0",
-    "bluebird": "^2.9.24",
-    "body-parser": "1.8.2",
-    "compression": "1.1.0",
-    "connect-flash": "0.1.1",
-    "connect-mongo": "0.4.1",
-    "cookie-parser": "1.3.3",
-    "cookie-session": "1.0.2",
-    "csurf": "1.6.1",
-    "express": "4.9.0",
-    "express-session": "1.8.2",
-    "forever": "0.11.1",
-    "imager": "0.2.7",
-    "method-override": "2.2.0",
-    "mongoose": "3.8.16",
-    "morgan": "1.3.1",
-    "multer": "0.1.4",
-    "notifier": "0.1.5",
-    "passport": "0.2.1",
-    "passport-local": "1.0.0",
-    "socket.io": "^1.3.5",
-    "swig": "1.4.2",
-    "view-helpers": "0.1.5",
-    "winston": "0.8.0"
+    "async": "*",
+    "bluebird": "*",
+    "body-parser": "*",
+    "compression": "*",
+    "connect-flash": "*",
+    "connect-mongo": "^0.8.1",
+    "cookie-parser": "*",
+    "cookie-session": "*",
+    "csurf": "*",
+    "express": "^5.0.0-alpha.1",
+    "express-session": "*",
+    "forever": "^0.14.1",
+    "method-override": "*",
+    "mongoose": "^4.0.2",
+    "morgan": "*",
+    "multer": "*",
+    "notifier": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "socket.io": "*",
+    "swig": "*",
+    "view-helpers": "*",
+    "winston": "^1.0.0"
   },
   "devDependencies": {
-    "supertest": "0.13.0",
-    "should": "4.0.4",
-    "mocha": "1.21.4",
+    "mocha": "*",
+    "should": ">= 0.0.1",
+    "supertest": "0.3.x",
     "nodemon": "1.2.1"
   }
 }
