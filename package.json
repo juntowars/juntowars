@@ -8,7 +8,7 @@
     "passport",
     "demo"
   ],
-  "version": "0.0.1",
+  "version": "4.0.0",
   "private": false,
   "author": "junto developement",
   "repository": {
@@ -35,6 +35,7 @@
     "express": "^5.0.0-alpha.1",
     "express-session": "*",
     "forever": "^0.14.1",
+    "imager": "^0.4.0",
     "method-override": "*",
     "mongoose": "^4.0.2",
     "morgan": "*",
@@ -49,8 +50,8 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "should": ">= 0.0.1",
-    "supertest": "0.3.x",
-    "nodemon": "1.2.1"
+    "nodemon": "*",
+    "should": "*",
+    "supertest": "*"
   }
 }
