@@ -75,7 +75,7 @@ describe('Users', function () {
                     .field('email', 'foobar@example.com')
                     .field('password', 'verySecret')
                     .expect('Content-Type', /text\/plain; charset=utf-8/)
-                    .expect(/Games/)
+                    .expect(/\//)
                     .expect(302)
                     .end(done)
             });
