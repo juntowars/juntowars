@@ -94,7 +94,7 @@ GamesSchema.statics = {
     var _query = this.find({"name": gameName});
     _query.exec(function (err, gameDoc) {
       if (err) callback(err);
-      return gameDoc[0].userList;
+      return gameDoc[0]._doc.userList.uuids;
     });
   },
   addUserToList: function (gameName, user, socket, callback) {
@@ -107,14 +107,16 @@ GamesSchema.statics = {
 
       if (err) callback(err, null);
 
-      if (gameObject.userList.uuids.length > 6 && !gameObject.userList.uuids.indexOf(user)) {
-        gameObject.userList.uuids.push(user);
-        gameObject.save(function (err) {
-          if (err) callback(err, null);
-          callback(null, usersInGame, socket);
-        });
+      if (gameObject.userList.uuids.length < 6) {
+        if(!gameObject.userList.uuids.indexOf(user)){
+          gameObject.userList.uuids.push(user);
+          gameObject.save(function (err) {
+            if (err) callback(err, null, socket);
+          });
+        }
+        callback(null, usersInGame, socket);
       } else {
-        callback("User already exists in room", null, null);
+        callback("An error has occurred. Lobby not available.", null, socket);
       }
     });
   }

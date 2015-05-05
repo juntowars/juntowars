@@ -53,7 +53,6 @@ exports.create = function (req, res) {
   var game = new Games();
   game.name = req.body.gameTitle;
   game.adminUser = req.user._doc.username;
-  game.userList.uuids.push(req.user._doc.username);
   game.save(function (err) {
     if (err) {
       if (err.code) {
@@ -90,7 +89,7 @@ function buildDashboard(req, res) {
 exports.viewGame = function (req, res) {
   var gameTitle = req.url.replace("/games/view/", "");
   console.log("Viewing gameTitle: " + gameTitle);
-  Games.getGameByTitle(req.user.id, gameTitle, doRender);
+  Games.getGameByTitle(req.user._doc.username, gameTitle, doRender);
   function doRender(gameDoc) {
     res.render('games/viewGame', {gameList: gameDoc});
   }
@@ -98,7 +97,7 @@ exports.viewGame = function (req, res) {
 
 exports.viewGameLobby = function (req, res) {
   var gameTitle = req.url.replace("/games/lobby/", "");
-  Games.getGameByTitle(req.user.id, gameTitle, parseLobbyData);
+  Games.getGameByTitle(req.user._doc.username, gameTitle, parseLobbyData);
 
   function parseLobbyData(gameDoc) {
     var _usersList = [];
