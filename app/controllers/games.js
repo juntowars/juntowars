@@ -101,10 +101,20 @@ exports.viewGameLobby = function (req, res) {
 
   function parseLobbyData(gameDoc) {
     var _usersList = [];
-    gameDoc["0"]._doc.userList.uuids.forEach(function (uuid) {
-      _usersList.push(uuid);
-    });
-    doRender(_usersList);
+
+    if (gameDoc["0"]._doc.userList.uuids.length >= 6) {
+      return res.render('games/dashboard', {
+        error: 'Too many people in this lobby',
+        title: 'Unable to join',
+        gameList: {},
+        gamesToJoin: {}
+      });
+    }else{
+      gameDoc["0"]._doc.userList.uuids.forEach(function (uuid) {
+        _usersList.push(uuid);
+      });
+      doRender(_usersList);
+    }
   }
 
   function doRender(usersList) {

@@ -25,10 +25,10 @@ window.onload = function () {
     });
 
     socket.on('userJoined', function (userList) {
-        if (userList.uuids) {
+        if (userList) {
             var html = '';
-            for (var i = 0; i < userList.uuids.length; i++) {
-                html += '<b>' + userList.uuids[i] + ': </b>';
+            for (var i = 0; i < userList.length; i++) {
+                html += '<b>' + userList[i] + ': </b>';
             }
             users.innerHTML = html + '<br />';
         } else {
