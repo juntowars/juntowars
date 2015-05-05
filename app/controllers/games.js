@@ -52,8 +52,8 @@ exports.new = function (req, res) {
 exports.create = function (req, res) {
   var game = new Games();
   game.name = req.body.gameTitle;
-  game.adminUser = req.user.id;
-  game.userList.uuids.push(req.user.id);
+  game.adminUser = req.user._doc.username;
+  game.userList.uuids.push(req.user._doc.username);
   game.save(function (err) {
     if (err) {
       if (err.code) {
@@ -81,7 +81,7 @@ function buildDashboard(req, res) {
   }
 
   function getOpenGames(req, gameList) {
-    Games.getOpenGamesList(req.user.id, gameList, doRender);
+    Games.getOpenGamesList(req.user._doc.username, gameList, doRender);
   }
 
   Games.getUsersGamesList(req, getOpenGames);
