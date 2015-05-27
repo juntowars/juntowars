@@ -3,7 +3,7 @@
  */
 
 var mongoose = require('mongoose');
-var config = require('config');
+var config = require('../../config/config');
 
 var Schema = mongoose.Schema;
 
