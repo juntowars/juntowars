@@ -1,7 +1,13 @@
-var express =  require('express');
+var express = require('express');
 
-var app =  express();
-module.exports.getStatus = function(req, res) {
+var app = express();
+module.exports.getStatus = function (req, res) {
   var environment = process.env.NODE_ENV.toString();
-  res.render('status', {server: environment, numberOfUsers: "not yet defined"});
+  res.setHeader("Content-Type", 'application/json');
+  res.json({
+    'status': 'ok',
+    'server': environment,
+    'numberOfUsers': 'not yet defined'
+  });
 };
+
