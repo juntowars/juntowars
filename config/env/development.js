@@ -6,6 +6,7 @@
 var fs = require('fs');
 var env = {};
 var envFile = __dirname + '/env.json';
+var config = require('../config');
 
 // Read env.json file, if it exists, load the id's and secrets from that
 // Note that this is only in the development env

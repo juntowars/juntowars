@@ -1,6 +1,6 @@
-var users = require('users');
-var games = require('games');
-var base = require('base');
+var users = require('../app/controllers/users');
+var games = require('../app/controllers/games');
+var base = require('../app/controllers/base');
 var mongoose = require('mongoose');
 var Games = mongoose.model('Games');
 

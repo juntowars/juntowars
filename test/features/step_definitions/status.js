@@ -10,21 +10,34 @@ var checkinStepsWrapper = function () {
   var assert = require('assert');
   var statusResponse;
 
+  this.Given(/^The server is running in '([^"]*)' environment$/, function(environment, next) {
+    process.env.NODE_ENV = environment;
+    next()
+  });
+
   this.When(/^I send a request to the server using the status endpoint$/, function (next) {
     request(app)
     .get('/status')
-    .expect(200)
-    .expect(/ok/);
+    .set('Content-Type', 'application/json')
+    .end(function(err, res) {
+      console.log(err);
+      statusResponse = res;
+      next();
+    });
   });
 
 
-  this.Then(/^I get a message "([^"]*)"$/, function (statusMessage, next) {
-    statusResponse.containDeep(statusMessage);
+  this.Then(/^I get http status (\d+)/, function (statusCode, next) {
+    statusResponse.statusCode.should.eql(parseInt(statusCode));
     next();
   });
 
-  this.Then(/^A HTTP status code of (\d+)$/, function (statusCode, callback) {
-    statusResponse.expect(statusCode);
+  this.Then(/The current environment should be '([^"]*)'$/, function (environment, next) {
+    responseBody = statusResponse.body;
+    responseBody.should.have.property('numberOfUsers');
+    responseBody.status.should.eql('ok');
+    responseBody.server.should.eql(environment);
+    next();
   });
 };
 

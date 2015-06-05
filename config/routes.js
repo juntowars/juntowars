@@ -5,10 +5,10 @@
 // Note: We can require users, games and other cotrollers because we have
 // set the NODE_PATH to be ./app/controllers (package.json # scripts # start)
 
-var users = require('users');
-var games = require('games');
-var base = require('base');
-var status = require('status');
+var users = require('../app/controllers/users');
+var games = require('../app/controllers/games');
+var base = require('../app/controllers/base');
+var status = require('../app/controllers/status');
 var auth = require('./middlewares/authorization');
 
 /**
