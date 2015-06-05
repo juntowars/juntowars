@@ -3,11 +3,8 @@ var mongoose = require('mongoose')
 , request = require('supertest')
 , app = require('../../../server');
 
-var should = require('should');
-
 var checkinStepsWrapper = function () {
 
-  var assert = require('assert');
   var statusResponse;
 
   this.Given(/^The server is running in '([^"]*)' environment$/, function(environment, next) {
