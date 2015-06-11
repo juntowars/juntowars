@@ -36,6 +36,8 @@
     "express-session": "*",
     "forever": "^0.14.1",
     "imager": "^0.4.0",
+    "jquery": "*",
+    "jsdom": "3.1.2",
     "method-override": "*",
     "mongoose": "^4.0.2",
     "morgan": "*",
@@ -46,7 +48,8 @@
     "socket.io": "*",
     "swig": "*",
     "view-helpers": "*",
-    "winston": "^1.0.0"
+    "winston": "^1.0.0",
+    "zombie": "*"
   },
   "devDependencies": {
     "mocha": "*",
