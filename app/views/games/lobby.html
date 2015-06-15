@@ -5,11 +5,46 @@
 {% endblock %}
 
 {% block content %}
-    <div id="users"></div>
-    <div id="content" style="width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;"></div>
-    <div id="controls">
-        <input type="hidden" id="name" value="{{ userName }}">
-        <input style="width:350px;" id="field">
-        <input type="button" value="send" id="send">
+    <div id="lobby">
+        <div id="chat" style="float: left">
+            <div id="users"></div>
+            <div id="content"
+                 style="width: 400px; height: 250px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;"></div>
+            <div id="controls">
+                <input type="hidden" id="name" value="{{ userName }}">
+                <input style="width:350px;" id="field">
+                <input type="button" value="send" id="send">
+            </div>
+        </div>
+        <table class="table table-striped table-bordered" style="width: 300px">
+            <thead>
+            <tr>
+                <th>Ready?</th>
+                <th>Player Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in usersList %}
+                <tr>
+                    <th scope="row">
+                        {% if userName == user %}
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+                                       value="{{ user }}" id="myonoffswitch">
+                                <label class="onoffswitch-label" for="myonoffswitch">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        {% else %}
+                            Player {{ loop.index }}
+                        {% endif %}
+                    </th>
+                    <td>{{ user }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
+    <div id="userlist"></div>
 {% endblock %}

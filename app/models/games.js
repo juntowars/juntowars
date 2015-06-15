@@ -61,7 +61,6 @@ GamesSchema.statics = {
       callback(req, _listOfGameNames);
     });
   },
-
   getOpenGamesList: function (uuid, gameList, fn) {
     var _listOfOpenGames = [];
     var _query = this.find({
@@ -82,7 +81,6 @@ GamesSchema.statics = {
       }
     });
   },
-
   getGameByTitle: function (userId, gameTitle, callback) {
     var _query = this.find({"name": gameTitle});
     _query.exec(function (err, gameDoc) {
@@ -90,11 +88,11 @@ GamesSchema.statics = {
       callback(gameDoc);
     });
   },
-  getUsersInAGame: function (gameName) {
+  getUsersInAGame: function (gameName,callback) {
     var _query = this.find({"name": gameName});
     _query.exec(function (err, gameDoc) {
       if (err) callback(err);
-      return gameDoc[0]._doc.userList.uuids;
+      callback(gameDoc[0]._doc.userList.uuids);
     });
   },
   addUserToList: function (gameName, user, socket, callback) {
@@ -107,7 +105,7 @@ GamesSchema.statics = {
       if (err) callback(err, null);
 
       if (gameObject.userList.uuids.length < 6) {
-        if(gameObject.userList.uuids.indexOf(user) == -1){
+        if (gameObject.userList.uuids.indexOf(user) == -1) {
           gameObject.userList.uuids.push(user);
           gameDoc[0].save(function (err) {
             if (err) callback(err, null, socket);
@@ -117,6 +115,23 @@ GamesSchema.statics = {
       } else {
         callback("An error has occurred. Lobby not available.", null, socket);
       }
+    });
+  },
+  removeUserFromAllOpenLobbies: function ( user, callback) {
+    var _query = this.find({"lobby": "open", "userList.uuids":{$in:[user]}});
+
+    _query.exec(function (err, gameDocs) {
+
+      var listOfRooms = [];
+      gameDocs.forEach(function(gameDoc){
+        gameDoc.userList.uuids.pull(user);
+        listOfRooms.push(gameDoc.name);
+        gameDoc.save(function (err) {
+          if (err) callback(err, null, socket);
+        });
+      });
+
+      callback(listOfRooms);
     });
   }
 };

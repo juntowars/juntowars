@@ -12,14 +12,13 @@ module.exports = function (io) {
     });
 
     socket.on('create', function (room, user) {
-
       function updateUserList(err, userList, socket) {
         if (err) {
           socket.emit('message', {message: err});
         }
         else {
           socket.join(room);
-          socket.emit('userJoined', {userList: userList});
+          io.sockets.in(room).emit('userJoined', {userList: userList});
           var message_text = socket.user + ' has joined the chat';
           io.sockets.in(room).emit('message', {message: message_text});
         }
@@ -30,5 +29,23 @@ module.exports = function (io) {
       Games.addUserToList(room, user, socket, updateUserList);
       socket.user = user;
     });
+
+    socket.on('disconnect', function(){
+      // remove user from all open lobbies
+      Games.removeUserFromAllOpenLobbies(this.user,updateAffectedLobbies);
+      function updateAffectedLobbies(listOfLobbies){
+        listOfLobbies.forEach(function(lobby){
+
+          Games.getUsersInAGame(lobby,sendUpdateToUsers);
+
+          function sendUpdateToUsers(userList){
+            io.sockets.in(lobby).emit('updateUsersList', {userList: userList });
+            var message_text = socket.user + ' has left the chat';
+            io.sockets.in(lobby).emit('message', {message: message_text});
+          }
+        });
+      }
+    });
+
   });
 };

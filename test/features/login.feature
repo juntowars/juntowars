@@ -7,6 +7,7 @@ Feature: testing Login
     When User attempts to login with email 'fake_email@test.com' and password 'test'
     Then The user sees error message 'Invalid email or password'
 
+  @wip
   Scenario: Valid user details are used to log in successfully
     Given User visits login screen
     When User attempts to login with email 'valid_email@test.com' and password 'test'

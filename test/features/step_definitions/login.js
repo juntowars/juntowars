@@ -28,7 +28,7 @@ var loginStepDefinitionsWrapper = function () {
 
   this.Then(/^The user is redirected to the home screen$/, function(callback) {
     browser.assert.success();
-    browser.assert.text('title', 'juntowars | juntowars');
+    browser.assert.text('title', 'Login | juntowars');
     callback();
   });
 

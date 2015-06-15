@@ -19,6 +19,7 @@
     "node": "*"
   },
   "scripts": {
+    "prestart": "mongod  --dbpath /var/mongo --fork --logpath /dev/null",
     "start": "NODE_PATH=./config:./app/controllers NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "test": "/usr/local/bin/node --harmony node_modules/.bin/cucumber.js -f pretty ./test/features/ --tags ~@wip"
   },
@@ -53,6 +54,7 @@
   },
   "devDependencies": {
     "mocha": "*",
+    "cucumber": "latest",
     "nodemon": "*",
     "should": "*",
     "supertest": "*"
