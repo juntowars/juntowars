@@ -24,23 +24,12 @@
             </tr>
             </thead>
             <tbody>
-            {% for user in usersList %}
+            {% for i in [1,2,3,4,5,6] -%}
                 <tr>
                     <th scope="row">
-                        {% if userName == user %}
-                            <div class="onoffswitch">
-                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-                                       value="{{ user }}" id="myonoffswitch">
-                                <label class="onoffswitch-label" for="myonoffswitch">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
-                            </div>
-                        {% else %}
-                            Player {{ loop.index }}
-                        {% endif %}
+                        player {{ i }}
                     </th>
-                    <td>{{ user }}</td>
+                    <td> <p id="player{{ i }}">Empty</p> </td>
                 </tr>
             {% endfor %}
             </tbody>

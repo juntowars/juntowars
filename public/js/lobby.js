@@ -5,7 +5,6 @@ window.onload = function () {
   var field = document.getElementById("field");
   var sendButton = document.getElementById("send");
   var content = document.getElementById("content");
-  var userlist = document.getElementById("userlist");
   var name = document.getElementById("name");
   var room = window.location.pathname.replace(/.*\//, '');
 
@@ -25,25 +24,21 @@ window.onload = function () {
     }
   });
 
-  socket.on('userJoined', function (userList) {
-    if (userList) {
-      var html = '';
-      for (var i = 0; i < userList.userList.length; i++) {
-        html += '<p>' + userList.userList[i] + ': </p>';
-      }
-      userlist.innerHTML = html;
-    } else {
-      console.log("There is a problem:", user);
-    }
-  });
-
   socket.on('updateUsersList', function (userList) {
     if (userList) {
-      var html = '';
       for (var i = 0; i < userList.userList.length; i++) {
-        html += '<p>' + userList.userList[i] + ': </p>';
+        var id = "player" + (i + 1).toString();
+        document.getElementById(id).innerHTML = '<p>' + userList.userList[i] + '</p>';
       }
-      userlist.innerHTML = html;
+
+      var gameMaxPlayers = 6;
+      if (userList.userList.length < gameMaxPlayers) {
+        var emptySpacesToFill = gameMaxPlayers - userList.userList.length;
+        for ( i = gameMaxPlayers - emptySpacesToFill; i < gameMaxPlayers; i++) {
+          id = "player" + (i + 1).toString();
+          document.getElementById(id).innerHTML = '<p>Empty</p>';
+        }
+      }
     } else {
       console.log("There is a problem:", user);
     }

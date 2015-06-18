@@ -18,7 +18,7 @@ module.exports = function (io) {
         }
         else {
           socket.join(room);
-          io.sockets.in(room).emit('userJoined', {userList: userList});
+          io.sockets.in(room).emit('updateUsersList', {userList: userList});
           var message_text = socket.user + ' has joined the chat';
           io.sockets.in(room).emit('message', {message: message_text});
         }
