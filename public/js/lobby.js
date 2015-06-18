@@ -29,6 +29,13 @@ window.onload = function () {
       for (var i = 0; i < userList.userList.length; i++) {
         var id = "player" + (i + 1).toString();
         document.getElementById(id).innerHTML = '<p>' + userList.userList[i] + '</p>';
+
+        if(userList.userList[i] == name.value){
+          document.getElementById(id+"row").innerHTML = '<div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value=name.value id="myonoffswitch"> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> </div>';
+        } else {
+          document.getElementById(id+"row").innerHTML = '<p>'+id+'</p>';
+        }
+
       }
 
       var gameMaxPlayers = 6;
@@ -37,6 +44,7 @@ window.onload = function () {
         for ( i = gameMaxPlayers - emptySpacesToFill; i < gameMaxPlayers; i++) {
           id = "player" + (i + 1).toString();
           document.getElementById(id).innerHTML = '<p>Empty</p>';
+          document.getElementById(id+"row").innerHTML = '<p>'+id+'</p>';
         }
       }
     } else {
