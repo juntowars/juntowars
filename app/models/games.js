@@ -3,6 +3,7 @@
  */
 
 var mongoose = require('mongoose');
+var Promise = require("bluebird");
 var Schema = mongoose.Schema;
 
 /**
@@ -96,10 +97,9 @@ GamesSchema.statics = {
     });
   },
   addUserToList: function (gameName, user, socket, callback) {
-
     var _query = this.find({"name": gameName, "lobby": "open"});
-    _query.exec(function (err, gameDoc) {
 
+    _query.exec(function (err, gameDoc) {
       var gameObject = gameDoc[0]._doc;
 
       if (err) callback(err, null);
@@ -125,27 +125,17 @@ GamesSchema.statics = {
   },
 
   removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
-
-    var finished = gameDocs.length;
-    function pullUser(name, user,gamesList) {
-      staticGames.update({"name": name}, {$pull: {"userList.uuids": user}}).exec(done(gamesList));
-    }
-
-    function done(gamesList) {
-      finished--;
-      if (finished == 0) {
-        cb(gamesList);
-      }
-    }
-
-    if (err) {
-      return err;
-    }
-    else {
+    if (err) return err;
+    else{
+      var updates = [];
       var gamesList = [];
       gameDocs.forEach(function (game) {
         gamesList.push(game.name);
-        pullUser(game.name, user, gamesList);
+        updates.push(staticGames.update({"name": game.name}, {$pull: {"userList.uuids": user}}).exec());
+      });
+
+      Promise.all(updates).then(function() {
+        cb(gamesList);
       });
     }
   }

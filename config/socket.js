@@ -36,8 +36,7 @@ module.exports = function (io) {
       }
 
       function updateLobby(room, userList){
-        //TODO refactor with promise, functions being called before db updates
-        io.sockets.in(room).emit('updateUsersList', {userList: userList.remove(socket.user)});
+        io.sockets.in(room).emit('updateUsersList', {userList: userList});
         var message_text = socket.user + ' has left the chat';
         io.sockets.in(room).emit('message', {message: message_text});
       }
