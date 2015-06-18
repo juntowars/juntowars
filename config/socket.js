@@ -31,20 +31,23 @@ module.exports = function (io) {
     });
 
     socket.on('disconnect', function(){
-      // remove user from all open lobbies
-      Games.removeUserFromAllOpenLobbies(this.user,updateAffectedLobbies);
-      function updateAffectedLobbies(listOfLobbies){
-        listOfLobbies.forEach(function(lobby){
+      function updateAffectedLobbies(err, res, user) {
+        Games.removeUserFromOpenLobbiesQuery(err, res, user,tellThePeople);
+      }
 
-          Games.getUsersInAGame(lobby,sendUpdateToUsers);
+      function updateLobby(room, userList){
+        //TODO refactor with promise, functions being called before db updates
+        io.sockets.in(room).emit('updateUsersList', {userList: userList.remove(socket.user)});
+        var message_text = socket.user + ' has left the chat';
+        io.sockets.in(room).emit('message', {message: message_text});
+      }
 
-          function sendUpdateToUsers(userList){
-            io.sockets.in(lobby).emit('updateUsersList', {userList: userList });
-            var message_text = socket.user + ' has left the chat';
-            io.sockets.in(lobby).emit('message', {message: message_text});
-          }
+      function tellThePeople(gamesList){
+        gamesList.forEach(function(game){
+          Games.getUsersInAGame(game, updateLobby);
         });
       }
+      Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
     });
 
   });

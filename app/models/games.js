@@ -8,7 +8,6 @@ var Schema = mongoose.Schema;
 /**
  * Games Schema
  */
-
 var GamesSchema = new Schema({
   name: {type: String, default: '', trim: true, unique: true},
   state: {
@@ -40,6 +39,7 @@ var GamesSchema = new Schema({
   createdAt: {type: Date, default: Date.now}
 });
 
+var staticGames = mongoose.model('games', GamesSchema);
 GamesSchema.path('name').required(true, 'Games name cannot be blank');
 GamesSchema.methods = {};
 GamesSchema.statics = {
@@ -88,11 +88,11 @@ GamesSchema.statics = {
       callback(gameDoc);
     });
   },
-  getUsersInAGame: function (gameName,callback) {
+  getUsersInAGame: function (gameName, callback) {
     var _query = this.find({"name": gameName});
     _query.exec(function (err, gameDoc) {
       if (err) callback(err);
-      callback(gameDoc[0]._doc.userList.uuids);
+      callback(gameName,gameDoc[0]._doc.userList.uuids);
     });
   },
   addUserToList: function (gameName, user, socket, callback) {
@@ -117,22 +117,37 @@ GamesSchema.statics = {
       }
     });
   },
-  removeUserFromAllOpenLobbies: function ( user, callback) {
-    var _query = this.find({"lobby": "open", "userList.uuids":{$in:[user]}});
 
-    _query.exec(function (err, gameDocs) {
-
-      var listOfRooms = [];
-      gameDocs.forEach(function(gameDoc){
-        gameDoc.userList.uuids.pull(user);
-        listOfRooms.push(gameDoc.name);
-        gameDoc.save(function (err) {
-          if (err) callback(err, null, socket);
-        });
-      });
-
-      callback(listOfRooms);
+  findUserInOpenLobbiesQuery: function (user, cb) {
+    this.find({"lobby": "open", "userList.uuids": {$in: [user]}}, function (err, res) {
+      err ? cb(err, null, user) : cb(null, res, user);
     });
+  },
+
+  removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
+
+    var finished = gameDocs.length;
+    function pullUser(name, user,gamesList) {
+      staticGames.update({"name": name}, {$pull: {"userList.uuids": user}}).exec(done(gamesList));
+    }
+
+    function done(gamesList) {
+      finished--;
+      if (finished == 0) {
+        cb(gamesList);
+      }
+    }
+
+    if (err) {
+      return err;
+    }
+    else {
+      var gamesList = [];
+      gameDocs.forEach(function (game) {
+        gamesList.push(game.name);
+        pullUser(game.name, user, gamesList);
+      });
+    }
   }
 };
 
