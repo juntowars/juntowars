@@ -75,11 +75,7 @@ GamesSchema.statics = {
       openGames.forEach(function (game) {
         _listOfOpenGames.push(game.name.replace(/\s+/g, '-'));
       });
-      if (gameList) {
-        fn(gameList, _listOfOpenGames);
-      } else {
-        fn(_listOfOpenGames);
-      }
+      fn(gameList, _listOfOpenGames);
     });
   },
   getGameByTitle: function (userId, gameTitle, callback) {
@@ -93,7 +89,7 @@ GamesSchema.statics = {
     var _query = this.find({"name": gameName});
     _query.exec(function (err, gameDoc) {
       if (err) callback(err);
-      callback(gameName,gameDoc[0]._doc.userList.uuids);
+      callback(gameName, gameDoc[0]._doc.userList.uuids);
     });
   },
   addUserToList: function (gameName, user, socket, callback) {
@@ -126,7 +122,7 @@ GamesSchema.statics = {
 
   removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
     if (err) return err;
-    else{
+    else {
       var updates = [];
       var gamesList = [];
       gameDocs.forEach(function (game) {
@@ -134,7 +130,7 @@ GamesSchema.statics = {
         updates.push(staticGames.update({"name": game.name}, {$pull: {"userList.uuids": user}}).exec());
       });
 
-      Promise.all(updates).then(function() {
+      Promise.all(updates).then(function () {
         cb(gamesList);
       });
     }

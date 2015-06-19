@@ -79,11 +79,7 @@ function buildDashboard(req, res) {
     res.render('games/dashboard', {gameList: gameList, gamesToJoin: gamesToJoin});
   }
   function getOpenGames(req, gameList) {
-    if(gameList) {
       Games.getOpenGamesList(req.user._doc.username, gameList, doRender);
-    }else {
-      Games.getOpenGamesList(req.user._doc.username, null, doRender);
-    }
   }
 
   Games.getUsersGamesList(req, getOpenGames);
