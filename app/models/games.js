@@ -75,10 +75,10 @@ GamesSchema.statics = {
       openGames.forEach(function (game) {
         _listOfOpenGames.push(game.name.replace(/\s+/g, '-'));
       });
-      if (typeof fn == "function") {
+      if (gameList) {
         fn(gameList, _listOfOpenGames);
       } else {
-        console.log("Render is a what?: " + fn)
+        fn(_listOfOpenGames);
       }
     });
   },
