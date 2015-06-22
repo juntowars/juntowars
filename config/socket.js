@@ -11,6 +11,11 @@ module.exports = function (io) {
       io.sockets.in(room).emit('message', data);
     });
 
+    socket.on('userReady', function (room, userName) {
+      console.log(userName+" just clicked his status");
+      io.sockets.in(room).emit('message', {message:  userName+" just clicked his status"} );
+    });
+
     socket.on('create', function (room, user) {
       function updateUserList(err, userList, socket) {
         if (err) {

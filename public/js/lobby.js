@@ -4,6 +4,7 @@ window.onload = function () {
   var socket = io.connect(location.origin);
   var field = document.getElementById("field");
   var sendButton = document.getElementById("send");
+  var readyButton = document.getElementById("readyButton");
   var content = document.getElementById("content");
   var name = document.getElementById("name");
   var room = window.location.pathname.replace(/.*\//, '');
@@ -31,7 +32,7 @@ window.onload = function () {
         document.getElementById(id).innerHTML = '<p>' + userList.userList[i] + '</p>';
 
         if(userList.userList[i] == name.value){
-          document.getElementById(id+"row").innerHTML = '<div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value=name.value id="myonoffswitch"> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> </div>';
+          document.getElementById(id+"row").innerHTML = '<input type="checkbox" id="readyButton"/> Ready?<br/>';
         } else {
           document.getElementById(id+"row").innerHTML = '<p>'+id+'</p>';
         }
@@ -56,6 +57,12 @@ window.onload = function () {
     socket.emit('send', room, {message: field.value, username: name.value});
     $('#field').val('');
   };
+
+
+  $(document).on('click','#readyButton',function() {
+    socket.emit('userReady', room, name.value);
+  });
+
 
   $('#field').keydown(function (event) {
     if (event.keyCode == 13) {
