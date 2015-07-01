@@ -35,7 +35,15 @@ var GamesSchema = new Schema({
     createdAt: {type: Date, default: Date.now}
   }],
   publicJoin: {type: Boolean, default: true},
-  lobby: {type: String, default: 'open'},
+  lobby: {
+    status:  {type: String, default: 'open'},
+    playerStatus: [
+      {
+        uuid:{type: String, default: ''},
+        ready:{type: Boolean, default: false}
+      }
+    ]
+  },
   adminUser: {type: String, default: ''},
   createdAt: {type: Date, default: Date.now}
 });
@@ -62,10 +70,18 @@ GamesSchema.statics = {
       callback(req, _listOfGameNames);
     });
   },
+  updatePlayersReadyStatus: function(gameName,uuid,cb){
+      var updates = [];
+      var arrayOfUsersStatus = [];
+      updates.push(staticGames.update({"name" : gameName,"lobby.playerStatus.uuid":uuid},{$set :{"lobby.playerStatus.$.ready": true}}).exec());
+      Promise.all(updates).then(function () {
+        cb(arrayOfUsersStatus);
+      });
+  },
   getOpenGamesList: function (uuid, gameList, fn) {
     var _listOfOpenGames = [];
     var _query = this.find({
-      "lobby": "open",
+      "lobby.status": "open",
       "adminUser": {
         $ne: uuid
       }
@@ -93,7 +109,7 @@ GamesSchema.statics = {
     });
   },
   addUserToList: function (gameName, user, socket, callback) {
-    var _query = this.find({"name": gameName, "lobby": "open"});
+    var _query = this.find({"name": gameName, "lobby.status": "open"});
 
     _query.exec(function (err, gameDoc) {
       var gameObject = gameDoc[0]._doc;
@@ -103,6 +119,7 @@ GamesSchema.statics = {
       if (gameObject.userList.uuids.length < 6) {
         if (gameObject.userList.uuids.indexOf(user) == -1) {
           gameObject.userList.uuids.push(user);
+          gameObject.lobby.playerStatus.push({uuid:user});
           gameDoc[0].save(function (err) {
             if (err) callback(err, null, socket);
           });
@@ -113,13 +130,11 @@ GamesSchema.statics = {
       }
     });
   },
-
   findUserInOpenLobbiesQuery: function (user, cb) {
-    this.find({"lobby": "open", "userList.uuids": {$in: [user]}}, function (err, res) {
+    this.find({"lobby.status": "open", "userList.uuids": {$in: [user]}}, function (err, res) {
       err ? cb(err, null, user) : cb(null, res, user);
     });
   },
-
   removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
     if (err) return err;
     else {
@@ -128,6 +143,7 @@ GamesSchema.statics = {
       gameDocs.forEach(function (game) {
         gamesList.push(game.name);
         updates.push(staticGames.update({"name": game.name}, {$pull: {"userList.uuids": user}}).exec());
+        updates.push(staticGames.update({"name": game.name}, { $pull: { "lobby.playerStatus" : { uuid: user }}}).exec());
       });
 
       Promise.all(updates).then(function () {

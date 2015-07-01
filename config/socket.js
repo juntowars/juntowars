@@ -12,8 +12,14 @@ module.exports = function (io) {
     });
 
     socket.on('userReady', function (room, userName) {
-      console.log(userName+" just clicked his status");
-      io.sockets.in(room).emit('message', {message:  userName+" just clicked his status"} );
+      function updateUsersAboutStatusChange(arrayOfUsersStatus){
+        io.sockets.in(room).emit('updateGamesLobby', {userList: arrayOfUsersStatus} );
+      }
+      Games.updatePlayersReadyStatus(room, userName, updateUsersAboutStatusChange);
+    });
+
+    socket.on('showStartButton', function (room) {
+      io.sockets.in(room).emit('displayStartButton');
     });
 
     socket.on('create', function (room, user) {
@@ -28,9 +34,7 @@ module.exports = function (io) {
           io.sockets.in(room).emit('message', {message: message_text});
         }
       }
-
       console.log(user + " is in room " + room);
-
       Games.addUserToList(room, user, socket, updateUserList);
       socket.user = user;
     });
