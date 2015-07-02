@@ -54,8 +54,7 @@ window.onload = function () {
       // Pad out the rest with place holders if needed
       var gameMaxPlayers = 6;
       if (data.playerStatus.length < gameMaxPlayers) {
-        var emptySpacesToFill = gameMaxPlayers - data.playerStatus.length;
-        for (i = gameMaxPlayers - emptySpacesToFill; i < gameMaxPlayers; i++) {
+        for (i = data.playerStatus.length; i < gameMaxPlayers; i++) {
           playerNum = "player" + (i + 1).toString();
           document.getElementById(playerNum).innerText = 'Empty';
           document.getElementById(playerNum + "row").innerText = playerNum;
