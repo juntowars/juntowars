@@ -12,10 +12,16 @@ module.exports = function (io) {
     });
 
     socket.on('userReady', function (room, userName) {
-      function updateUsersAboutStatusChange(arrayOfUsersStatus){
-        io.sockets.in(room).emit('updateGamesLobby', {userList: arrayOfUsersStatus} );
+
+      function updateClientsWithReadyStatus(room,arrayOfUsersStatus){
+        io.sockets.in(room).emit('refreshLobbyStatus',  {playerStatus: arrayOfUsersStatus[0]} );
       }
-      Games.updatePlayersReadyStatus(room, userName, updateUsersAboutStatusChange);
+
+      function getLobbyReadyState(){
+        Games.getPlayersReadyStatus(room,updateClientsWithReadyStatus);
+      }
+
+      Games.updatePlayersReadyStatus(room, userName, getLobbyReadyState);
     });
 
     socket.on('showStartButton', function (room) {
@@ -23,38 +29,40 @@ module.exports = function (io) {
     });
 
     socket.on('create', function (room, user) {
-      function updateUserList(err, userList, socket) {
-        if (err) {
-          socket.emit('message', {message: err});
-        }
-        else {
+
+      function updateLobby(room, arrayOfUsersStatus){
+        io.sockets.in(room).emit('refreshLobbyStatus', {playerStatus: arrayOfUsersStatus[0]});
+      }
+
+      function joinRoom(game) {
           socket.join(room);
-          io.sockets.in(room).emit('updateUsersList', {userList: userList});
+          Games.getPlayersReadyStatus(game, updateLobby);
           var message_text = socket.user + ' has joined the chat';
           io.sockets.in(room).emit('message', {message: message_text});
-        }
       }
+
       console.log(user + " is in room " + room);
-      Games.addUserToList(room, user, socket, updateUserList);
+      Games.addUserToList(room, user, socket, joinRoom );
       socket.user = user;
     });
 
     socket.on('disconnect', function(){
-      function updateAffectedLobbies(err, res, user) {
-        Games.removeUserFromOpenLobbiesQuery(err, res, user,tellThePeople);
-      }
-
-      function updateLobby(room, userList){
-        io.sockets.in(room).emit('updateUsersList', {userList: userList});
+      function updateLobby(room, arrayOfUsersStatus){
+        io.sockets.in(room).emit('refreshLobbyStatus', {playerStatus: arrayOfUsersStatus[0]});
         var message_text = socket.user + ' has left the chat';
         io.sockets.in(room).emit('message', {message: message_text});
       }
 
       function tellThePeople(gamesList){
         gamesList.forEach(function(game){
-          Games.getUsersInAGame(game, updateLobby);
+          Games.getPlayersReadyStatus(game, updateLobby);
         });
       }
+
+      function updateAffectedLobbies(err, res, user) {
+        Games.removeUserFromOpenLobbiesQuery(err, res, user,tellThePeople);
+      }
+
       Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
     });
 

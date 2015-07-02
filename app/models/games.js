@@ -72,11 +72,20 @@ GamesSchema.statics = {
   },
   updatePlayersReadyStatus: function(gameName,uuid,cb){
       var updates = [];
-      var arrayOfUsersStatus = [];
       updates.push(staticGames.update({"name" : gameName,"lobby.playerStatus.uuid":uuid},{$set :{"lobby.playerStatus.$.ready": true}}).exec());
       Promise.all(updates).then(function () {
-        cb(arrayOfUsersStatus);
+        cb();
       });
+  },
+  getPlayersReadyStatus: function(gameName,cb){
+    var currentLobbyStatus = [];
+    staticGames.find({"name" : gameName },{"lobby.playerStatus":1,"_id":0}, function(error, playerStatus){
+      if (error) return console.log(error);
+      playerStatus.forEach(function(status){
+        currentLobbyStatus.push(status._doc.lobby.playerStatus)
+      });
+      cb(gameName,currentLobbyStatus)
+    })
   },
   getOpenGamesList: function (uuid, gameList, fn) {
     var _listOfOpenGames = [];
@@ -101,13 +110,6 @@ GamesSchema.statics = {
       callback(gameDoc);
     });
   },
-  getUsersInAGame: function (gameName, callback) {
-    var _query = this.find({"name": gameName});
-    _query.exec(function (err, gameDoc) {
-      if (err) callback(err);
-      callback(gameName, gameDoc[0]._doc.userList.uuids);
-    });
-  },
   addUserToList: function (gameName, user, socket, callback) {
     var _query = this.find({"name": gameName, "lobby.status": "open"});
 
@@ -121,12 +123,12 @@ GamesSchema.statics = {
           gameObject.userList.uuids.push(user);
           gameObject.lobby.playerStatus.push({uuid:user});
           gameDoc[0].save(function (err) {
-            if (err) callback(err, null, socket);
+            if (err) console.log("An error has occurred: " + err);
+            callback(gameName);
           });
         }
-        callback(null, gameObject.userList.uuids, socket);
       } else {
-        callback("An error has occurred. Lobby not available.", null, socket);
+        console.log("An error has occurred. Lobby not available.");
       }
     });
   },

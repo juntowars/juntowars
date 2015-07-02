@@ -30,70 +30,53 @@ window.onload = function () {
     document.getElementById("startGameButton").disable = false;
   });
 
-  socket.on('updateUsersList', function (userList) {
-    if (userList) {
-      for (var i = 0; i < userList.userList.length; i++) {
-        var id = "player" + (i + 1).toString();
-        document.getElementById(id).innerText = userList.userList[i];
-        if (userList.userList[i] == name.value) {
-          var tmp = document.getElementById(id + "row").innerHTML;
-          document.getElementById(id + "row").innerHTML = '<input type="checkbox" id="readyButton"/> Are you Ready?<br/>';
+  socket.on('refreshLobbyStatus', function (data) {
+    if (data) {
+      var listOfUsers = data.playerStatus;
+      // Fill out the data we have
+      for (var i = 0; i < listOfUsers.length; i++) {
+        var playerNum = "player" + (i + 1).toString();
+        // Display users name
+        document.getElementById(playerNum).innerText = listOfUsers[i].uuid;
+        // Display users Status
+        var playerStatus = playerNum;
+        if (listOfUsers[i].uuid == name.value ) {
+          playerStatus =  '<input type="checkbox" id="readyButton"/> Are you Ready?<br/>';
+          if(listOfUsers[i].ready) playerStatus = '<p style="color: green">IM READY</p>';
+          document.getElementById(playerNum + "row").innerHTML = playerStatus;
         } else {
-          document.getElementById(id + "row").innerText = id;
+          // Other player
+          if(listOfUsers[i].ready) playerStatus = '<p style="color: green">PLAYER READY</p>';
+          document.getElementById(playerNum + "row").innerHTML = playerStatus;
         }
       }
 
+      // Pad out the rest with place holders if needed
       var gameMaxPlayers = 6;
-      if (userList.userList.length < gameMaxPlayers) {
-        var emptySpacesToFill = gameMaxPlayers - userList.userList.length;
+      if (data.playerStatus.length < gameMaxPlayers) {
+        var emptySpacesToFill = gameMaxPlayers - data.playerStatus.length;
         for (i = gameMaxPlayers - emptySpacesToFill; i < gameMaxPlayers; i++) {
-          id = "player" + (i + 1).toString();
-          document.getElementById(id).innerText = 'Empty';
-          document.getElementById(id + "row").innerText = id;
+          playerNum = "player" + (i + 1).toString();
+          document.getElementById(playerNum).innerText = 'Empty';
+          document.getElementById(playerNum + "row").innerText = playerNum;
         }
       }
     } else {
-      console.log("There is no user list to create table:", user);
+      console.log("There is no user list to create table:", data);
     }
-  });
-
-  socket.on('playerReady', function (data) {
-
-    function setPlayerReady(data) {
-      if (data.user) {
-        for (var i = 0; i < 6; i++) {
-          var id = "player" + (i + 1).toString();
-          var userToUpdate = document.getElementById(id).innerText;
-          if (data.user == userToUpdate) {
-            document.getElementById(id + "row").style.color = 'green';
-          }
-        }
-      } else {
-        console.log("There is no user information to change", user);
-      }
-    }
-
-    function displayStartButton() {
-        socket.emit('showStartButton', room);
-    }
-
-    setPlayerReady(data, displayStartButton);
   });
 
   sendButton.onclick = function () {
     socket.emit('send', room, {message: field.value, username: name.value});
     $('#field').val('');
   };
-
   $(document).on('click', '#readyButton', function () {
     socket.emit('userReady', room, name.value);
     document.getElementById("readyButton").disabled = true;
   });
-
   $('#field').keydown(function (event) {
     if (event.keyCode == 13) {
       $('#send').trigger('click');
     }
   });
-
 };
