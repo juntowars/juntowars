@@ -27,7 +27,7 @@ window.onload = function () {
   });
 
   socket.on('displayStartButton', function () {
-    document.getElementById("startGameButton").disable = false;
+    document.getElementById("startGameButton").innerHTML = '<a class="btn btn-primary" id="initGameButton">Start</a>';
   });
 
   socket.on('refreshLobbyStatus', function (data) {
@@ -65,6 +65,10 @@ window.onload = function () {
     }
   });
 
+  socket.on('redirect', function () {
+    window.location.href = location.origin + "/games/view/"+room;
+  });
+
   sendButton.onclick = function () {
     socket.emit('send', room, {message: field.value, username: name.value});
     $('#field').val('');
@@ -72,6 +76,9 @@ window.onload = function () {
   $(document).on('click', '#readyButton', function () {
     socket.emit('userReady', room, name.value);
     document.getElementById("readyButton").disabled = true;
+  });
+  $(document).on('click', '#initGameButton', function () {
+    socket.emit('startGame', room, name.value);
   });
   $('#field').keydown(function (event) {
     if (event.keyCode == 13) {

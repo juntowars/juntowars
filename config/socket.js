@@ -15,6 +15,14 @@ module.exports = function (io) {
 
       function updateClientsWithReadyStatus(room,arrayOfUsersStatus){
         io.sockets.in(room).emit('refreshLobbyStatus',  {playerStatus: arrayOfUsersStatus[0]} );
+
+        if(arrayOfUsersStatus[0].length == 6){
+          var count=0;
+          for(var i = 0; i < 6 ; i++){
+            if (arrayOfUsersStatus[0][i].ready) count++;
+            if (count == 6) io.sockets.in(room).emit('displayStartButton');
+          }
+        }
       }
 
       function getLobbyReadyState(){
@@ -22,10 +30,6 @@ module.exports = function (io) {
       }
 
       Games.updatePlayersReadyStatus(room, userName, getLobbyReadyState);
-    });
-
-    socket.on('showStartButton', function (room) {
-      io.sockets.in(room).emit('displayStartButton');
     });
 
     socket.on('create', function (room, user) {
@@ -44,6 +48,10 @@ module.exports = function (io) {
       console.log(user + " is in room " + room);
       Games.addUserToList(room, user, socket, joinRoom );
       socket.user = user;
+    });
+
+    socket.on('startGame', function (room) {
+      io.sockets.in(room).emit('redirect');
     });
 
     socket.on('disconnect', function(){
