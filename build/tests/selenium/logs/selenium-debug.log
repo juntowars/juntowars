@@ -1,0 +1,293 @@
+00:46:38.651 INFO - Launching a standalone Selenium Server
+Setting system property webdriver.chrome.driver to lib/chromedriver
+00:46:38.694 INFO - Java: Oracle Corporation 24.71-b01
+00:46:38.695 INFO - OS: Mac OS X 10.10.1 x86_64
+00:46:38.706 INFO - v2.46.0, with Core v2.46.0. Built from revision 87c69e2
+00:46:38.788 INFO - Driver provider org.openqa.selenium.ie.InternetExplorerDriver registration is skipped:
+registration capabilities Capabilities [{platform=WINDOWS, ensureCleanSession=true, browserName=internet explorer, version=}] does not match the current platform MAC
+00:46:38.788 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+00:46:38.788 INFO - Driver provider com.opera.core.systems.OperaDriver is not registered
+00:46:38.887 INFO - RemoteWebDriver instances should connect to: http://127.0.0.1:4444/wd/hub
+00:46:38.887 INFO - Selenium Server is up and running
+00:46:39.889 INFO - Executing: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]])
+00:46:39.890 INFO - Executing: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]])
+00:46:39.889 INFO - Executing: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]])
+00:46:39.889 INFO - Executing: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]])
+00:46:39.889 INFO - Executing: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]])
+00:46:39.891 INFO - Executing: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]])
+00:46:39.903 INFO - Creating a new session for Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]
+00:46:39.903 INFO - Creating a new session for Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]
+00:46:39.904 INFO - Creating a new session for Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]
+00:46:39.903 INFO - Creating a new session for Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]
+00:46:39.903 INFO - Creating a new session for Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]
+00:46:39.903 INFO - Creating a new session for Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]
+SSttaarrttiinngg  CChhrroommeeDDrriivveerr  22..1166..33333322443 3( 0(b0fbaf1ad13d537557f5cf1c014044244244f42f12d1ddbd8b28b2fb8f870944ef961)S toanr tpionrgt  C4h5r8o4m7e
+Only local connections are allowed.
+70944ef961) on port 45025
+Only local connections are allowed.
+Starting ChromeDriver 2.16.333243 (0bfa1d3575fc1044244f21ddb82bf870944ef961) on port 32551
+Only local connections are allowed.
+Driver 2.16.333243 (0bfa1d3575fc1044244f21ddb82bf870944ef961) on port 13529
+Only local connections are allowed.
+Starting ChromeDriver 2.16.333243 (0bfa1d3575fc1044244f21ddb82bf870944ef961) on port 20755
+Only local connections are allowed.
+Starting ChromeDriver 2.16.333243 (0bfa1d3575fc1044244f21ddb82bf870944ef961) on port 40966
+Only local connections are allowed.
+00:46:44.612 INFO - Done: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]]
+00:46:44.618 INFO - Done: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]]
+00:46:44.618 INFO - Done: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]]
+00:46:44.636 INFO - Executing: [get: http://localhost:3000/login])
+00:46:44.638 INFO - Executing: [get: http://localhost:3000/login])
+00:46:44.649 INFO - Executing: [get: http://localhost:3000/login])
+00:46:44.690 INFO - Done: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]]
+00:46:44.719 INFO - Executing: [get: http://localhost:3000/login])
+00:46:44.758 INFO - Done: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]]
+00:46:44.785 INFO - Executing: [get: http://localhost:3000/login])
+00:46:44.904 INFO - Done: [new session: Capabilities [{platform=ANY, acceptSslCerts=true, javascriptEnabled=true, browserName=chrome, name=Lobby}]]
+00:46:44.932 INFO - Executing: [get: http://localhost:3000/login])
+00:46:46.788 INFO - Done: [get: http://localhost:3000/login]
+00:46:46.814 INFO - Executing: [find elements: By.cssSelector: #email])
+00:46:46.858 INFO - Done: [get: http://localhost:3000/login]
+00:46:46.861 INFO - Done: [find elements: By.cssSelector: #email]
+00:46:46.868 INFO - Executing: [find elements: By.cssSelector: #email])
+00:46:46.887 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: #email]])
+00:46:46.912 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: #email]]
+00:46:46.916 INFO - Done: [find elements: By.cssSelector: #email]
+00:46:46.921 INFO - Executing: [find element: By.cssSelector: #email])
+00:46:46.931 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: #email]])
+00:46:46.940 INFO - Done: [find element: By.cssSelector: #email]
+00:46:46.958 INFO - Executing: [send keys: 0 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: #email], [4, @, t, e, s, t, ., c, o, m]])
+00:46:46.960 INFO - Done: [get: http://localhost:3000/login]
+00:46:46.963 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: #email]]
+00:46:46.992 INFO - Executing: [find elements: By.cssSelector: #email])
+00:46:47.010 INFO - Executing: [find element: By.cssSelector: #email])
+00:46:47.012 INFO - Done: [find elements: By.cssSelector: #email]
+00:46:47.027 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: #email]])
+00:46:47.032 INFO - Done: [get: http://localhost:3000/login]
+00:46:47.038 INFO - Done: [find element: By.cssSelector: #email]
+00:46:47.044 INFO - Executing: [find elements: By.cssSelector: #email])
+00:46:47.056 INFO - Executing: [send keys: 0 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: #email], [3, @, t, e, s, t, ., c, o, m]])
+00:46:47.091 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: #email]]
+00:46:47.114 INFO - Executing: [find element: By.cssSelector: #email])
+00:46:47.135 INFO - Done: [find element: By.cssSelector: #email]
+00:46:47.151 INFO - Executing: [send keys: 0 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: #email], [5, @, t, e, s, t, ., c, o, m]])
+00:46:47.200 INFO - Done: [get: http://localhost:3000/login]
+00:46:47.223 INFO - Executing: [find elements: By.cssSelector: #email])
+00:46:47.232 INFO - Done: [find elements: By.cssSelector: #email]
+00:46:47.249 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: #email]])
+00:46:47.274 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: #email]]
+00:46:47.295 INFO - Executing: [find element: By.cssSelector: #email])
+00:46:47.309 INFO - Done: [send keys: 0 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: #email], [4, @, t, e, s, t, ., c, o, m]]
+00:46:47.320 INFO - Done: [find element: By.cssSelector: #email]
+00:46:47.339 INFO - Executing: [find element: By.cssSelector: #password])
+00:46:47.342 INFO - Done: [find elements: By.cssSelector: #email]
+00:46:47.430 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: #email]])
+00:46:47.437 INFO - Done: [send keys: 0 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: #email], [3, @, t, e, s, t, ., c, o, m]]
+00:46:47.437 INFO - Executing: [send keys: 0 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: #email], [1, @, t, e, s, t, ., c, o, m]])
+00:46:47.444 INFO - Done: [send keys: 0 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: #email], [5, @, t, e, s, t, ., c, o, m]]
+00:46:47.464 INFO - Executing: [find element: By.cssSelector: #password])
+00:46:47.470 INFO - Done: [find element: By.cssSelector: #password]
+00:46:47.472 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: #email]]
+00:46:47.473 INFO - Executing: [find element: By.cssSelector: #password])
+00:46:47.485 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: #password], [4]])
+00:46:47.494 INFO - Done: [find element: By.cssSelector: #password]
+00:46:47.498 INFO - Done: [find element: By.cssSelector: #password]
+00:46:47.499 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: #password], [3]])
+00:46:47.504 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: #password], [5]])
+00:46:47.506 INFO - Executing: [find element: By.cssSelector: #email])
+00:46:47.547 INFO - Done: [find element: By.cssSelector: #email]
+00:46:47.570 INFO - Executing: [send keys: 0 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: #email], [6, @, t, e, s, t, ., c, o, m]])
+00:46:47.671 INFO - Done: [get: http://localhost:3000/login]
+00:46:47.680 INFO - Executing: [find elements: By.cssSelector: #email])
+00:46:47.704 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: #password], [4]]
+00:46:47.710 INFO - Executing: [find element: By.cssSelector: button[type=submit]])
+00:46:47.717 INFO - Done: [send keys: 0 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: #email], [1, @, t, e, s, t, ., c, o, m]]
+00:46:47.722 INFO - Executing: [find element: By.cssSelector: #password])
+00:46:47.745 INFO - Done: [find element: By.cssSelector: button[type=submit]]
+00:46:47.751 INFO - Executing: [click: 2 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: button[type=submit]]])
+00:46:47.792 INFO - Done: [find element: By.cssSelector: #password]
+00:46:47.797 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: #password], [1]])
+00:46:47.807 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: #password], [5]]
+00:46:47.812 INFO - Executing: [find element: By.cssSelector: button[type=submit]])
+00:46:47.841 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: #password], [3]]
+00:46:47.845 INFO - Executing: [find element: By.cssSelector: button[type=submit]])
+00:46:47.861 INFO - Done: [find element: By.cssSelector: button[type=submit]]
+00:46:47.867 INFO - Executing: [click: 2 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: button[type=submit]]])
+00:46:47.880 INFO - Done: [find elements: By.cssSelector: #email]
+00:46:47.886 INFO - Executing: [is displayed: 0 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: #email]])
+00:46:47.907 INFO - Done: [find element: By.cssSelector: button[type=submit]]
+00:46:47.912 INFO - Executing: [click: 2 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: button[type=submit]]])
+00:46:47.919 INFO - Done: [send keys: 0 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: #email], [6, @, t, e, s, t, ., c, o, m]]
+00:46:47.923 INFO - Executing: [find element: By.cssSelector: #password])
+00:46:47.941 INFO - Done: [is displayed: 0 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: #email]]
+00:46:47.952 INFO - Executing: [find element: By.cssSelector: #email])
+00:46:47.957 INFO - Done: [find element: By.cssSelector: #password]
+00:46:47.961 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: #password], [6]])
+00:46:48.030 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: #password], [1]]
+00:46:48.031 INFO - Done: [find element: By.cssSelector: #email]
+00:46:48.035 INFO - Executing: [find element: By.cssSelector: button[type=submit]])
+00:46:48.043 INFO - Executing: [send keys: 0 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: #email], [2, @, t, e, s, t, ., c, o, m]])
+00:46:48.151 INFO - Done: [find element: By.cssSelector: button[type=submit]]
+00:46:48.157 INFO - Executing: [click: 2 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: button[type=submit]]])
+00:46:48.366 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: #password], [6]]
+00:46:48.372 INFO - Executing: [find element: By.cssSelector: button[type=submit]])
+00:46:48.431 INFO - Done: [send keys: 0 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: #email], [2, @, t, e, s, t, ., c, o, m]]
+00:46:48.436 INFO - Executing: [find element: By.cssSelector: #password])
+00:46:48.461 INFO - Done: [find element: By.cssSelector: button[type=submit]]
+00:46:48.473 INFO - Executing: [click: 2 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: button[type=submit]]])
+00:46:48.510 INFO - Done: [find element: By.cssSelector: #password]
+00:46:48.515 INFO - Executing: [send keys: 1 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: #password], [2]])
+00:46:48.643 INFO - Done: [click: 2 [[ChromeDriver: chrome on MAC (fedb195d7e696ac6990a60d215a1a946)] -> css selector: button[type=submit]]]
+00:46:48.648 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:48.661 INFO - Done: [click: 2 [[ChromeDriver: chrome on MAC (4c87fb3728c7981e40ad94e249c1c080)] -> css selector: button[type=submit]]]
+00:46:48.666 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:48.681 INFO - Done: [click: 2 [[ChromeDriver: chrome on MAC (db884e7f0b40cce7d31a704f37e15c14)] -> css selector: button[type=submit]]]
+00:46:48.688 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:48.740 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:48.751 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:48.752 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:48.756 INFO - Done: [send keys: 1 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: #password], [2]]
+00:46:48.761 INFO - Executing: [find element: By.cssSelector: button[type=submit]])
+00:46:48.782 INFO - Done: [click: 2 [[ChromeDriver: chrome on MAC (10f1cccc9049e41d965e818f7020e1fa)] -> css selector: button[type=submit]]]
+00:46:48.784 INFO - Done: [find element: By.cssSelector: button[type=submit]]
+00:46:48.788 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:48.789 INFO - Executing: [click: 2 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: button[type=submit]]])
+00:46:48.831 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:48.877 INFO - Done: [click: 2 [[ChromeDriver: chrome on MAC (57d735bef226fc98bdf212de2d622687)] -> css selector: button[type=submit]]]
+00:46:48.883 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:48.910 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:48.997 INFO - Done: [click: 2 [[ChromeDriver: chrome on MAC (b6368134972727df2d016866d54989b2)] -> css selector: button[type=submit]]]
+00:46:49.001 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.018 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.249 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.262 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.262 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.266 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.276 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.277 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.339 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.352 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.420 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.433 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.528 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.541 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.776 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.782 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.784 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.785 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.791 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.794 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.861 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.868 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:49.938 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:49.947 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.051 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.060 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.289 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.296 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.297 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.300 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.303 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.306 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.373 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.379 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.454 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.460 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.566 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.573 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.804 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.811 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.811 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.812 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.817 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.817 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.887 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.894 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:50.967 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:50.974 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.081 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.087 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.322 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.323 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.323 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.329 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.331 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.331 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.400 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.406 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.483 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.490 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.594 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.602 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.841 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.841 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.841 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.848 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.848 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.849 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.914 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:51.920 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:51.999 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.005 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.110 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.116 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.359 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.359 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.359 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.366 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.366 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.366 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.430 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.436 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.514 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.524 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.622 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.628 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.872 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.872 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.872 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.879 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.879 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.880 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:52.943 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:52.949 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.032 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.038 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.133 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.139 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.385 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.385 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.385 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.392 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.392 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.392 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.458 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.464 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.547 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.553 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.643 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.650 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.900 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.901 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.901 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:53.909 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.909 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.909 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:53.915 INFO - Executing: [delete session: 43bae471-4471-4030-9a97-f43fa57f9a77])
+00:46:53.915 INFO - Executing: [delete session: ebdf782f-4090-4a7e-998d-5ffed13fceae])
+00:46:53.915 INFO - Executing: [delete session: ad2dbe83-1337-4e06-a78f-be0e8a48cba2])
+00:46:53.996 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:54.008 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:54.015 INFO - Executing: [delete session: c7767213-958e-41a2-b89b-5658288a9da3])
+00:46:54.062 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:54.069 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:54.075 INFO - Executing: [delete session: f79ddc4c-c906-4864-bb9d-0dda9d521d3b])
+00:46:54.157 INFO - Executing: [find elements: By.cssSelector: a[title="Your Games"]])
+00:46:54.163 INFO - Done: [find elements: By.cssSelector: a[title="Your Games"]]
+00:46:54.167 INFO - Executing: [delete session: ba383858-25c6-4582-aba9-d30f8c954eae])
+00:46:54.507 INFO - Done: [delete session: ad2dbe83-1337-4e06-a78f-be0e8a48cba2]
+00:46:54.507 INFO - Done: [delete session: ebdf782f-4090-4a7e-998d-5ffed13fceae]
+00:46:54.534 INFO - Done: [delete session: 43bae471-4471-4030-9a97-f43fa57f9a77]
+00:46:54.581 INFO - Done: [delete session: c7767213-958e-41a2-b89b-5658288a9da3]
+00:46:54.653 INFO - Done: [delete session: f79ddc4c-c906-4864-bb9d-0dda9d521d3b]
+00:46:54.789 INFO - Done: [delete session: ba383858-25c6-4582-aba9-d30f8c954eae]
