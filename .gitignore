@@ -6,3 +6,6 @@ Makefile
 .idea/
 npm-debug.log
 build
+
+#web-drivers, selenium, etc...
+lib/external_tools

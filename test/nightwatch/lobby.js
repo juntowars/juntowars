@@ -7,38 +7,35 @@ module.exports = new (function () {
 
     client
     .url('http://localhost:3000/login')
-    .waitForElementVisible('#email', 10000)
+    .waitForElementVisible('#email', client.globals.WAIT)
     .setValue('#email', clientNumber + '@test.com')
-    .setValue('#password', clientNumber)
+    .setValue('#password', 'test')
     .click('button[type=submit]')
-    .waitForElementVisible('a[title="Your Games"]', 5000)
+    .waitForElementVisible('a[title="Your Games"]', client.globals.WAIT)
     .assert.containsText('a[title="Your Games"]', 'Games')
     .click('a[title="Your Games"]')
-    .waitForElementVisible('#accordion > div > div.panel-heading > h4', 10000)
+    .waitForElementVisible('#accordion > div > div.panel-heading > h4', client.globals.WAIT)
     .click('#accordion > div > div.panel-heading > h4')
-    .waitForElementVisible('#test > div > a', 10000)
+    .waitForElementVisible('#test > div > a', client.globals.WAIT)
     .click('#test > div > a')
-    .pause(2000)
-    .waitForElementVisible('#content', 10000)
-    .assert.containsText('#content', 'valid_user_' + clientNumber + ' has joined the chat')
-    .waitForElementVisible('#readyButton', 50000)
-    .pause(3000);
+    .pause(client.globals.THREE_SECONDS);
   };
 
   testCases['once all players ready, first user clicks start button'] = function (client) {
     client
+    .waitForElementVisible('#readyButton', client.globals.WAIT)
     .click('#readyButton', startTheGame);
 
     function startTheGame(cb) {
       if (clientNumber == '1') {
         client
-        .waitForElementPresent('#initGameButton', 50000)
+        .waitForElementPresent('#initGameButton', client.globals.WAIT)
         .click('#initGameButton')
-        .waitForElementPresent('#map', 5000)
+        .waitForElementPresent('#map', client.globals.WAIT)
         .assert.elementPresent('#map', cb);
       } else {
         client
-        .waitForElementPresent('#map', 50000)
+        .waitForElementPresent('#map', client.globals.WAIT)
         .assert.elementPresent('#map', cb);
       }
     }
@@ -46,7 +43,14 @@ module.exports = new (function () {
 
   testCases.after = function (client) {
     console.log(process.env.__NIGHTWATCH_ENV_KEY);
-    client.end();
+    client
+    .getLogTypes(function(result) {
+      console.log(result);
+    })
+    .getLog('browser', function(result) {
+      console.log(result);
+    })
+    .end();
   };
 });
 
