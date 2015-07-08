@@ -7,10 +7,11 @@ module.exports = new (function () {
 
     client
     .url('http://localhost:3000/login')
-    .waitForElementVisible('#email', client.globals.WAIT)
     .setValue('#email', clientNumber + '@test.com')
-    .setValue('#password', 'test')
-    .click('button[type=submit]')
+    .waitForElementVisible('#password', client.globals.WAIT)
+    .setValue('#password', 'test', function(){
+      client.click('button[type=submit]');
+    })
     .waitForElementVisible('a[title="Your Games"]', client.globals.WAIT)
     .assert.containsText('a[title="Your Games"]', 'Games')
     .click('a[title="Your Games"]')

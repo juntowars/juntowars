@@ -11,8 +11,9 @@ module.exports = new (function () {
     .setValue('#name', "created_user_" + clientNumber)
     .setValue('#email', clientNumber + '@create.com')
     .setValue('#username', "created" + clientNumber)
-    .setValue('#password', "test")
-    .click('button[type=submit]')
+    .setValue('#password', 'test', function(){
+      client.click('button[type=submit]');
+    })
     .waitForElementVisible('a[title="Your Games"]', client.globals.WAIT)
     .assert.containsText('a[title="Your Games"]', 'Games');
   };

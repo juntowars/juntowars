@@ -9,8 +9,9 @@ module.exports = new (function () {
     .url('http://localhost:3000/login')
     .waitForElementVisible('#email', client.globals.WAIT)
     .setValue('#email', clientNumber + "@test.com")
-    .setValue('#password', 'test')
-    .click('button[type=submit]')
+    .setValue('#password', 'test', function(){
+      client.click('button[type=submit]');
+    })
     .waitForElementVisible('a[title="Your Games"]', client.globals.WAIT)
     .assert.containsText('a[title="Your Games"]', 'Games');
   };
@@ -22,8 +23,9 @@ module.exports = new (function () {
     .url('http://localhost:3000/login')
     .waitForElementVisible('#email', client.globals.WAIT)
     .setValue('#email', clientNumber + "@test.com")
-    .setValue('#password', 'bad_password')
-    .click('button[type=submit]')
+    .setValue('#password', 'bad password', function(){
+      client.click('button[type=submit]');
+    })
     .waitForElementVisible('body > div > div.messages > div > ul > li', client.globals.WAIT)
     .useXpath()
     .assert.containsText('/html/body/div/div[2]/div/ul/li', client.globals.WRONG_LOGIN_MESSAGE);
@@ -35,7 +37,7 @@ module.exports = new (function () {
     .getLogTypes(function(result) {
       console.log(result);
     })
-    .getLog('browser', function(result) {
+    .getLog(client, function(result) {
       console.log(result);
     })
     .end();

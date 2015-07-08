@@ -16,6 +16,14 @@ To run project:
     - npm install
 	
     - npm start
+    
+Tests are running with Nightwatch.js, using the selenium standalone server
+    
+    - Download the Chromedriver and Selenium-Standalone-Server and save them into the /lib/external_tools folder
+  
+    - update nightwatch.json with the version of Chromedriver and selenium you are using
+  
+    - run npm test to run all current tests
 
 That's it you should be good to go:
     

@@ -21,9 +21,10 @@
   "scripts": {
     "start": "NODE_PATH=./config:./app/controllers NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "test_env": "NODE_PATH=./config:./app/controllers NODE_ENV=test ./node_modules/.bin/nodemon server.js",
-    "nightwatch": "/usr/local/bin/node nightwatch.js --group test/nightwatch/ -c nightwatch.json --env chrome,chrome,chrome,chrome,chrome,chrome",
+    "nightwatch_single_user": "/usr/local/bin/node nightwatch.js --group test/nightwatch/single_user -c nightwatch.json",
+    "nightwatch_full_user_list": "/usr/local/bin/node nightwatch.js --group test/nightwatch/full_user_list -c nightwatch.json --env chrome,chrome,chrome,chrome,chrome,chrome",
     "pretest": "mongo test test/support/build_users.js",
-    "test": "npm run test_env & npm run nightwatch",
+    "test": "eval 'npm run test_env & npm run nightwatch_single_user && npm run nightwatch_full_user_list' || npm run posttest",
     "posttest": "mongo test test/support/tear_down_users.js & npm run stop",
     "stop": "killall -2 node"
   },
