@@ -14,7 +14,8 @@ var GamesSchema = new Schema({
   state: {
     round: {type: Number, default: '1'},
     phase: {type: String, default: '1'},
-    nextToMove: {type: String, default: ''}
+    nextToMove: {type: String, default: ''},
+    units: []
   },
   userList: {
     uuids: [{type: String, default: ''}],

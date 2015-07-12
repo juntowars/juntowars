@@ -3,7 +3,7 @@ function NewGame() {
 		RenderMap(data);
 		RenderStatusBar();
 	});
-};
+}
 
 $(function() {
 	NewGame();

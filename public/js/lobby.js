@@ -3,7 +3,6 @@ window.onload = function () {
   var messages = [];
   var socket = io.connect(location.origin);
   var field = document.getElementById("field");
-  var sendButton = document.getElementById("send");
   var readyButton = document.getElementById("readyButton");
   var startGameButton = document.getElementById("startGameButton");
   var content = document.getElementById("content");
@@ -69,10 +68,10 @@ window.onload = function () {
     window.location.href = location.origin + "/games/view/"+room;
   });
 
-  sendButton.onclick = function () {
+  $(document).on('click', '#send', function () {
     socket.emit('send', room, {message: field.value, username: name.value});
     $('#field').val('');
-  };
+  });
   $(document).on('click', '#readyButton', function () {
     socket.emit('userReady', room, name.value);
     document.getElementById("readyButton").disabled = true;
@@ -80,7 +79,7 @@ window.onload = function () {
   $(document).on('click', '#initGameButton', function () {
     socket.emit('startGame', room, name.value);
   });
-  $('#field').keydown(function (event) {
+  $(document).on('keydown', '#field', function () {
     if (event.keyCode == 13) {
       $('#send').trigger('click');
     }
