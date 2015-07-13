@@ -74,5 +74,10 @@ module.exports = function (io) {
       Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
     });
 
+    //In game socket methods
+    socket.on('gameStart', function (room, user) {
+      console.log(user + " is in game: " + room);
+      socket.user = user;
+    });
   });
 };
