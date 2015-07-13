@@ -23,21 +23,35 @@ module.exports = new (function () {
   };
 
   testCases['once all players ready, first user clicks start button'] = function (client) {
-    client
-    .waitForElementVisible('#readyButton', client.globals.WAIT)
-    .click('#readyButton', startTheGame);
 
-    function startTheGame(cb) {
+    clickThatShitAgain();
+
+    function clickThatShitAgain(){
+      console.log(process.env.__NIGHTWATCH_ENV_KEY+ " making it to clickThatShitAgain");
+      client.isVisible('#readyButton', function(result) {
+        if(result.value == true){
+          client
+          .waitForElementVisible('#readyButton', client.globals.WAIT)
+          .click('#readyButton', clickThatShitAgain);
+        } else {
+          client.pause(5000,startTheGame);
+        }
+      });
+    }
+
+    function startTheGame() {
+      console.log(process.env.__NIGHTWATCH_ENV_KEY+ " making it to startTheGame");
+
       if (clientNumber == '1') {
         client
         .waitForElementPresent('#initGameButton', client.globals.WAIT)
         .click('#initGameButton')
         .waitForElementPresent('#map', client.globals.WAIT)
-        .assert.elementPresent('#map', cb);
+        .assert.elementPresent('#map');
       } else {
         client
         .waitForElementPresent('#map', client.globals.WAIT)
-        .assert.elementPresent('#map', cb);
+        .assert.elementPresent('#map');
       }
     }
   };
