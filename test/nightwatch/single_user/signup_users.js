@@ -1,9 +1,14 @@
+var winston = require('winston');
+
 module.exports = new (function () {
+
+  winston.log('info', 'Winston recording Login.js!');
+  winston.level = 'debug';
 
   var testCases = this;
   var clientNumber = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
   testCases['players signs up for account'] = function (client) {
-    console.log(process.env.__NIGHTWATCH_ENV_KEY);
+    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " starting signup.js");
 
     client
     .url('http://localhost:3000/signup')
@@ -18,7 +23,7 @@ module.exports = new (function () {
     .assert.containsText('a[title="Your Games"]', 'Games');
   };
   testCases.after = function (client) {
-    console.log(process.env.__NIGHTWATCH_ENV_KEY);
+    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " signup test complete");
     client.end();
   };
 });

@@ -1,30 +1,3 @@
-db.games.insert({
-"adminUser" : "1",
-"lobby" : {
-  "playerStatus" : [ ],
-  "status" : "open"
-},
-  "publicJoin" : true,
-"gameLog" : [ ],
-"chatLog" : [ ],
-"userList" : {
-  "guardians" : "",
-  "reduviidae" : "",
-  "periplaneta" : "",
-  "kingdomWatchers" : "",
-  "settlers" : "",
-  "geoEngineers" : "",
-  "uuids" : [ ]
-},
-  "state" : {
-  "nextToMove" : "",
-  "phase" : "1",
-  "round" : 1
-},
-  "name" : "test"
-});
-
-
 db.users.insert({
 "authToken" : "",
 "salt" : "1076403035111",
@@ -80,4 +53,51 @@ db.users.insert({
 "username" : "2",
 "email" : "2@test.com",
 "name" : "valid_user_2"
+});
+
+db.games.insert({
+  "adminUser" : "1",
+  "lobby" : {
+    "playerStatus" : [
+      {
+        "ready" : true,
+        "uuid" : "2"
+      },
+      {
+        "ready" : true,
+        "uuid" : "3"
+      },
+      {
+        "ready" : true,
+        "uuid" : "4"
+      },
+      {
+        "ready" : true,
+        "uuid" : "5"
+      },
+      {
+        "ready" : true,
+        "uuid" : "6"
+      }
+    ],
+    "status" : "open"
+  },
+  "publicJoin" : true,
+  "gameLog" : [ ],
+  "chatLog" : [ ],
+  "userList" : {
+    "guardians" : "",
+    "reduviidae" : "",
+    "periplaneta" : "",
+    "kingdomWatchers" : "",
+    "settlers" : "",
+    "geoEngineers" : "",
+    "uuids" : [ ]
+  },
+  "state" : {
+    "nextToMove" : "",
+    "phase" : "1",
+    "round" : 1
+  },
+  "name" : "test"
 });

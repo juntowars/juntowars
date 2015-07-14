@@ -1,9 +1,13 @@
+var winston = require('winston');
+
 module.exports = new (function () {
+  winston.log('info', 'Winston recording Login.js!');
+  winston.level = 'debug';
 
   var testCases = this;
   var clientNumber = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
   testCases['player logs in successfully'] = function (client) {
-    console.log(process.env.__NIGHTWATCH_ENV_KEY);
+    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " starting test");
 
     client
     .url('http://localhost:3000/login')
@@ -17,8 +21,6 @@ module.exports = new (function () {
   };
 
   testCases['player login failed, wrong password'] = function (client) {
-    console.log(process.env.__NIGHTWATCH_ENV_KEY);
-
     client
     .url('http://localhost:3000/login')
     .waitForElementVisible('#email', client.globals.WAIT)
@@ -32,14 +34,8 @@ module.exports = new (function () {
 
   };
   testCases.after = function (client) {
-    console.log(process.env.__NIGHTWATCH_ENV_KEY);
+    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " lobby test complete");
     client
-    .getLogTypes(function(result) {
-      console.log(result);
-    })
-    .getLog(client, function(result) {
-      console.log(result);
-    })
     .end();
   };
 });
