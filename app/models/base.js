@@ -12,10 +12,62 @@ var Schema = mongoose.Schema;
  */
 
 var BaseSchema = new Schema({
-    map: {}
+  map: {}
 });
 
 BaseSchema.methods = {};
-BaseSchema.statics = {};
+BaseSchema.statics = {
+  getDefaultUnitsSetUp: function () {
+    return [
+      { "posX" : 4,
+        "posY" : 3,
+        "race" : "kingdomWatchers",
+        "infantry" : 1,
+        "ranged" : 1,
+        "tanks" : 3
+      },
+      {
+        "posX" : 4,
+        "posY" : 7,
+        "race" : "periplaneta",
+        "infantry" : 2,
+        "ranged" : 2,
+        "tanks" : 1
+      },
+      {
+        "posX" : 20,
+        "posY" : 2,
+        "race" : "settlers",
+        "infantry" : 2,
+        "ranged" : 3,
+        "tanks" : 1
+      },
+      {
+        "posX" : 21,
+        "posY" : 7,
+        "race" : "geoEngineers",
+        "infantry" : 2,
+        "ranged" : 4,
+        "tanks" : 1
+      },
+      {
+        "posX" : 1,
+        "posY" : 16,
+        "race" : "reduviidae",
+        "infantry" : 2,
+        "ranged" : 5,
+        "tanks" : 1
+      },
+      {
+        "posX" : 8,
+        "posY" : 11,
+        "race" : "guardians",
+        "infantry" : 2,
+        "ranged" : 6,
+        "tanks" : 1
+      }
+    ];
+  }
+};
 
 mongoose.model('Base', BaseSchema, 'base');

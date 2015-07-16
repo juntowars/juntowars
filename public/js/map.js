@@ -3,35 +3,29 @@ function GetMap() {
     type: 'GET',
     url: location.origin + '/getBaseBoard',
     dataType: 'json',
-    success: function (data) {
-      console.log("JSON Data: " + data);
-    },
     data: {},
     async: true
   });
 }
 
 function GetMapUnits() {
-  var gameName =  window.location.pathname.replace(/.*\//, '');
+  var gameName = window.location.pathname.replace(/.*\//, '');
   return $.ajax({
     type: 'GET',
-    url: location.origin + '/getMapUnits/'+gameName,
+    url: location.origin + '/getMapUnits/' + gameName,
     dataType: 'json',
-    success: function (data) {
-      console.log("JSON Data: " + data);
-    },
     data: {},
     async: true
   });
 }
 
 function getFactionsColour(faction) {
-  var geoEngineers = "yellow";
-  var settlers = "red";
-  var kingdomWatchers = "grey";
-  var periplaneta = "blue";
-  var reduviidae = "white";
-  var guardians = "green";
+  var geoEngineers = "#00CCFF";
+  var settlers = "#00FFCC";
+  var kingdomWatchers = "#CCCC00";
+  var periplaneta = "#FF9933";
+  var reduviidae = "#FF5050";
+  var guardians = "#6666FF";
 
   switch (faction) {
     case "settlers":
@@ -86,7 +80,7 @@ function getSvgForUnits(faction, infanty, ranged, tank) {
 
 function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
   $(".hex").each(function (index) {
-    if (((posX * cols) + posY) == index) {
+    if (((posY * cols) + posX) == index) {
       this.innerHTML = getSvgForUnits(faction, infantry, ranged, tank);
     }
   });
@@ -147,12 +141,9 @@ function RenderMap(data) {
       this.className += " desert";
   });
 
-  //todo make call to db for units details
-  //drawUnits(cols, 3, 4, "settlers", 1, 1, 1);
-  //drawUnits(cols, 3, 3, "geoEngineers", 0, 0, 1);
-
-  $.when(GetMapUnits()).done(function(units){
-    units.forEach(function(unitSet){
+  // init game pieces
+  $.when(GetMapUnits()).done(function (units) {
+    units.forEach(function (unitSet) {
       drawUnits(cols, unitSet.posX, unitSet.posY, unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
     });
   });

@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose');
 var Games = mongoose.model('Games');
+var Base = mongoose.model('Base');
 var User = mongoose.model('User');
 var utils = require('../../lib/utils');
 var extend = require('util')._extend;
@@ -53,6 +54,8 @@ exports.create = function (req, res) {
   var game = new Games();
   game.name = req.body.gameTitle;
   game.adminUser = req.user._doc.username;
+  game.state.units = Base.getDefaultUnitsSetUp();
+
   game.save(function (err) {
     if (err) {
       if (err.code) {
