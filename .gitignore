@@ -6,5 +6,7 @@ Makefile
 .idea/
 npm-debug.log
 build
-lib/external_tools/.*
+lib/external_tools/chromedriver
+lib/external_tools/selenium-server-standalone-2.46.0.jar
+
 
