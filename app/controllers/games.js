@@ -105,7 +105,14 @@ exports.viewGameLobby = function (req, res) {
   function parseLobbyData(gameDoc) {
     var _usersList = [];
 
-    if (gameDoc["0"]._doc.userList.uuids.length >= 6) {
+    if(!gameDoc["0"]._doc){
+      return res.render('games/dashboard', {
+      error: 'This is not the game you are looking for.. jedi shit',
+      title: 'Unable to join',
+      gameList: {},
+      gamesToJoin: {}
+    });
+    } else if (gameDoc["0"]._doc.userList.uuids.length >= 6) {
       return res.render('games/dashboard', {
         error: 'Too many people in this lobby',
         title: 'Unable to join',
