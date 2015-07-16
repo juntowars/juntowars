@@ -37,13 +37,13 @@ module.exports = function (app, passport) {
   app.param('userId', users.load);
 
   app.get('/getBaseBoard', base.getMap);
+  app.get('/getMapUnits/:game', games.getMapUnits);
   app.get('/games', games.index);
   app.get('/games/user/:userId', auth.requiresLogin, games.dashboard);
   app.post('/games/user/:userId', auth.requiresLogin, games.create);
   app.get('/games/view/:gameName', auth.requiresLogin, games.viewGame);
   app.get('/games/lobby/:gameName', auth.requiresLogin, games.viewGameLobby);
   app.get('/games/:id', games.show);
-  app.get('/games/:id/edit', gamesAuth, games.edit);
   app.put('/games/:id', gamesAuth, games.update);
   app.delete('/games/:id', gamesAuth, games.destroy);
 
@@ -69,10 +69,10 @@ module.exports = function (app, passport) {
   });
 
   // assume 404 since no middleware responded
-  app.use(function (req, res, next) {
+  app.use(function (req, res) {
     res.status(404).render('404', {
       url: req.originalUrl,
       error: 'Not found'
     });
   });
-}
+};

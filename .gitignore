@@ -6,3 +6,5 @@ Makefile
 .idea/
 npm-debug.log
 build
+lib/external_tools/.*
+

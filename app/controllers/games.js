@@ -78,8 +78,9 @@ function buildDashboard(req, res) {
   function doRender(gameList, gamesToJoin) {
     res.render('games/dashboard', {gameList: gameList, gamesToJoin: gamesToJoin});
   }
+
   function getOpenGames(req, gameList) {
-      Games.getOpenGamesList(req.user._doc.username, gameList, doRender);
+    Games.getOpenGamesList(req.user._doc.username, gameList, doRender);
   }
 
   Games.getUsersGamesList(req, getOpenGames);
@@ -108,7 +109,7 @@ exports.viewGameLobby = function (req, res) {
         gameList: {},
         gamesToJoin: {}
       });
-    }else{
+    } else {
       gameDoc["0"]._doc.userList.uuids.forEach(function (uuid) {
         _usersList.push(uuid);
       });
@@ -125,10 +126,13 @@ exports.viewGameLobby = function (req, res) {
  * Edit an Games
  */
 
-exports.edit = function (req, res) {
-  res.render('games/edit', {
-    title: 'Edit ' + req.Games.title,
-    Games: req.Games
+exports.getMapUnits = function (req, res) {
+  var gameName = req.url.replace("/getMapUnits/","");
+  var _query = Games.find({"name" : gameName},{"state.units" :1});
+  _query.exec(function (err, data) {
+    if (err) return console.log("EROROROROROR " + err);
+    res.setHeader("Content-Type", 'application/jsonp');
+    res.jsonp(data[0].state.units);
   });
 };
 
@@ -177,7 +181,7 @@ exports.show = function (req, res) {
 
 exports.destroy = function (req, res) {
   var Games = req.Games;
-  Games.remove(function (err) {
+  Games.remove(function () {
     req.flash('info', 'Deleted successfully');
     res.redirect('/games');
   });

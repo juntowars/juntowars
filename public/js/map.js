@@ -11,6 +11,20 @@ function GetMap() {
   });
 }
 
+function GetMapUnits() {
+  var gameName =  window.location.pathname.replace(/.*\//, '');
+  return $.ajax({
+    type: 'GET',
+    url: location.origin + '/getMapUnits/'+gameName,
+    dataType: 'json',
+    success: function (data) {
+      console.log("JSON Data: " + data);
+    },
+    data: {},
+    async: true
+  });
+}
+
 function getFactionsColour(faction) {
   var geoEngineers = "yellow";
   var settlers = "red";
@@ -49,7 +63,7 @@ function displayRangedUnits(unitColour, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var infantrySvgOpen = '<g> <polygon points="60,5 40,40 80,40"stroke="black" stroke-width="1" fill="';
+    var infantrySvgOpen = '<g> <polygon points="60,5 40,40 80,40" stroke="black" stroke-width="1" fill="';
     var infantrySvgClose = '"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
     return infantrySvgOpen + unitColour + infantrySvgClose;
   }
@@ -134,8 +148,15 @@ function RenderMap(data) {
   });
 
   //todo make call to db for units details
-  drawUnits(cols, 3, 4, "settlers", 1, 1, 1);
-  drawUnits(cols, 3, 3, "geoEngineers", 0, 0, 1);
+  //drawUnits(cols, 3, 4, "settlers", 1, 1, 1);
+  //drawUnits(cols, 3, 3, "geoEngineers", 0, 0, 1);
+
+  $.when(GetMapUnits()).done(function(units){
+    units.forEach(function(unitSet){
+      drawUnits(cols, unitSet.posX, unitSet.posY, unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
+    });
+  });
+
 }
 
 
