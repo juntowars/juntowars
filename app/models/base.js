@@ -24,13 +24,20 @@ BaseSchema.statics = {
         "race" : "kingdomWatchers",
         "infantry" : 1,
         "ranged" : 1,
-        "tanks" : 3
+        "tanks" : 1
+      },
+      { "posX" : 4,
+        "posY" : 2,
+        "race" : "kingdomWatchers",
+        "infantry" : 2,
+        "ranged" : 2,
+        "tanks" : 4
       },
       {
         "posX" : 4,
         "posY" : 7,
         "race" : "periplaneta",
-        "infantry" : 2,
+        "infantry" : 1,
         "ranged" : 2,
         "tanks" : 1
       },
@@ -38,7 +45,7 @@ BaseSchema.statics = {
         "posX" : 20,
         "posY" : 2,
         "race" : "settlers",
-        "infantry" : 2,
+        "infantry" : 1,
         "ranged" : 3,
         "tanks" : 1
       },
@@ -46,7 +53,7 @@ BaseSchema.statics = {
         "posX" : 21,
         "posY" : 7,
         "race" : "geoEngineers",
-        "infantry" : 2,
+        "infantry" : 1,
         "ranged" : 4,
         "tanks" : 1
       },
@@ -54,7 +61,7 @@ BaseSchema.statics = {
         "posX" : 1,
         "posY" : 16,
         "race" : "reduviidae",
-        "infantry" : 2,
+        "infantry" : 1,
         "ranged" : 5,
         "tanks" : 1
       },
@@ -62,7 +69,7 @@ BaseSchema.statics = {
         "posX" : 8,
         "posY" : 11,
         "race" : "guardians",
-        "infantry" : 2,
+        "infantry" : 1,
         "ranged" : 6,
         "tanks" : 1
       }

@@ -43,6 +43,19 @@ function getFactionsColour(faction) {
   }
 }
 
+function getMenu(index) {
+  return '<nav class="menu" >\
+            <input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>\
+            <label class="menu-open-button" for="menu-open' + index + '">\
+            <i class="fa fa-plus-circle"></i>\
+            </label>\
+            <a href="#" class="menu-item"> <i class="fa fa-arrow-right"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-shield"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-bug"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-cog"></i> </a>\
+          </nav>';
+}
+
 function displayInfantryUnits(unitColour, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
@@ -81,7 +94,7 @@ function getSvgForUnits(faction, infanty, ranged, tank) {
 function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
   $(".hex").each(function (index) {
     if (((posY * cols) + posX) == index) {
-      this.innerHTML = getSvgForUnits(faction, infantry, ranged, tank);
+      this.innerHTML = getMenu(index) + getSvgForUnits(faction, infantry, ranged, tank);
     }
   });
 }
