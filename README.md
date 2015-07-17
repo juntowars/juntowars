@@ -16,19 +16,22 @@
     - npm install
 	
     - npm start
+
+## Testing
+ 
+   - Juntowars uses Nightwatch.js as it's main testing tool.
+     
+   - The configuration for tests are defined in nightwatch.json
+     
+   - Before starting tests mongod must be running
     
 ## To run the tests:
-
- Juntowars uses Nightwatch.js as it's main testing tool.
     
-    - The configuration for tests are defined in nightwatch.json
+    - npm run test_env  
     
-    - Before starting tests mongod must be running
+    - npm test 
     
-    ..* In terminal, type the command _npm_ _run_ _test_env_ to start the test server
-    ..* Then in another window type _npm_ _test_ 
-  
-    - When the tests are finished run _npm_ _run_ _stop_ to kill the mongod instance or _ctrl+c_ where the mongod instance is running
+    - npm run stop 
 
 That's it you should be good to go:
     
