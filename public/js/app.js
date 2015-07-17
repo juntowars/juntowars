@@ -3,92 +3,41 @@ window.onload = function () {
     $(this).toggleClass("down");
   });
 
-  $(document).on('click', '.move-action', function () {
-
-    $(this).parent().parent()
+  function lockInAction (element,icon){
+    element.parent().parent()
     .find('.action-display')
-    .addClass('fa-arrow-right')
+    .addClass(icon)
     .removeClass('fa-plus')
     .toggleClass("down")
     .removeClass('rotate');
 
-    $(this).parent().parent()
+    element.parent().parent()
     .find(".menu-open")
     .prop('checked', false)
     .prop("disabled", true);
 
-    $(this).parent().parent()
+    element.parent().parent()
     .find(".menu-item")
     .css("background", "green");
 
-    $(this).parent().parent()
+    element.parent().parent()
     .find(".menu-open-button")
     .css("background", "green");
+  }
+
+  $(document).on('click', '.move-action', function () {
+    lockInAction ( $(this) ,'fa-arrow-right');
   });
 
   $(document).on('click', '.defence-action', function () {
-    $(this).parent().parent()
-    .find('.action-display')
-    .addClass('fa-shield')
-    .removeClass('fa-plus')
-    .toggleClass("down")
-    .removeClass('rotate');
-
-    $(this).parent().parent()
-    .find(".menu-open")
-    .prop('checked', false)
-    .prop("disabled", true);
-
-    $(this).parent().parent()
-    .find(".menu-item")
-    .css("background", "green");
-
-    $(this).parent().parent()
-    .find(".menu-open-button")
-    .css("background", "green");
+    lockInAction ( $(this) ,'fa-shield');
   });
 
   $(document).on('click', '.recruit-action', function () {
-    $(this).parent().parent()
-    .find('.action-display')
-    .addClass('fa-bug')
-    .removeClass('fa-plus')
-    .toggleClass("down")
-    .removeClass('rotate');
-
-    $(this).parent().parent()
-    .find(".menu-open")
-    .prop('checked', false)
-    .prop("disabled", true);
-
-    $(this).parent().parent()
-    .find(".menu-item")
-    .css("background", "green");
-
-    $(this).parent().parent()
-    .find(".menu-open-button")
-    .css("background", "green");
+    lockInAction ( $(this) ,'fa-bug');
   });
 
   $(document).on('click', '.harvest-action', function () {
-    $(this).parent().parent()
-    .find('.action-display')
-    .addClass('fa-cog')
-    .removeClass('fa-plus')
-    .toggleClass("down")
-    .removeClass('rotate');
-
-    $(this).parent().parent()
-    .find(".menu-open")
-    .prop('checked', false)
-    .prop("disabled", true);
-
-    $(this).parent().parent()
-    .find(".menu-item")
-    .css("background", "green");
-
-    $(this).parent().parent()
-    .find(".menu-open-button")
-    .css("background", "green");
+    lockInAction ( $(this) ,'fa-cog');
   });
 };
