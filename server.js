@@ -7,6 +7,10 @@ var express = require('express');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var config = require('./config/config');
+var winston = require('winston');
+
+winston.add(winston.transports.File, { filename: 'junto_server.log' });
+winston.remove(winston.transports.Console);
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -40,7 +44,7 @@ require('./config/routes')(app, passport);
 var io = require('socket.io').listen(app.listen(port));
 require('./config/socket')(io);
 
-console.log('Express app started on port ' + port);
+winston.info('Express app started on port ' + port);
 
 /**
  * Expose

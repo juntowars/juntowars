@@ -2,6 +2,7 @@ var users = require('../app/controllers/users');
 var games = require('../app/controllers/games');
 var base = require('../app/controllers/base');
 var mongoose = require('mongoose');
+var winston = require('winston');
 var Games = mongoose.model('Games');
 
 module.exports = function (io) {
@@ -45,7 +46,7 @@ module.exports = function (io) {
           io.sockets.in(room).emit('message', {message: message_text});
       }
 
-      console.log(user + " is in room " + room);
+      winston.log(user + " is in room " + room);
       Games.addUserToList(room, user, socket, joinRoom );
       socket.user = user;
     });
@@ -76,7 +77,7 @@ module.exports = function (io) {
 
     //In game socket methods
     socket.on('gameStart', function (room, user) {
-      console.log(user + " is in game: " + room);
+      winston.log(user + " is in game: " + room);
       socket.user = user;
     });
   });

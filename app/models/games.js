@@ -4,6 +4,7 @@
 
 var mongoose = require('mongoose');
 var Promise = require("bluebird");
+var winston = require('winston');
 var Schema = mongoose.Schema;
 
 /**
@@ -81,7 +82,7 @@ GamesSchema.statics = {
   getPlayersReadyStatus: function(gameName,cb){
     var currentLobbyStatus = [];
     staticGames.find({"name" : gameName },{"lobby.playerStatus":1,"_id":0}, function(error, playerStatus){
-      if (error) return console.log(error);
+      if (error) return winston.error(error);
       playerStatus.forEach(function(status){
         currentLobbyStatus.push(status._doc.lobby.playerStatus)
       });
@@ -124,12 +125,12 @@ GamesSchema.statics = {
           gameObject.userList.uuids.push(user);
           gameObject.lobby.playerStatus.push({uuid:user});
           gameDoc[0].save(function (err) {
-            if (err) console.log("An error has occurred: " + err);
+            if (err) winston.info("An error has occurred: " + err);
             callback(gameName);
           });
         }
       } else {
-        console.log("An error has occurred. Lobby not available.");
+        winston.error("An error has occurred. Lobby not available.");
       }
     });
   },

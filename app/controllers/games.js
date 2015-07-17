@@ -7,6 +7,8 @@ var Base = mongoose.model('Base');
 var User = mongoose.model('User');
 var utils = require('../../lib/utils');
 var extend = require('util')._extend;
+var winston = require('winston');
+
 
 /**
  * Load
@@ -91,7 +93,7 @@ function buildDashboard(req, res) {
 
 exports.viewGame = function (req, res) {
   var gameTitle = req.url.replace("/games/view/", "");
-  console.log("Viewing gameTitle: " + gameTitle);
+  winston.info("Viewing gameTitle: " + gameTitle);
   Games.getGameByTitle(req.user._doc.username, gameTitle, doRender);
   function doRender(gameDoc) {
     res.render('games/viewGame', {gameList: gameDoc});
@@ -140,7 +142,7 @@ exports.getMapUnits = function (req, res) {
   var gameName = req.url.replace("/getMapUnits/","");
   var _query = Games.find({"name" : gameName},{"state.units" :1});
   _query.exec(function (err, data) {
-    if (err) return console.log("EROROROROROR " + err);
+    if (err) return winston.info("getMapUnits failed with: " + err);
     res.setHeader("Content-Type", 'application/jsonp');
     res.jsonp(data[0].state.units);
   });

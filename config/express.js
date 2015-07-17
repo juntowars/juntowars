@@ -16,7 +16,6 @@ var swig = require('swig');
 
 var mongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
-var winston = require('winston');
 var helpers = require('view-helpers');
 var config = require('./config');
 var pkg = require('../package.json');
@@ -37,24 +36,6 @@ module.exports = function (app, passport) {
 
     // Static files middleware
     app.use(express.static(config.root + '/public'));
-
-    // Use winston on production
-    var log;
-    if (env !== 'development') {
-        log = {
-            stream: {
-                write: function (message, encoding) {
-                    winston.info(message);
-                }
-            }
-        };
-    } else {
-        log = 'dev';
-    }
-
-    // Don't log during tests
-    // Logging middleware
-    if (env !== 'test') app.use(morgan(log));
 
     // Swig templating engine settings
     if (env === 'development' || env === 'test') {

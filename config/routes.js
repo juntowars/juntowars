@@ -10,6 +10,7 @@ var games = require('../app/controllers/games');
 var base = require('../app/controllers/base');
 var status = require('../app/controllers/status');
 var auth = require('./middlewares/authorization');
+var winston = require('winston');
 
 /**
  * Route middlewares
@@ -63,7 +64,7 @@ module.exports = function (app, passport) {
     || (~err.message.indexOf('Cast to ObjectId failed')))) {
       return next();
     }
-    console.error(err.stack);
+    winston.error(err.stack);
     // error page
     res.status(500).render('500', {error: err.stack});
   });
