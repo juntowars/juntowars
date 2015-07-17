@@ -273,8 +273,6 @@ a {
     background: #8bc34a;
     color: white;
     text-align: center;
-    -webkit-filter: url("#goo");
-    filter: url("#goo");
 }
 
 .menu-item, .menu-open-button {
@@ -358,4 +356,14 @@ a {
     transition-duration: 480ms;
     -webkit-transform: translate3d(-40px, 25px, 0);
     transform: translate3d(-40px, 25px, 0);
+}
+
+.rotate{
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.5s linear;
+}
+
+.rotate.down{
+    -webkit-transform:rotate(180deg);
+    transform:rotate(180deg);
 }

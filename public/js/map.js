@@ -47,12 +47,12 @@ function getMenu(index) {
   return '<nav class="menu" >\
             <input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>\
             <label class="menu-open-button" for="menu-open' + index + '">\
-            <i class="fa fa-plus-circle"></i>\
+            <i class="fa fa-plus rotate action-display" ></i>\
             </label>\
-            <a href="#" class="menu-item"> <i class="fa fa-arrow-right"></i> </a>\
-            <a href="#" class="menu-item"> <i class="fa fa-shield"></i> </a>\
-            <a href="#" class="menu-item"> <i class="fa fa-bug"></i> </a>\
-            <a href="#" class="menu-item"> <i class="fa fa-cog"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-arrow-right move-action"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-shield defence-action"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-bug recruit-action"></i> </a>\
+            <a href="#" class="menu-item"> <i class="fa fa-cog harvest-action"></i> </a>\
           </nav>';
 }
 
