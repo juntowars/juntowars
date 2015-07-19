@@ -1,51 +1,47 @@
-window.onload = function () {
-  $(document).on('click', '.rotate', function () {
-    $(this).toggleClass("down");
-  });
+function lockInAction(element, icon) {
+  var middleIcon = element.parentElement.getElementsByClassName('action-display')[0];
+  middleIcon.classList.add(icon);
+  middleIcon.classList.remove('fa-plus');
 
-  function lockInAction(element, icon) {
-    element.parent().parent()
-    .find('.action-display')
-    .addClass(icon)
-    .removeClass('fa-plus')
-    .toggleClass("down")
-    .removeClass('rotate');
+  var checkBox = element.parentElement.getElementsByClassName('menu-open')[0];
+  checkBox.disabled = true;
+  checkBox.checked = false;
 
-    element.parent().parent()
-    .find(".menu-open")
-    .prop('checked', false)
-    .prop("disabled", true);
+  var menuOpenButton = element.parentElement.getElementsByClassName('menu-open-button')[0];
+  menuOpenButton.style.background = "green";
 
-    element.parent().parent()
-    .find(".menu-item")
-    .css("background", "green");
+  scrollToNextAction();
+}
 
-    element.parent().parent()
-    .find(".menu-open-button")
-    .css("background", "green");
+function highlightMoveOptions(index, turnOn) {
+  var opacitySetting = turnOn ? 0.5 : 1;
+  var allTileElements = document.getElementsByClassName('hex');
+  var neighbouringTiles = index % 2 ? [-1, +1, -24, 23, 24, 25] : [-1, +1, -23, -24, -25, 24];
 
-    scrollToNextAction();
+  for (var i = 0; i < neighbouringTiles.length; i++) {
+    var hex = allTileElements[index + neighbouringTiles[i]];
+    if (hex.className != "hex water") hex.style.opacity = opacitySetting;
   }
+}
 
-  $(document).on('click', '.move-action', function () {
-    lockInAction($(this), 'fa-arrow-right');
-  });
+function scrollToNextAction() {
 
-  $(document).on('click', '.defence-action', function () {
-    lockInAction($(this), 'fa-shield');
-  });
+  //todo find non jquery scroller
+  var map = $('#map');
+  var actionsToSet = $('.fa-plus');
 
-  $(document).on('click', '.recruit-action', function () {
-    lockInAction($(this), 'fa-bug');
-  });
+  if (actionsToSet.length > 0) {
+    map.scrollTo(actionsToSet, {duration: 1000, axis: 'xy', offset: -150});
+  } else {
 
-  $(document).on('click', '.harvest-action', function () {
-    lockInAction($(this), 'fa-cog');
-  });
+    var movementAction = document.getElementsByClassName('fa-arrow-right')[0];
+    map.scrollTo(movementAction, {duration: 1000, offset: -150});
 
-  function scrollToNextAction() {
-    if ($('.fa-plus').length > 0) {
-      $('#map').scrollTo($('.fa-plus'), {duration: 1000, axis: 'xy', offset: -150});
-    }
+    var activeTileInputTag = movementAction.parentElement.parentElement.getElementsByTagName('input')[0];
+    var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
+
+    movementAction.parentElement.style.background = 'orange';
+    highlightMoveOptions(index, true);
+    //var unitsToMove = movementAction.parentElement.parentElement.parentElement.getElementsByTagName('g');
   }
-};
+}

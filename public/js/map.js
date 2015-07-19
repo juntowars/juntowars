@@ -49,10 +49,10 @@ function getMenu(index) {
             <label class="menu-open-button" for="menu-open' + index + '">\
             <i class="fa fa-plus rotate action-display" ></i>\
             </label>\
-            <a href="#" class="menu-item"> <i class="fa fa-arrow-right move-action"></i> </a>\
-            <a href="#" class="menu-item"> <i class="fa fa-shield defence-action"></i> </a>\
-            <a href="#" class="menu-item"> <i class="fa fa-bug recruit-action"></i> </a>\
-            <a href="#" class="menu-item"> <i class="fa fa-cog harvest-action"></i> </a>\
+            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\')"> <i class="fa fa-arrow-right move-action"></i> </a>\
+            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\')"> <i class="fa fa-shield defence-action"></i> </a>\
+            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\')"> <i class="fa fa-bug recruit-action"></i> </a>\
+            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\')"> <i class="fa fa-cog harvest-action"></i> </a>\
           </nav>';
 }
 
@@ -60,9 +60,9 @@ function displayInfantryUnits(unitColour, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" stroke="black" stroke-width="1" fill="';
+    var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" stroke="black" id="inf" stroke-width="1" fill="';
     var infantrySvgClose = '"></circle><text x="25" y="65" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
-    return infantrySvgOpen + unitColour + infantrySvgClose;
+    return [infantrySvgOpen , unitColour , infantrySvgClose].join('');
   }
 }
 
