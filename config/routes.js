@@ -11,6 +11,7 @@ var base = require('../app/controllers/base');
 var status = require('../app/controllers/status');
 var auth = require('./middlewares/authorization');
 var winston = require('winston');
+var favicon = require('serve-favicon');
 
 /**
  * Route middlewares
@@ -50,8 +51,10 @@ module.exports = function (app, passport) {
 
   // home route
   app.get('/', games.index);
-
   app.get('/status', status.getStatus);
+
+  //favicon.ico
+  app.use(favicon(__dirname + '/../public/img/favicon.ico'));
 
   /**
    * Error handling
