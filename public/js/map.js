@@ -70,9 +70,9 @@ function displayRangedUnits(unitColour, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var infantrySvgOpen = '<g> <polygon points="60,5 40,40 80,40" stroke="black" stroke-width="1" fill="';
-    var infantrySvgClose = '"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
-    return infantrySvgOpen + unitColour + infantrySvgClose;
+    var rangedSvgOpen = '<g><polygon points="60,5 40,40 80,40" stroke="black" stroke-width="1" fill="';
+    var rangedSvgClose = '"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
+    return [rangedSvgOpen , unitColour , rangedSvgClose].join('');
   }
 }
 
@@ -82,7 +82,7 @@ function displayTankUnits(unitColour, numberOfUnits) {
   } else {
     var svgOpen = '<g><rect x="50" y="50" width="40" height="40" style="fill:';
     var svgClose = ';stroke:black;stroke-width:1;" /><text x="60" y="75" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text> </g>';
-    return svgOpen + unitColour + svgClose;
+    return [svgOpen , unitColour , svgClose].join('');
   }
 }
 

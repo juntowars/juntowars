@@ -20,13 +20,40 @@ function highlightMoveOptions(index, turnOn) {
 
   for (var i = 0; i < neighbouringTiles.length; i++) {
     var hex = allTileElements[index + neighbouringTiles[i]];
-    if (hex.className != "hex water") hex.style.opacity = opacitySetting;
+    if (hex.className != "hex water") {
+      hex.style.opacity = opacitySetting;
+
+      hex.onclick = function () {
+        var movementAction = document.getElementsByClassName('fa-arrow-right')[0];
+        var parentHex = movementAction.parentElement.parentElement.parentElement;
+
+        //Find selected svg elements
+        var svgInParentHex = parentHex.childNodes[1];
+        var selectedUnitsShapes = svgInParentHex.getElementsByClassName('selected');
+
+        //Add selected elements into an array
+        var newHexElements = [];
+
+        // todo Some sort of mental bug - picking it up on the morrow
+        for (var i = 0; i < selectedUnitsShapes.length; i++) {
+          var shapeToMove = selectedUnitsShapes[i];
+          newHexElements.push(shapeToMove.parentElement.outerHTML);
+          svgInParentHex.removeChild(shapeToMove.parentElement);
+        }
+
+        //Wrap elements in SVG rapper
+        var selectedWrappedSvgArray = ["<svg height='100' width='100'>"].concat(newHexElements).concat(["</svg>"]);
+
+        //Update Clicked tile
+        this.innerHTML = selectedWrappedSvgArray.join("");
+      }
+    }
   }
 }
 
 function scrollToNextAction() {
 
-  //todo find non jquery scroller
+  //todo find non-jquery scroller
   var map = $('#map');
   var actionsToSet = $('.fa-plus');
 
@@ -35,13 +62,29 @@ function scrollToNextAction() {
   } else {
 
     var movementAction = document.getElementsByClassName('fa-arrow-right')[0];
-    map.scrollTo(movementAction, {duration: 1000, offset: -150});
-
     var activeTileInputTag = movementAction.parentElement.parentElement.getElementsByTagName('input')[0];
     var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
 
+    map.scrollTo(movementAction, {duration: 1000, offset: -150});
     movementAction.parentElement.style.background = 'orange';
     highlightMoveOptions(index, true);
-    //var unitsToMove = movementAction.parentElement.parentElement.parentElement.getElementsByTagName('g');
+
+    var unitList = movementAction
+    .parentElement
+    .parentElement
+    .parentElement
+    .getElementsByTagName('g');
+
+    for (var i = 0; i < unitList.length; i++) {
+      var shape;
+      var svgElement = unitList[i];
+      svgElement.onclick = function () {
+        shape = this.childNodes[0];
+        shape.style.fill = "#33CCFF";
+        shape.style.stroke = "white";
+        shape.classList.add("selected");
+      };
+    }
+
   }
 }
