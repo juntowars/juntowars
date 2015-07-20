@@ -38,13 +38,6 @@
     display: none;
 }
 
-/*#subStatusBarToggle {*/
-/*padding: 5px;*/
-/*text-align: center;*/
-/*background-color: #e5eecc;*/
-/*border: solid 1px #c3c3c3;*/
-/*}*/
-
 /* Board hexes. */
 .hex {
     float: left;
@@ -56,6 +49,35 @@
 
 .hex:hover {
     -webkit-filter: drop-shadow(0 0 5px orange);
+}
+
+.settlers{
+    fill : #00FFCC;
+    stroke : black;
+}
+.geoEngineers{
+    fill : #00CCFF;
+    stroke : black;
+}
+.kingdomWatchers{
+    fill : #CCCC00;
+    stroke : black;
+}
+.periplaneta{
+    fill : #FF9933;
+    stroke : black;
+}
+.reduviidae{
+    fill : #FF5050;
+    stroke : black;
+}
+.guardians{
+    fill : #6666FF;
+    stroke : black;
+}
+.selected {
+    fill : #33CCFF;
+    stroke : white;
 }
 
 /* Map rows. */

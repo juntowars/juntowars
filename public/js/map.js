@@ -19,76 +19,55 @@ function GetMapUnits() {
   });
 }
 
-function getFactionsColour(faction) {
-  var geoEngineers = "#00CCFF";
-  var settlers = "#00FFCC";
-  var kingdomWatchers = "#CCCC00";
-  var periplaneta = "#FF9933";
-  var reduviidae = "#FF5050";
-  var guardians = "#6666FF";
-
-  switch (faction) {
-    case "settlers":
-      return settlers;
-    case "geoEngineers":
-      return geoEngineers;
-    case "kingdomWatchers":
-      return kingdomWatchers;
-    case "periplaneta":
-      return periplaneta;
-    case "reduviidae":
-      return reduviidae;
-    case "guardians":
-      return guardians;
-  }
-}
-
 function getMenu(index) {
-  return '<nav class="menu" >\
-            <input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>\
-            <label class="menu-open-button" for="menu-open' + index + '">\
-            <i class="fa fa-plus rotate action-display" ></i>\
-            </label>\
-            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\')"> <i class="fa fa-arrow-right move-action"></i> </a>\
-            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\')"> <i class="fa fa-shield defence-action"></i> </a>\
-            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\')"> <i class="fa fa-bug recruit-action"></i> </a>\
-            <a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\')"> <i class="fa fa-cog harvest-action"></i> </a>\
-          </nav>';
+  return ['<nav class="menu" >',
+    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+    '<label class="menu-open-button" for="menu-open' + index + '">',
+    '<i class="fa fa-plus rotate action-display" ></i>',
+    '</label>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\')"> <i class="fa fa-arrow-right move-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\')"> <i class="fa fa-shield defence-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\')"> <i class="fa fa-bug recruit-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\')"> <i class="fa fa-cog harvest-action"></i> </a>',
+    '</nav>'].join("");
 }
 
-function displayInfantryUnits(unitColour, numberOfUnits) {
+function displayInfantryUnits(race, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" stroke="black" id="inf" stroke-width="1" fill="';
+    var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" id="inf" class="';
     var infantrySvgClose = '"></circle><text x="25" y="65" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
-    return [infantrySvgOpen , unitColour , infantrySvgClose].join('');
+    return [infantrySvgOpen , race , infantrySvgClose].join('');
   }
 }
 
-function displayRangedUnits(unitColour, numberOfUnits) {
+function displayRangedUnits(race, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var rangedSvgOpen = '<g><polygon points="60,5 40,40 80,40" stroke="black" stroke-width="1" fill="';
+    var rangedSvgOpen = '<g><polygon points="60,5 40,40 80,40" class="';
     var rangedSvgClose = '"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
-    return [rangedSvgOpen , unitColour , rangedSvgClose].join('');
+    return [rangedSvgOpen , race , rangedSvgClose].join('');
   }
 }
 
-function displayTankUnits(unitColour, numberOfUnits) {
+function displayTankUnits(race, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var svgOpen = '<g><rect x="50" y="50" width="40" height="40" style="fill:';
-    var svgClose = ';stroke:black;stroke-width:1;" /><text x="60" y="75" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text> </g>';
-    return [svgOpen , unitColour , svgClose].join('');
+    var svgOpen = '<g><rect x="50" y="50" width="40" height="40" class="';
+    var svgClose = '" /><text x="60" y="75" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text> </g>';
+    return [svgOpen , race , svgClose].join('');
   }
 }
 
-function getSvgForUnits(faction, infanty, ranged, tank) {
-  var unitColour = getFactionsColour(faction);
-  return '<svg height="100" width="100">' + displayInfantryUnits(unitColour, infanty) + displayRangedUnits(unitColour, ranged) + displayTankUnits(unitColour, tank) + '</svg>';
+function getSvgForUnits(faction, infantry, ranged, tank) {
+  return ['<svg height="100" width="100">',
+    displayInfantryUnits(faction, infantry),
+    displayRangedUnits(faction, ranged),
+    displayTankUnits(faction, tank),
+    '</svg>'].join("");
 }
 
 function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
@@ -122,7 +101,7 @@ function RenderMap(data) {
 // Generate a row of hexes as html.
   var rowHtml = "<div>";
   for (var i = 0; i < cols; i++)
-    rowHtml += '<div class="hex"></div>';
+    rowHtml += '<div class="hex"><svg height="100" width="100"></svg></div>';
   rowHtml += "</div>";
 
 // Main map html.

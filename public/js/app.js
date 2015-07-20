@@ -13,6 +13,25 @@ function lockInAction(element, icon) {
   scrollToNextAction();
 }
 
+function moveSelectUnits() {
+  var movementAction = document.getElementsByClassName('ACTIVE')[0];
+  var parentHex = movementAction.parentElement.parentElement;
+  var selectedUnitsShapes = parentHex.childNodes[1].getElementsByClassName('selected');
+
+  //todo handle merging units
+  //todo fix moving units into previously active space
+
+  while (selectedUnitsShapes.length > 0) {
+    var shapeToMove = selectedUnitsShapes[0];
+    shapeToMove.classList.remove('selected');
+
+    shapeToMove.parentElement.onclick = null;
+    shapeToMove.parentElement.removeAttribute("onclick");
+
+    this.childNodes[0].appendChild(shapeToMove.parentElement);
+  }
+}
+
 function highlightMoveOptions(index, turnOn) {
   var opacitySetting = turnOn ? 0.5 : 1;
   var allTileElements = document.getElementsByClassName('hex');
@@ -22,69 +41,67 @@ function highlightMoveOptions(index, turnOn) {
     var hex = allTileElements[index + neighbouringTiles[i]];
     if (hex.className != "hex water") {
       hex.style.opacity = opacitySetting;
-
-      hex.onclick = function () {
-        var movementAction = document.getElementsByClassName('fa-arrow-right')[0];
-        var parentHex = movementAction.parentElement.parentElement.parentElement;
-
-        //Find selected svg elements
-        var svgInParentHex = parentHex.childNodes[1];
-        var selectedUnitsShapes = svgInParentHex.getElementsByClassName('selected');
-
-        //Add selected elements into an array
-        var newHexElements = [];
-
-        // todo Some sort of mental bug - picking it up on the morrow
-        for (var i = 0; i < selectedUnitsShapes.length; i++) {
-          var shapeToMove = selectedUnitsShapes[i];
-          newHexElements.push(shapeToMove.parentElement.outerHTML);
-          svgInParentHex.removeChild(shapeToMove.parentElement);
-        }
-
-        //Wrap elements in SVG rapper
-        var selectedWrappedSvgArray = ["<svg height='100' width='100'>"].concat(newHexElements).concat(["</svg>"]);
-
-        //Update Clicked tile
-        this.innerHTML = selectedWrappedSvgArray.join("");
+      if (turnOn) {
+        hex.onclick = moveSelectUnits;
+      } else {
+        hex.onclick = null;
+        hex.removeAttribute("onclick");
       }
     }
   }
 }
 
+function handleMoveAction(index, movementAction, turnOn) {
+  highlightMoveOptions(index, turnOn);
+  movementAction.parentElement.parentElement.childNodes[0].disbled = turnOn;
+
+  var unitList = movementAction.parentElement.parentElement.getElementsByTagName('g');
+  for (var i = 0; i < unitList.length; i++) {
+    var svgElement = unitList[i];
+    if (turnOn) {
+      svgElement.onclick = markAsSelected;
+    } else {
+      svgElement.onclick = null;
+      svgElement.removeAttribute("onclick");
+    }
+  }
+
+  function markAsSelected(){
+    this.childNodes[0].classList.add("selected");
+  }
+}
+
 function scrollToNextAction() {
 
-  //todo find non-jquery scroller
   var map = $('#map');
   var actionsToSet = $('.fa-plus');
 
   if (actionsToSet.length > 0) {
     map.scrollTo(actionsToSet, {duration: 1000, axis: 'xy', offset: -150});
   } else {
+    //All actions are set, activate all move commands
 
-    var movementAction = document.getElementsByClassName('fa-arrow-right')[0];
-    var activeTileInputTag = movementAction.parentElement.parentElement.getElementsByTagName('input')[0];
-    var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
+    var listOfMoves = document.getElementsByClassName('fa-arrow-right');
 
-    map.scrollTo(movementAction, {duration: 1000, offset: -150});
-    movementAction.parentElement.style.background = 'orange';
-    highlightMoveOptions(index, true);
+    for (var i = 0; i < listOfMoves.length; i++) {
+      var movementAction = listOfMoves[i];
+      movementAction.parentElement.style.background = 'orange';
 
-    var unitList = movementAction
-    .parentElement
-    .parentElement
-    .parentElement
-    .getElementsByTagName('g');
+      movementAction.parentElement.onclick = function () {
 
-    for (var i = 0; i < unitList.length; i++) {
-      var shape;
-      var svgElement = unitList[i];
-      svgElement.onclick = function () {
-        shape = this.childNodes[0];
-        shape.style.fill = "#33CCFF";
-        shape.style.stroke = "white";
-        shape.classList.add("selected");
+        //Mark as active and handle move
+        var activeTileInputTag = this.parentElement.getElementsByTagName('input')[0];
+        var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
+        this.classList.add('ACTIVE');
+        handleMoveAction(index, this, true);
+
+        //End move with second click
+        this.onclick = function () {
+          handleMoveAction(index, this, false);
+          this.style.background = 'grey';
+          this.classList.remove('ACTIVE');
+        }
       };
     }
-
   }
 }
