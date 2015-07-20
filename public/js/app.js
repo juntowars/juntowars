@@ -18,17 +18,45 @@ function moveSelectUnits() {
   var parentHex = movementAction.parentElement.parentElement;
   var selectedUnitsShapes = parentHex.childNodes[1].getElementsByClassName('selected');
 
-  //todo handle merging units
-  //todo fix moving units into previously active space
-
   while (selectedUnitsShapes.length > 0) {
     var shapeToMove = selectedUnitsShapes[0];
     shapeToMove.classList.remove('selected');
-
     shapeToMove.parentElement.onclick = null;
     shapeToMove.parentElement.removeAttribute("onclick");
 
-    this.childNodes[0].appendChild(shapeToMove.parentElement);
+
+    if(this.childNodes.length == 2){
+      //There is units in this tile
+      if(this.childNodes[1].getElementsByTagName(shapeToMove.tagName).length == 1){
+
+        //todo check for enemy and handle battle
+
+        //Handle merging
+        var newForces = parseInt(shapeToMove.parentElement
+        .getElementsByTagName('text')[0]
+        .innerHTML);
+
+        var existingForces = parseInt(this.childNodes[1]
+        .getElementsByTagName(shapeToMove.tagName)[0]
+        .parentElement
+        .getElementsByTagName('text')[0]
+        .innerHTML);
+
+        this.childNodes[1]
+        .getElementsByTagName(shapeToMove.tagName)[0]
+        .parentElement
+        .getElementsByTagName('text')[0]
+        .innerHTML = newForces + existingForces;
+
+        shapeToMove.parentElement.parentElement.removeChild(shapeToMove.parentElement);
+      } else{
+        //Unit type doesn't exit, just append
+        this.childNodes[1].appendChild(shapeToMove.parentElement);
+      }
+    } else {
+      //Empty tile, plough ahead
+      this.childNodes[0].appendChild(shapeToMove.parentElement);
+    }
   }
 }
 
