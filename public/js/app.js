@@ -13,6 +13,11 @@ function lockInAction(element, icon) {
   scrollToNextAction();
 }
 
+function removeOnClickEvent(element){
+  element.onclick = null;
+  element.removeAttribute("onclick");
+}
+
 function moveSelectUnits() {
   var movementAction = document.getElementsByClassName('ACTIVE')[0];
   var parentHex = movementAction.parentElement.parentElement;
@@ -21,9 +26,7 @@ function moveSelectUnits() {
   while (selectedUnitsShapes.length > 0) {
     var shapeToMove = selectedUnitsShapes[0];
     shapeToMove.classList.remove('selected');
-    shapeToMove.parentElement.onclick = null;
-    shapeToMove.parentElement.removeAttribute("onclick");
-
+    removeOnClickEvent(shapeToMove.parentElement);
 
     if(this.childNodes.length == 2){
       //There is units in this tile
@@ -72,8 +75,7 @@ function highlightMoveOptions(index, turnOn) {
       if (turnOn) {
         hex.onclick = moveSelectUnits;
       } else {
-        hex.onclick = null;
-        hex.removeAttribute("onclick");
+        removeOnClickEvent(hex);
       }
     }
   }
@@ -89,8 +91,7 @@ function handleMoveAction(index, movementAction, turnOn) {
     if (turnOn) {
       svgElement.onclick = markAsSelected;
     } else {
-      svgElement.onclick = null;
-      svgElement.removeAttribute("onclick");
+      removeOnClickEvent(svgElement);
     }
   }
 
