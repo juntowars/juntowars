@@ -34,8 +34,8 @@ BaseSchema.statics = {
         "tanks" : 4
       },
       {
-        "posX" : 4,
-        "posY" : 7,
+        "posX" : 5,
+        "posY" : 2,
         "race" : "periplaneta",
         "infantry" : 1,
         "ranged" : 2,
