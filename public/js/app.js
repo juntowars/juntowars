@@ -101,8 +101,7 @@ function enableMoveActions() {
       //End move with second click
       this.onclick = function () {
         handleMoveAction(index, this, false);
-        this.style.background = 'grey';
-        this.classList.remove('ACTIVE');
+        removeActionMenu(this.parentElement);
       }
     };
   }
@@ -113,7 +112,7 @@ function moveSelectUnits() {
   var targetTile = this.childNodes;
 
   if (isBattleMovement(targetTile, selectedUnitsShapesToMove)) {
-    resolveBattleMovement(targetTile[1], selectedUnitsShapesToMove);
+    resolveBattleMovement(targetTile, selectedUnitsShapesToMove);
   } else {
     resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove);
   }
@@ -135,36 +134,38 @@ function getParentsFor(elements) {
   return arrayOfParents;
 }
 
-function resolveBattleMovement(defendingUnits, selectedUnitsShapesToMove) {
+function resolveBattleMovement(targetTile, selectedUnitsShapesToMove) {
 
-  var attackingUnits = selectedUnitsShapesToMove[0].parentElement.parentElement;
-  var arrayOfDefendingUnits = defendingUnits.getElementsByTagName('g');
-  var defStr = calculateStrength(arrayOfDefendingUnits);
-  var atkStr = calculateSelectedStrength(attackingUnits.childNodes);
+  var attackingUnitsSvgElement = selectedUnitsShapesToMove[0].parentElement.parentElement;
+  var defendingUnitsSvgElement = targetTile[0].parentElement.getElementsByTagName('svg')[0];
+
   var arrayOfAttackingUnits = getParentsFor(selectedUnitsShapesToMove);
+  var arrayOfDefendingUnits = defendingUnitsSvgElement.getElementsByTagName('g');
+
+  var defStr = calculateStrength(arrayOfDefendingUnits);
+  var atkStr = calculateSelectedStrength(attackingUnitsSvgElement.childNodes);
 
   if (defStr > atkStr) {
     // defender wins
-    killUnits(arrayOfAttackingUnits, attackingUnits, true, 0);
-    killUnits(arrayOfDefendingUnits, defendingUnits, false, atkStr);
+    killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, true, 0);
+    killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, false, atkStr);
   } else if (defStr < atkStr) {
     // attacker wins
-    killUnits(arrayOfDefendingUnits, defendingUnits, true, 0);
-    var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnits, false, defStr);
+    killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
+    var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
     for (var i = 0; i < unitsToMoveIn.length; i++) {
-      moveToNonHostileTarget(defendingUnits, unitsToMoveIn[i]);
+      moveToNonHostileTarget(defendingUnitsSvgElement, unitsToMoveIn[i]);
       resetUnit(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
     }
 
-    if (defendingUnits.parentElement.childElementCount == 2) {
-      removeActionMenu(defendingUnits.parentElement.childNodes[0]);
+    if (defendingUnitsSvgElement.parentElement.childElementCount == 2) {
+      removeActionMenu(defendingUnitsSvgElement.parentElement.childNodes[0]);
     }
   } else {
     // draw
-    killUnits(arrayOfAttackingUnits, attackingUnits, true, 0);
-    killUnits(arrayOfDefendingUnits, defendingUnits, true, 0);
+    killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, true, 0);
+    killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
   }
-  //add clean up for menu + selected units
 }
 
 function deleteChild(parentTile, unitsToKill) {
@@ -202,15 +203,20 @@ function killUnits(unitsToKill, parentTile, killAll, damageTaken) {
 }
 
 function isBattleMovement(targetTile, selectedUnitsShapesToMove) {
-
   if (selectedUnitsShapesToMove.length == 0) {
     return false;
-  } else if (tileHasUnits(targetTile)) {
-    var localRace = targetTile[1].childNodes[0].childNodes[0].classList[0];
-    var invaderRace = selectedUnitsShapesToMove[0].classList[0];
-    return (invaderRace != localRace);
+  } else if (tileHasUnits(targetTile[0])) {
+    return (getRaceOfUnit(selectedUnitsShapesToMove) != getUnitsRaceInTargetTile(targetTile));
   }
   return false;
+}
+
+function getUnitsRaceInTargetTile(targetTile) {
+  return targetTile[0].parentElement.getElementsByTagName('g')[0].childNodes[0].classList[0];
+}
+
+function getRaceOfUnit(selectedUnitsShapesToMove) {
+  return selectedUnitsShapesToMove[0].classList[0];
 }
 
 function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
@@ -218,7 +224,7 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
     var shapeToMove = selectedUnitsShapesToMove[0];
     resetUnit(shapeToMove);
 
-    if (tileHasUnits(targetTile)) {
+    if (tileHasUnits(targetTile[0])) {
       if (unitMergeRequired(targetTile[1], shapeToMove)) {
         mergeUnits(shapeToMove, targetTile[1]);
       } else {
@@ -273,6 +279,7 @@ function unitMergeRequired(tile, shapeToMove) {
   return (tile.getElementsByTagName(shapeToMove.tagName).length == 1);
 }
 
-function tileHasUnits(tile) {
-  return (tile.length == 2);
+function tileHasUnits(tileElement) {
+  console.log("in tileHasUnits")
+  return (tileElement.parentElement.getElementsByTagName('g').length > 0);
 }
