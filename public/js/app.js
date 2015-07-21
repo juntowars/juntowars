@@ -155,6 +155,10 @@ function resolveBattleMovement(defendingUnits, selectedUnitsShapesToMove) {
       moveToNonHostileTarget(defendingUnits, unitsToMoveIn[i]);
       resetUnit(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
     }
+
+    if (defendingUnits.parentElement.childElementCount == 2) {
+      removeActionMenu(defendingUnits.parentElement.childNodes[0]);
+    }
   } else {
     // draw
     killUnits(arrayOfAttackingUnits, attackingUnits, true, 0);
