@@ -136,6 +136,7 @@ function getParentsFor(elements) {
 }
 
 function resolveBattleMovement(defendingUnits, selectedUnitsShapesToMove) {
+
   var attackingUnits = selectedUnitsShapesToMove[0].parentElement.parentElement;
   var arrayOfDefendingUnits = defendingUnits.getElementsByTagName('g');
   var defStr = calculateStrength(arrayOfDefendingUnits);
@@ -150,18 +151,16 @@ function resolveBattleMovement(defendingUnits, selectedUnitsShapesToMove) {
     // attacker wins
     killUnits(arrayOfDefendingUnits, defendingUnits, true, 0);
     var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnits, false, defStr);
-    for(var i =0;i<unitsToMoveIn.length;i++){
+    for (var i = 0; i < unitsToMoveIn.length; i++) {
       moveToNonHostileTarget(defendingUnits, unitsToMoveIn[i]);
+      resetUnit(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
     }
   } else {
     // draw
     killUnits(arrayOfAttackingUnits, attackingUnits, true, 0);
     killUnits(arrayOfDefendingUnits, defendingUnits, true, 0);
   }
-
   //add clean up for menu + selected units
-
-
 }
 
 function deleteChild(parentTile, unitsToKill) {
@@ -230,13 +229,13 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
 function moveToNonHostileTarget(target, unit) {
   var oldTileUnits = unit.parentElement;
   target.appendChild(unit);
-  if(oldTileUnits.childElementCount == 0){
+  if (oldTileUnits.childElementCount == 0) {
     removeActionMenu(oldTileUnits.parentElement.childNodes[0]);
   }
 }
 
-function removeActionMenu(menu){
-  var index = parseInt(menu.getElementsByTagName('input')[0].name.replace("menu-open",""));
+function removeActionMenu(menu) {
+  var index = parseInt(menu.getElementsByTagName('input')[0].name.replace("menu-open", ""));
   menu.parentElement.removeChild(menu);
   highlightMoveOptions(index, false);
 }
