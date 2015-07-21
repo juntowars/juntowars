@@ -83,7 +83,7 @@ function scrollToNextAction() {
   }
 }
 
-function enableMoveActions(){
+function enableMoveActions() {
   var listOfMoves = document.getElementsByClassName('fa-arrow-right');
 
   for (var i = 0; i < listOfMoves.length; i++) {
@@ -112,14 +112,14 @@ function moveSelectUnits() {
   var selectedUnitsShapesToMove = getSelectedUnitsShapesToMove();
   var targetTile = this.childNodes;
 
-  if (isBattleMovement(targetTile,selectedUnitsShapesToMove)) {
-    resolveBattleMovement(targetTile,selectedUnitsShapesToMove);
+  if (isBattleMovement(targetTile, selectedUnitsShapesToMove)) {
+    resolveBattleMovement(targetTile[1], selectedUnitsShapesToMove);
   } else {
-    resolvePeacefulMovement(targetTile,selectedUnitsShapesToMove);
+    resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove);
   }
 }
 
-function getSelectedUnitsShapesToMove(){
+function getSelectedUnitsShapesToMove() {
   return document.getElementsByClassName('ACTIVE')[0]
   .parentElement
   .parentElement
@@ -127,30 +127,82 @@ function getSelectedUnitsShapesToMove(){
   .getElementsByClassName('selected');
 }
 
-function resolveBattleMovement(targetTile,selectedUnitsShapesToMove){
-  var localRaceStrength = calculateStrength(targetTile[1].getElementsByTagName('g'));
-  var invaderRaceStrength = calculateSelectedStrength(selectedUnitsShapesToMove[0].parentElement.parentElement.childNodes);
+function getParentsFor(elements) {
+  var arrayOfParents = [];
+  for (var i = 0; i < elements.length; i++) {
+    arrayOfParents.push(elements[i].parentElement);
+  }
+  return arrayOfParents;
+}
 
-  if (localRaceStrength > invaderRaceStrength) {
-    while (selectedUnitsShapesToMove.length > 0) {
-      selectedUnitsShapesToMove[0].parentElement.parentElement.removeChild(selectedUnitsShapesToMove[0].parentElement);
-    }
-  } else if (localRaceStrength < invaderRaceStrength) {
-    while (targetTile[1].getElementsByTagName('g').length > 0) {
-      targetTile[1].removeChild(targetTile[1].getElementsByTagName('g')[0]);
+function resolveBattleMovement(defendingUnits, selectedUnitsShapesToMove) {
+  var attackingUnits = selectedUnitsShapesToMove[0].parentElement.parentElement;
+  var arrayOfDefendingUnits = defendingUnits.getElementsByTagName('g');
+  var defStr = calculateStrength(arrayOfDefendingUnits);
+  var atkStr = calculateSelectedStrength(attackingUnits.childNodes);
+  var arrayOfAttackingUnits = getParentsFor(selectedUnitsShapesToMove);
+
+  if (defStr > atkStr) {
+    // defender wins
+    killUnits(arrayOfAttackingUnits, attackingUnits, true, 0);
+    killUnits(arrayOfDefendingUnits, defendingUnits, false, atkStr);
+  } else if (defStr < atkStr) {
+    // attacker wins
+    killUnits(arrayOfDefendingUnits, defendingUnits, true, 0);
+    var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnits, false, defStr);
+    for(var i =0;i<unitsToMoveIn.length;i++){
+      moveToNonHostileTarget(defendingUnits, unitsToMoveIn[i]);
     }
   } else {
-    while (targetTile[1].getElementsByTagName('g').length > 0) {
-      targetTile[1].removeChild(targetTile[1].getElementsByTagName('g')[0]);
-    }
-    while (selectedUnitsShapesToMove.length > 0) {
-      selectedUnitsShapesToMove[0].parentElement.parentElement.removeChild(selectedUnitsShapesToMove[0].parentElement);
-    }
+    // draw
+    killUnits(arrayOfAttackingUnits, attackingUnits, true, 0);
+    killUnits(arrayOfDefendingUnits, defendingUnits, true, 0);
+  }
+
+  //add clean up for menu + selected units
+
+
+}
+
+function deleteChild(parentTile, unitsToKill) {
+  parentTile.removeChild(unitsToKill[0]);
+  //todo: investigate this tryCatch further, removeChild seems to update the last
+  //todo: iteration of removing a element from unitsToKill, i've tried
+  //todo: wrapping this in a if check for unitsToKill.length but its
+  //todo: saying there is an element to be updated and splice is reporting
+  //todo: otherwise
+  try {
+    unitsToKill.splice(0, 1);
+  } catch (e) {
+    console.log("Error Caught: " + e);
   }
 }
 
-function isBattleMovement(targetTile,selectedUnitsShapesToMove){
-  if (tileHasUnits(targetTile)) {
+function killUnits(unitsToKill, parentTile, killAll, damageTaken) {
+  if (killAll) {
+    while (unitsToKill.length > 0) {
+      deleteChild(parentTile, unitsToKill);
+    }
+  } else {
+    var valueOfUnitsKilled = 0;
+    while (damageTaken > valueOfUnitsKilled) {
+      var currentUnitValue = parseInt(unitsToKill[0].getElementsByTagName('text')[0].innerHTML) - 1;
+      if (currentUnitValue == 0) {
+        deleteChild(parentTile, unitsToKill);
+      } else {
+        unitsToKill[0].getElementsByTagName('text')[0].innerHTML = currentUnitValue;
+      }
+      valueOfUnitsKilled++;
+    }
+  }
+  return unitsToKill;
+}
+
+function isBattleMovement(targetTile, selectedUnitsShapesToMove) {
+
+  if (selectedUnitsShapesToMove.length == 0) {
+    return false;
+  } else if (tileHasUnits(targetTile)) {
     var localRace = targetTile[1].childNodes[0].childNodes[0].classList[0];
     var invaderRace = selectedUnitsShapesToMove[0].classList[0];
     return (invaderRace != localRace);
@@ -158,7 +210,7 @@ function isBattleMovement(targetTile,selectedUnitsShapesToMove){
   return false;
 }
 
-function resolvePeacefulMovement(targetTile,selectedUnitsShapesToMove){
+function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
   while (selectedUnitsShapesToMove.length > 0) {
     var shapeToMove = selectedUnitsShapesToMove[0];
     resetUnit(shapeToMove);
@@ -167,19 +219,29 @@ function resolvePeacefulMovement(targetTile,selectedUnitsShapesToMove){
       if (unitMergeRequired(targetTile[1], shapeToMove)) {
         mergeUnits(shapeToMove, targetTile[1]);
       } else {
-        moveToNonHostileTarget(targetTile[1],shapeToMove.parentElement)
+        moveToNonHostileTarget(targetTile[1], shapeToMove.parentElement);
       }
     } else {
-      moveToNonHostileTarget(targetTile[0],shapeToMove.parentElement)
+      moveToNonHostileTarget(targetTile[0], shapeToMove.parentElement);
     }
   }
 }
 
-function moveToNonHostileTarget(target,unit){
+function moveToNonHostileTarget(target, unit) {
+  var oldTileUnits = unit.parentElement;
   target.appendChild(unit);
+  if(oldTileUnits.childElementCount == 0){
+    removeActionMenu(oldTileUnits.parentElement.childNodes[0]);
+  }
 }
 
-function resetUnit(shapeToMove){
+function removeActionMenu(menu){
+  var index = parseInt(menu.getElementsByTagName('input')[0].name.replace("menu-open",""));
+  menu.parentElement.removeChild(menu);
+  highlightMoveOptions(index, false);
+}
+
+function resetUnit(shapeToMove) {
   shapeToMove.classList.remove('selected');
   removeOnClickEvent(shapeToMove.parentElement);
 }
