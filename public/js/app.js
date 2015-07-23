@@ -154,7 +154,7 @@ function resolveBattleMovement(targetTile, selectedUnitsShapesToMove) {
     killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
     var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
     for (var i = 0; i < unitsToMoveIn.length; i++) {
-      moveToNonHostileTarget(defendingUnitsSvgElement, unitsToMoveIn[i]);
+      moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i]);
       resetUnit(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
     }
 
@@ -205,7 +205,7 @@ function killUnits(unitsToKill, parentTile, killAll, damageTaken) {
 function isBattleMovement(targetTile, selectedUnitsShapesToMove) {
   if (selectedUnitsShapesToMove.length == 0) {
     return false;
-  } else if (tileHasUnits(targetTile[0])) {
+  } else if (tileHasUnits(targetTile)) {
     return (getRaceOfUnit(selectedUnitsShapesToMove) != getUnitsRaceInTargetTile(targetTile));
   }
   return false;
@@ -224,21 +224,22 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
     var shapeToMove = selectedUnitsShapesToMove[0];
     resetUnit(shapeToMove);
 
-    if (tileHasUnits(targetTile[0])) {
-      if (unitMergeRequired(targetTile[1], shapeToMove)) {
-        mergeUnits(shapeToMove, targetTile[1]);
+    if (tileHasUnits(targetTile)) {
+      if (unitMergeRequired(targetTile, shapeToMove)) {
+        mergeUnits(shapeToMove, targetTile);
       } else {
-        moveToNonHostileTarget(targetTile[1], shapeToMove.parentElement);
+        moveToNonHostileTarget(targetTile, shapeToMove.parentElement);
       }
     } else {
-      moveToNonHostileTarget(targetTile[0], shapeToMove.parentElement);
+      moveToNonHostileTarget(targetTile, shapeToMove.parentElement);
     }
   }
 }
 
 function moveToNonHostileTarget(target, unit) {
   var oldTileUnits = unit.parentElement;
-  target.appendChild(unit);
+  console.log("here in moveToNonHostileTarget");
+  target[0].parentElement.getElementsByTagName('svg')[0].appendChild(unit);
   if (oldTileUnits.childElementCount == 0) {
     removeActionMenu(oldTileUnits.parentElement.childNodes[0]);
   }
@@ -260,13 +261,13 @@ function mergeUnits(shapeToMove, targetTile) {
   .getElementsByTagName('text')[0]
   .innerHTML);
 
-  var existingForces = parseInt(targetTile
+  var existingForces = parseInt(targetTile[0].parentElement
   .getElementsByTagName(shapeToMove.tagName)[0]
   .parentElement
   .getElementsByTagName('text')[0]
   .innerHTML);
 
-  targetTile
+  targetTile[0].parentElement
   .getElementsByTagName(shapeToMove.tagName)[0]
   .parentElement
   .getElementsByTagName('text')[0]
@@ -276,10 +277,9 @@ function mergeUnits(shapeToMove, targetTile) {
 }
 
 function unitMergeRequired(tile, shapeToMove) {
-  return (tile.getElementsByTagName(shapeToMove.tagName).length == 1);
+  return (tile[0].parentElement.getElementsByTagName(shapeToMove.tagName).length == 1);
 }
 
 function tileHasUnits(tileElement) {
-  console.log("in tileHasUnits")
-  return (tileElement.parentElement.getElementsByTagName('g').length > 0);
+  return (tileElement[0].parentElement.getElementsByTagName('g').length > 0);
 }
