@@ -1,11 +1,14 @@
-function GetMap() {
-  return $.ajax({
-    type: 'GET',
-    url: location.origin + '/getBaseBoard',
-    dataType: 'json',
-    data: {},
-    async: true
-  });
+function GetMap(callback) {
+  var request = new XMLHttpRequest();
+  var getBaseBoardUrl = location.origin + '/getBaseBoard';
+  request.open('GET', getBaseBoardUrl, true);
+
+  request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+      callback(JSON.parse(request.responseText)[0].map);
+    }
+  };
+  request.send();
 }
 
 function GetMapUnits() {
@@ -78,13 +81,11 @@ function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
   });
 }
 
-function RenderMap(data) {
+function RenderMap(boardBackgroundMap) {
 // Board element.
   var map = $("<div>", {
     id: "map"
   }).appendTo(document.body);
-
-  var boardBackgroundMap = data[0].map;
 
 // Board size.
   var rows = boardBackgroundMap.length;
