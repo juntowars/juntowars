@@ -82,11 +82,12 @@ function getSvgForUnits(faction, infantry, ranged, tank) {
 }
 
 function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
-  $(".hex").each(function (index) {
-    if (((posY * cols) + posX) == index) {
-      this.innerHTML = getMenu(index) + getSvgForUnits(faction, infantry, ranged, tank);
+  var hexes = document.getElementsByClassName('hex');
+  for (var i = 0; i < hexes.length; i++) {
+    if (((posY * cols) + posX) == i) {
+      hexes[i].innerHTML = getMenu(i) + getSvgForUnits(faction, infantry, ranged, tank);
     }
-  });
+  }
 }
 
 function RenderMap(boardBackgroundMap) {
