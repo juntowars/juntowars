@@ -10,7 +10,7 @@ function lockInAction(element, icon) {
   var menuOpenButton = element.parentElement.getElementsByClassName('menu-open-button')[0];
   menuOpenButton.style.background = "green";
 
-  scrollToNextAction();
+  if (document.getElementsByClassName('fa-plus').length == 0) enableMoveActions();
 }
 
 function removeOnClickEvent(element) {
@@ -69,17 +69,6 @@ function handleMoveAction(index, movementAction, turnOn) {
 
   function markAsSelected() {
     this.childNodes[0].classList.add("selected");
-  }
-}
-
-function scrollToNextAction() {
-  var map = $('#map');
-  var actionsToSet = $('.fa-plus');
-
-  if (actionsToSet.length > 0) {
-    map.scrollTo(actionsToSet, {duration: 1000, axis: 'xy', offset: -150});
-  } else {
-    enableMoveActions();
   }
 }
 
@@ -260,7 +249,6 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
 
 function moveToNonHostileTarget(target, unit) {
   var oldTileUnits = unit.parentElement;
-  console.log("here in moveToNonHostileTarget");
   target[0].parentElement.getElementsByTagName('svg')[0].appendChild(unit);
   if (oldTileUnits.childElementCount == 0) {
     removeActionMenu(oldTileUnits.parentElement.childNodes[0]);
