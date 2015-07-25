@@ -11,14 +11,22 @@ function GetMap(callback) {
   request.send();
 }
 
-function GetMapUnits() {
-  var gameName = window.location.pathname.replace(/.*\//, '');
-  return $.ajax({
-    type: 'GET',
-    url: location.origin + '/getMapUnits/' + gameName,
-    dataType: 'json',
-    data: {},
-    async: true
+function GetMapUnits(cols, callback) {
+  var request = new XMLHttpRequest();
+  var getMapUnitsUrl = location.origin + '/getMapUnits/' + window.location.pathname.replace(/.*\//, '');
+  request.open('GET', getMapUnitsUrl, true);
+
+  request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+      callback(cols, JSON.parse(request.responseText));
+    }
+  };
+  request.send();
+}
+
+function drawAllUnits(cols, units) {
+  units.forEach(function (unitSet) {
+    drawUnits(cols, unitSet.posX, unitSet.posY, unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
   });
 }
 
@@ -135,11 +143,6 @@ function RenderMap(boardBackgroundMap) {
   });
 
   // init game pieces
-  $.when(GetMapUnits()).done(function (units) {
-    units.forEach(function (unitSet) {
-      drawUnits(cols, unitSet.posX, unitSet.posY, unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
-    });
-  });
-
+  GetMapUnits(cols, drawAllUnits);
 }
 
