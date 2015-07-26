@@ -49,7 +49,7 @@ function displayInfantryUnits(race, numberOfUnits) {
   } else {
     var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" id="inf" class="';
     var infantrySvgClose = '"></circle><text x="25" y="65" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
-    return [infantrySvgOpen , race , infantrySvgClose].join('');
+    return [infantrySvgOpen, race, infantrySvgClose].join('');
   }
 }
 
@@ -59,7 +59,7 @@ function displayRangedUnits(race, numberOfUnits) {
   } else {
     var rangedSvgOpen = '<g><polygon points="60,5 40,40 80,40" class="';
     var rangedSvgClose = '"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
-    return [rangedSvgOpen , race , rangedSvgClose].join('');
+    return [rangedSvgOpen, race, rangedSvgClose].join('');
   }
 }
 
@@ -69,7 +69,7 @@ function displayTankUnits(race, numberOfUnits) {
   } else {
     var svgOpen = '<g><rect x="50" y="50" width="40" height="40" class="';
     var svgClose = '" /><text x="60" y="75" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text> </g>';
-    return [svgOpen , race , svgClose].join('');
+    return [svgOpen, race, svgClose].join('');
   }
 }
 
@@ -91,42 +91,39 @@ function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
 }
 
 function RenderMap(boardBackgroundMap) {
-// Board element.
-  var map = $("<div>", {
-    id: "map"
-  }).appendTo(document.body);
+  // Board element.
+  document.getElementsByTagName('body')[0].innerHTML += '<div id="map"></div>';
+  var map = document.getElementById('map');
 
-// Board size.
+  // Board size.
   var rows = boardBackgroundMap.length;
   var cols = boardBackgroundMap[0].length;
 
-// Inner, scrollable map container.
-  var mapHolder = $("<div>", {
-    id: "mapHolder",
-    css: {
-      width: cols * 94
-    }
-  }).appendTo(map);
+  // Inner, scrollable map container.
+  map.innerHTML += '<div id="mapHolder" style="width: ' + (cols * 94) + 'px"></div>';
+  var mapHolder = document.getElementById('mapHolder');
 
-// Generate a row of hexes as html.
+  // Generate a row of hexes as html.
   var rowHtml = "<div>";
   for (var i = 0; i < cols; i++)
     rowHtml += '<div class="hex"><svg height="100" width="100"></svg></div>';
   rowHtml += "</div>";
 
-// Main map html.
+  // Main map html.
   var mapHtml = "";
   for (i = 0; i < rows; i++)
     mapHtml += rowHtml;
 
-// Set map contents.
-  mapHolder.html(mapHtml);
+  // Set map contents.
+  mapHolder.innerHTML = mapHtml;
 
 // Generate hex terrain.
   var rowCounter = 0;
   var y = 0;
-  $(".hex").each(function (index) {
-    var x = index % cols;
+
+  var hexes = document.getElementsByClassName('hex');
+  for (var i = 0; i < hexes.length; i++) {
+    var x = i % cols;
     if (rowCounter == cols) {
       y = y + 1;
       rowCounter = 0;
@@ -134,14 +131,14 @@ function RenderMap(boardBackgroundMap) {
     rowCounter++;
 
     if (boardBackgroundMap[y][x] == 0)
-      this.className += " water";
+      hexes[i].className += " water";
     else if (boardBackgroundMap[y][x] == 1)
-      this.className += " grass";
+      hexes[i].className += " grass";
     else if (boardBackgroundMap[y][x] == 2)
-      this.className += " forest";
+      hexes[i].className += " forest";
     else
-      this.className += " desert";
-  });
+      hexes[i].className += " desert";
+  }
 
   // init game pieces
   GetMapUnits(cols, drawAllUnits);
