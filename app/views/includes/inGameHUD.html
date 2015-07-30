@@ -1,0 +1,16 @@
+<nav role="navigation" class="navbar navbar-default navbar-fixed-bottom">
+    <ul class="nav nav-tabs">
+        <li class=""><a id="units_tab" href="#" data-toggle="tab" aria-expanded="false">Units</a></li>
+        <li class=""><a id="game_progress_tab" href="#" data-toggle="tab" aria-expanded="false" >Game Progress</a></li>
+        <li class=""><a id="player_display_tab" href="#" data-toggle="tab" aria-expanded="false">Player Display</a></li>
+    </ul>
+    <div class="container hudContainer" id="units_hud">
+        {% include '../hud/units.html' %}
+    </div>
+    <div class="container hudContainer" id="game_progress_hud">
+        {% include '../hud/game_progress.html' %}
+    </div>
+    <div class="container hudContainer" id="player_display_hud">
+        {% include '../hud/player_display.html' %}
+    </div>
+</nav>

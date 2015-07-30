@@ -38,6 +38,14 @@
     display: none;
 }
 
+/* Hud Display*/
+.activeHud { display: block }
+
+.hudContainer {
+    display: none;
+    height:170px;
+}
+
 /* Board hexes. */
 .hex {
     float: left;

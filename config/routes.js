@@ -40,6 +40,7 @@ module.exports = function (app, passport) {
 
   app.get('/getBaseBoard', base.getMap);
   app.get('/getMapUnits/:game', games.getMapUnits);
+  app.get('/getHudStatistics/:game/:race', games.getHudStatistics);
   app.get('/games', games.index);
   app.get('/games/user/:userId', auth.requiresLogin, games.dashboard);
   app.post('/games/user/:userId', auth.requiresLogin, games.create);

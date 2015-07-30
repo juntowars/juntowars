@@ -30,6 +30,21 @@ function drawAllUnits(cols, units) {
   });
 }
 
+function GetHudStatistics(callback) {
+  var request = new XMLHttpRequest();
+  var gameName = window.location.pathname.replace(/.*\//, '');
+  //todo hardcoded for now. Add race variable to query
+  var race = "kingdomWatchers";
+
+  request.open('GET', location.origin + '/getHudStatistics/' + gameName + '/' + race, true);
+  request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+      callback(JSON.parse(request.responseText));
+    }
+  };
+  request.send();
+}
+
 function getMenu(index) {
   return ['<nav class="menu" >',
     '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
@@ -142,5 +157,7 @@ function RenderMap(boardBackgroundMap) {
 
   // init game pieces
   GetMapUnits(cols, drawAllUnits);
+
+  addHudListeners();
 }
 

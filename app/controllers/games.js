@@ -107,13 +107,13 @@ exports.viewGameLobby = function (req, res) {
   function parseLobbyData(gameDoc) {
     var _usersList = [];
 
-    if(!gameDoc["0"]._doc){
+    if (!gameDoc["0"]._doc) {
       return res.render('games/dashboard', {
-      error: 'This is not the game you are looking for.. jedi shit',
-      title: 'Unable to join',
-      gameList: {},
-      gamesToJoin: {}
-    });
+        error: 'This is not the game you are looking for.. jedi shit',
+        title: 'Unable to join',
+        gameList: {},
+        gamesToJoin: {}
+      });
     } else if (gameDoc["0"]._doc.userList.uuids.length >= 6) {
       return res.render('games/dashboard', {
         error: 'Too many people in this lobby',
@@ -139,14 +139,43 @@ exports.viewGameLobby = function (req, res) {
  */
 
 exports.getMapUnits = function (req, res) {
-  var gameName = req.url.replace("/getMapUnits/","");
-  var _query = Games.find({"name" : gameName},{"state.units" :1});
+  var gameName = req.url.replace("/getMapUnits/", "");
+  var _query = Games.find({"name": gameName}, {"state.units": 1});
   _query.exec(function (err, data) {
     if (err) return winston.info("getMapUnits failed with: " + err);
     res.setHeader("Content-Type", 'application/jsonp');
     res.jsonp(data[0].state.units);
   });
 };
+
+/**
+ * Get game stats for HUD
+ */
+
+exports.getHudStatistics = function (req, res) {
+  var raceName = req.url.replace(/\/getHudStatistics.*\//, "");
+  var gameName = req.url.replace("/getHudStatistics/", "").replace("/" + raceName, "");
+  var _query = Games.find({"name": gameName}, {"state.units": 1});
+  _query.exec(function (err, data) {
+    if (err) return winston.error("Get Hud statistics failed with error: " + err);
+    res.setHeader("Content-Type", 'application/jsonp');
+    res.jsonp(getArmyStrength(raceName, data[0]._doc.state.units, gameName));
+  });
+};
+
+function getArmyStrength(race, units, game) {
+  var infantry = 0;
+  var ranged = 0;
+  var tank = 0;
+  units.forEach(function(army) {
+    if(army.race.toLowerCase() == race.toLowerCase()) {
+      infantry += army.infantry;
+      ranged += army.ranged;
+      tank += army.tanks;
+    }
+  });
+  return ({infantry: infantry, ranged: ranged, tank: tank, game: game});
+}
 
 /**
  * Update Games
