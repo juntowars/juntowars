@@ -36,14 +36,13 @@ function calculateSelectedStrength(elements) {
 }
 
 function highlightMoveOptions(index, turnOn) {
-  var opacitySetting = turnOn ? 0.5 : 1;
   var allTileElements = document.getElementsByClassName('hex');
   var neighbouringTiles = index % 2 ? [-1, +1, -24, 23, 24, 25] : [-1, +1, -23, -24, -25, 24];
 
   for (var i = 0; i < neighbouringTiles.length; i++) {
     var hex = allTileElements[index + neighbouringTiles[i]];
     if (hex.className != "hex water") {
-      hex.style.opacity = opacitySetting;
+      turnOn ? hex.classList.add("highlight") : hex.classList.remove("highlight");
       if (turnOn) {
         hex.onclick = moveSelectUnits;
       } else {
