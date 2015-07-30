@@ -40,38 +40,6 @@ BaseSchema.statics = {
         "infantry" : 1,
         "ranged" : 2,
         "tanks" : 1
-      },
-      {
-        "posX" : 20,
-        "posY" : 2,
-        "race" : "settlers",
-        "infantry" : 1,
-        "ranged" : 3,
-        "tanks" : 1
-      },
-      {
-        "posX" : 21,
-        "posY" : 7,
-        "race" : "geoEngineers",
-        "infantry" : 1,
-        "ranged" : 4,
-        "tanks" : 1
-      },
-      {
-        "posX" : 1,
-        "posY" : 16,
-        "race" : "reduviidae",
-        "infantry" : 1,
-        "ranged" : 5,
-        "tanks" : 1
-      },
-      {
-        "posX" : 8,
-        "posY" : 11,
-        "race" : "guardians",
-        "infantry" : 1,
-        "ranged" : 6,
-        "tanks" : 1
       }
     ];
   }
