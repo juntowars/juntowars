@@ -9,35 +9,6 @@
     bottom: 10px;
 }
 
-#statusBar {
-    box-shadow: 0 0 50px rgba(50, 50, 150, .5);
-    overflow: auto;
-    position: absolute;
-    border-radius: 15px 50px;
-    border: 6px inset #95E8C6;
-    background: #4AABC8;
-    padding: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 8px;
-    min-height: 10%;
-    min-width: 80%;
-    display: none;
-}
-
-#subStatusBar {
-    border: 6px inset rgb(70, 159, 159);
-    border-radius: 15px 53px;
-    background: #226666;
-    padding: 1px;
-    left: 1px;
-    bottom: 1px;
-    height: 120px;
-    width: 250px;
-    float: left;
-    display: none;
-}
-
 /* Hud Display*/
 .activeHud { display: block }
 
@@ -53,10 +24,6 @@
     margin-bottom: -52px;
     height: 104px;
     width: 120px;
-}
-
-.hex:hover {
-    -webkit-filter: drop-shadow(0 0 5px orange);
 }
 
 .settlers{
@@ -97,16 +64,6 @@
     margin-top: 53px;
 }
 
-/* Highlighted hexes. */
-.highlight {
-    opacity: 0.50;
-    filter: alpha(opacity=50);
-}
-
-#activeHex {
-    -webkit-filter: hue-rotate(290deg);
-}
-
 /* Terrain textures. */
 .forest {
     background: url("/img/forest_tile.png");
@@ -122,173 +79,6 @@
 
 .desert {
     background: url("/img/desert_tile.png");
-}
-
-/* Roads. */
-.road {
-    position: absolute;
-    height: 20px;
-    width: 62px;
-    background: rgb(124, 124, 124);
-    margin: 42px 0 0 8px;
-    transform-origin: 52px 10px;
-    border-radius: 0 10px 10px 0;
-}
-
-.road:after {
-    content: "";
-    position: absolute;
-    top: 9px;
-    left: 5px;
-    width: 44px;
-    border-bottom: 2px dashed yellow;
-}
-
-/* Playing pieces. */
-.chit {
-    position: absolute;
-    font: bold 11pt georgia;
-    padding: 22px 6px 6px 6px;
-    text-shadow: 0 1px 0 rgb(100, 100, 100);
-    text-align: center;
-    background: blue none no-repeat center 5px;
-    border: 1px solid rgb(200, 200, 200);
-    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.59);
-    margin: 12px 0 0 23px;
-    cursor: pointer;
-    border-radius: 4px;
-    white-space: nowrap;
-    transition: margin .5s;
-}
-
-.chit div {
-    line-height: 11pt;
-}
-
-.chit div:last-child {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: white;
-    opacity: .5;
-}
-
-.german {
-    background-color: rgb(158, 158, 158);
-}
-
-.american {
-    background-color: rgb(71, 175, 57);
-}
-
-.infantry {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKDSURBVDjLjdFNTNJxHAZw69CWHjp16O2AZB3S1ovOObaI8NBYuuZAhqjIQkzJoSIZBmSCpVuK/sE/WimU6N9SDM0R66IHbabie1hrg0MK3Zo5a8vwidgym8w8PKffvp89e35RAKJ2ipp7WDxvjltZ6jwCr5W2bpHHtqUnx+77877jsZxzlO3roAWXuw5ha1pl9MZdAW2ig8RyXyL8rnx8G6uH387AMnUMC2b6l10BJPdAfWDGhZVREuszT7D6hsTStBNDurO+XQEZnEypx1a28XW2F8HFPqwtOBAYJlCde9EeEZCy4sTN4ksrRA4LZB57vZCfMElUyH4E7Ap86r+LwIAGIy03cDr/lDNJGR/zDyBiHGc3i1ODjUIWtqbdIIexVY86kwZ3HijR/86GmqFqJGhPWs8oTkRvAgb+uZGHhVfRV3UNni41OhU8EDlstBSkwjKjhnmqAg3uUtS6y9Dzvg0ljmKkFCaRm4CJT+/5OERtG4yqZMEwdQt1biV0EyW4PVEE1dsiiMk8eMn0/w9Wp+PCNK1CQ6iBYeommkIpH5Qhy5AF/6Mrf4G955tUJlXxtsHieeWQ2LJxvVuAAkoASUcmLugZPqW0qsprEQjDx3sY3ZIMhXt1+DNw77kdmnYKSsKKx+PfoTQtYX9KtzWG2Rod6aujaJwWHk8+uDawGITeA+SPA7nDQOYgwKcAYhQQajyIY9eQEYE5feLPyV4jFC8CELkAkWMDQmoDPGsQaWYgzRjEU8vL8GARAV8T099bUwqBdgzS14D4VaiBA8gZALJ/t6j1Qqu4Hx4sIvChoyDFWZ1RmcyzORJLJsDSzoUyD5Z6FsxKN+iXn/mM5ZLwYJGAX0F/sgCQt3xBAAAAAElFTkSuQmCC);
-}
-
-.tank {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABR0lEQVR42mNkoBAw0sSA4OBg97Vr1+4k2wAbGxuTI0eOnCHLgKqMsPsHb+5VgPH/vef7f/zCfSaiDKjPTb7FKvNU1c5a79+du/eYxMWE/2/bdITx7IkvDMYWPBiap06/ygg3YHpVwaNZ29fyObsq8jrZW/2/c+cuIycXx/9nz98zbl516cOZK4+Ecbog0lbtHLs6n+Htu/eJCnkNNXWGuTOPgfUyNjY25rNynJugJCf8i4uTnUlESIDh+cs3DL9//2UwNdb5v3nbXkZdHfX/vFxc/+YvWsvMx8f3V0RSkf3cyZtbl68878PY2tpadOzI6s4PPx6zEGO7nIL8P8lPgh+ERKRf18xcpAEPg3wvxyesimIsTD9//Pn55u1/fmlJhj/fvzFwcnMxfv3599+PV68ZmYQE/ktKyH4/cfNlHiyd0CYljjADAB/+fxHifnl+AAAAAElFTkSuQmCC);
-}
-
-.artillery {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJ+SURBVBgZlcFLSBRhAAfw/858s860aygiptIp9NChoDzkxYNUYIcO0TUIOghFUNElvEad6lBkdEqCIugi3QQfLR2yQumBaPh+7Li7o/uanfmes1972IOEQv5+Ma01DuPRh+U+StlEhSsZUnElprXGQd6kdomUsoOJaiflojXk4mIM+pZjaXCp8GslTwkOMDLlOVyoCamiXhkpVCOJRDyGpG2CCYlsgSPvh4TgACGVt21L97Y0meBCg0kNyiW28wHiJrC8VYAo0wsE+3g1vtRdquYeHyXHUfAldkohKJcIuUSjbWI5XYKXLQ5/fnk1RbDHyJTnSKHeCbF6SbVMGCteH5pxAk7cQLbAQZmAGbOQccuQZTqGGoK615M5woX6aRPdZTkn4a+7kehMmdOzMmptaDOTNkEuzxE3gaAcQITMQ42BugpVHUzIrqRjwCJVOA3nzPLvMzKScujPxnK04RbRdIQgYBxhIYSs0DRqDNSFnHUKIUG5xKZXQTweg5Potmyde9hz/quZ9RbgukWsLWQQlvxFFQkXNQbqKgFvDRhHyCRCKrC27cOxYmhrPksyP5rQMzAPd3FJZVdzoyrip+cn7yvUENSVQnajvclCSAUqlIMyCa8oYVsmoPsxM/pJRVVxam7ywTz2IKi5+WLmXqNjXI4TA5lCgIRtwjI1GqwYhJBY39hFLt0+NPtxcB7/IIPPvt9N2MaTRNwAZQKWqbGeLmFnxwf1GZhPwXz+RXH2HPsgPuVP25qT0DrCZtbHpltEwQuGlRBjEedexFVaCenOjd9R2Acp+RQb2xFMaKS3iiju+v3Tb69N4T8RGtBjK/lSRoWKKsYGvr2/nsIh/AUG0IfiieuuUQAAAABJRU5ErkJggg==);
-}
-
-.hasMoved {
-    -webkit-filter: sepia(1);
-}
-
-/* Slide extra chits to the side when hovering over a hex. */
-.hex:hover .chit:nth-of-type(2) {
-    margin-left: 73px;
-}
-
-.hex:hover .chit:nth-of-type(3) {
-    margin-left: 123px;
-}
-
-/* Crosshairs to show over an opponent. */
-.crosshairs, .crosshairs div {
-    position: absolute;
-    box-shadow: 0 0 6px red, 0 0 6px red inset;
-    border-radius: 100px;
-}
-
-.crosshairs {
-    height: 100px;
-    width: 100px;
-    margin: 2px 0 0 10px;
-}
-
-.crosshairs div:first-child {
-    left: 20px;
-    top: 20px;
-    height: 60px;
-    width: 60px;
-}
-
-.crosshairs div:nth-child(2) {
-    left: 40px;
-    top: 40px;
-    height: 20px;
-    width: 20px;
-}
-
-/* Slide-out game menu. */
-#gamemenu {
-    position: fixed;
-    margin: 100px 0 0 -5em;
-    z-index: 5;
-    list-style: none;
-    padding: 0;
-    font: bold 15pt georgia;
-    text-shadow: 0 1px 0 rgb(150, 150, 150);
-    transition: all .25s;
-    box-shadow: 0 0 10px black;
-}
-
-#gamemenu:hover {
-    margin-left: 0;
-}
-
-#gamemenu li {
-    background: linear-gradient(-45deg, rgba(195, 210, 233, .8), rgba(93, 156, 250, .8));
-    cursor: pointer;
-    padding: .25em;
-}
-
-#gamemenu li:hover {
-    background: linear-gradient(-45deg, rgb(195, 210, 233), rgb(93, 156, 250));
-}
-
-/* Modal dialogs. */
-#blocker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: white;
-    opacity: .5;
-}
-
-#dialog {
-    position: fixed;
-    left: 30%;
-    top: 30%;
-    width: 40%;
-    border: 1px solid rgb(150, 150, 150);
-    background: rgb(220, 220, 220);
-    box-shadow: 0 0 20px black;
-}
-
-/* New game terrains picker panel. */
-#terrainsPicker {
-    font: 14pt georgia;
-}
-
-#terrainsPicker label {
-    float: left;
-    clear: both;
 }
 
 a {
@@ -392,4 +182,11 @@ a {
 .rotate.down{
     -webkit-transform:rotate(180deg);
     transform:rotate(180deg);
+}
+
+.highlight {
+    -webkit-filter: brightness(110%);
+    /*other options for highlighting*/
+    /*-webkit-filter: sepia(70%);*/
+    /*-webkit-filter: hue-rotate(-15deg);*/
 }
