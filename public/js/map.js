@@ -11,6 +11,19 @@ function GetMap(callback) {
   request.send();
 }
 
+function getRaceByPlayerName(playerName, gameName, cols, units, callback) {
+  var request = new XMLHttpRequest();
+  var getPlayersRaceUrl = location.origin + '/getPlayersRace/' + playerName + "/" + gameName;
+  request.open('GET', getPlayersRaceUrl, true);
+
+  request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+      callback(cols, units, JSON.parse(request.responseText).race);
+    }
+  };
+  request.send();
+}
+
 function GetMapUnits(cols, callback) {
   var request = new XMLHttpRequest();
   var getMapUnitsUrl = location.origin + '/getMapUnits/' + window.location.pathname.replace(/.*\//, '');
@@ -24,15 +37,29 @@ function GetMapUnits(cols, callback) {
   request.send();
 }
 
+function getPlayersName() {
+  return document.getElementById('playerName').attributes[1].value;
+}
+
 function drawAllUnits(cols, units) {
-  units.forEach(function (unitSet) {
-    drawUnits(cols, unitSet.posX, unitSet.posY, unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
-  });
+  var playerName = getPlayersName();
+  var gameName = getGameName();
+  getRaceByPlayerName(playerName, gameName, cols, units, startDrawingUnits);
+
+  function startDrawingUnits(cols, units, race) {
+    units.forEach(function (unitSet) {
+      drawUnits(race, cols, unitSet);
+    });
+  }
+}
+
+function getGameName() {
+  return window.location.pathname.replace(/.*\//, '');
 }
 
 function GetHudStatistics(callback) {
   var request = new XMLHttpRequest();
-  var gameName = window.location.pathname.replace(/.*\//, '');
+  var gameName = getGameName();
   //todo hardcoded for now. Add race variable to query
   var race = "kingdomWatchers";
 
@@ -96,11 +123,15 @@ function getSvgForUnits(faction, infantry, ranged, tank) {
     '</svg>'].join("");
 }
 
-function drawUnits(cols, posX, posY, faction, infantry, ranged, tank) {
+function drawUnits(race, cols, unitSet) {
   var hexes = document.getElementsByClassName('hex');
   for (var i = 0; i < hexes.length; i++) {
-    if (((posY * cols) + posX) == i) {
-      hexes[i].innerHTML = getMenu(i) + getSvgForUnits(faction, infantry, ranged, tank);
+    if (((unitSet.posY * cols) + unitSet.posX) == i) {
+      if (race == unitSet.race) {
+        hexes[i].innerHTML = getMenu(i) + getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
+      } else {
+        hexes[i].innerHTML = getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
+      }
     }
   }
 }

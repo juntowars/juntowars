@@ -148,6 +148,43 @@ exports.getMapUnits = function (req, res) {
   });
 };
 
+exports.getPlayersRace = function (req, res) {
+  var player = req.url.replace("/getPlayersRace/", "").replace(/\/.*/, "");
+  var game = req.url.replace("/getPlayersRace/", "").replace(/.*\//, "");
+
+  var _query = Games.find({"name": game}, {"userList": 1});
+  _query.exec(function (err, data) {
+    if (err) return winston.info("getPlayersRace failed with: " + err);
+
+    var userList = data[0]._doc.userList;
+    switch (player) {
+      case userList.guardians:
+        sendResponse(res, "guardians");
+        break;
+      case userList.reduviidae:
+        sendResponse(res, "reduviidae");
+        break;
+      case userList.periplaneta:
+        sendResponse(res, "periplaneta");
+        break;
+      case userList.kingdomWatchers:
+        sendResponse(res, "kingdomWatchers");
+        break;
+      case userList.settlers:
+        sendResponse(res, "settlers");
+        break;
+      case userList.geoEngineers:
+        sendResponse(res, "geoEngineers");
+        break;
+    }
+
+    function sendResponse(res, race) {
+      res.setHeader("Content-Type", 'application/jsonp');
+      res.jsonp({race: race});
+    }
+  });
+};
+
 /**
  * Get game stats for HUD
  */
