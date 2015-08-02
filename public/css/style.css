@@ -185,8 +185,10 @@ a {
 }
 
 .highlight {
-    -webkit-filter: brightness(110%);
+    -webkit-filter: saturate(1.1) brightness(125%);
     /*other options for highlighting*/
+    /*-webkit-filter: brightness(125%);*/
     /*-webkit-filter: sepia(70%);*/
-    /*-webkit-filter: hue-rotate(-15deg);*/
+    /*-webkit-filter: hue-rotate(320deg);*/
+    /*-webkit-filter: opacity(.5);*/
 }

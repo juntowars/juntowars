@@ -96,7 +96,7 @@ exports.viewGame = function (req, res) {
   winston.info("Viewing gameTitle: " + gameTitle);
   Games.getGameByTitle(req.user._doc.username, gameTitle, doRender);
   function doRender(gameDoc) {
-    res.render('games/viewGame', {gameList: gameDoc});
+    res.render('games/viewGame', {gameList: gameDoc, username : req.user._doc.username});
   }
 };
 

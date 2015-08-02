@@ -139,6 +139,9 @@ GamesSchema.statics = {
       err ? cb(err, null, user) : cb(null, res, user);
     });
   },
+  markLobbyAsClosed: function (gameName) {
+    staticGames.update({"name": gameName, "lobby.status": "open"}, {$set: {"lobby.status": "closed"}}).exec();
+  },
   removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
     if (err) return err;
     else {

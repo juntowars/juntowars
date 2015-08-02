@@ -14,14 +14,15 @@ module.exports = function (io) {
 
     socket.on('userReady', function (room, userName) {
 
+      var playersToPlay = 2;
       function updateClientsWithReadyStatus(room,arrayOfUsersStatus){
         io.sockets.in(room).emit('refreshLobbyStatus',  {playerStatus: arrayOfUsersStatus[0]} );
 
-        if(arrayOfUsersStatus[0].length == 6){
+        if (arrayOfUsersStatus[0].length == playersToPlay) {
           var count=0;
-          for(var i = 0; i < 6 ; i++){
+          for (var i = 0; i < playersToPlay; i++) {
             if (arrayOfUsersStatus[0][i].ready) count++;
-            if (count == 6) io.sockets.in(room).emit('displayStartButton');
+            if (count == playersToPlay) io.sockets.in(room).emit('displayStartButton');
           }
         }
       }
@@ -53,6 +54,7 @@ module.exports = function (io) {
 
     socket.on('startGame', function (room) {
       io.sockets.in(room).emit('redirect');
+      Games.markLobbyAsClosed(room);
     });
 
     socket.on('disconnect', function(){
@@ -75,7 +77,6 @@ module.exports = function (io) {
       Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
     });
 
-    //In game socket methods
     socket.on('gameStart', function (room, user) {
       winston.log(user + " is in game: " + room);
       socket.user = user;

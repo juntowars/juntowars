@@ -55,7 +55,7 @@ window.onload = function () {
       }
 
       // Pad out the rest with place holders if needed
-      var gameMaxPlayers = 6;
+      var gameMaxPlayers = 2;
       if (data.playerStatus.length < gameMaxPlayers) {
         for (i = data.playerStatus.length; i < gameMaxPlayers; i++) {
           playerNum = "player" + (i + 1).toString();
