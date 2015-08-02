@@ -142,6 +142,14 @@ GamesSchema.statics = {
   markLobbyAsClosed: function (gameName) {
     staticGames.update({"name": gameName, "lobby.status": "open"}, {$set: {"lobby.status": "closed"}}).exec();
   },
+  assignRaces: function (gameName) {
+    Promise.all([staticGames.find({"name": gameName}, {"userList.uuids": 1}).exec()]
+    ).then(function (data) {
+      var listOfUsersToGiveRacesTo = data[0][0]._doc.userList.uuids;
+      staticGames.update({"name": gameName}, {$set: {"userList.kingdomWatchers": listOfUsersToGiveRacesTo[0]}}).exec();
+      staticGames.update({"name": gameName}, {$set: {"userList.periplaneta": listOfUsersToGiveRacesTo[1]}}).exec();
+    });
+  },
   removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
     if (err) return err;
     else {

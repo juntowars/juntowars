@@ -55,6 +55,7 @@ module.exports = function (io) {
     socket.on('startGame', function (room) {
       io.sockets.in(room).emit('redirect');
       Games.markLobbyAsClosed(room);
+      Games.assignRaces(room);
     });
 
     socket.on('disconnect', function(){
