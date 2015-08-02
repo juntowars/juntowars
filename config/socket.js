@@ -8,6 +8,8 @@ var Games = mongoose.model('Games');
 module.exports = function (io) {
 
   io.sockets.on('connection', function (socket) {
+
+    //lobby Methods
     socket.on('send', function (room, data) {
       io.sockets.in(room).emit('message', data);
     });
@@ -78,9 +80,11 @@ module.exports = function (io) {
       Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
     });
 
-    socket.on('gameStart', function (room, user) {
-      winston.log(user + " is in game: " + room);
+    //game Methods
+    socket.on('createGame', function (room, user) {
+      winston.info(user + " is in game: " + room);
       socket.user = user;
+      io.sockets.in(room).emit('displayActionModal', user);
     });
   });
 };

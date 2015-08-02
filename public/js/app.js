@@ -295,3 +295,20 @@ function unitMergeRequired(tile, shapeToMove) {
 function tileHasUnits(tileElement) {
   return (tileElement[0].parentElement.getElementsByTagName('g').length > 0);
 }
+
+function displayModal() {
+  document.getElementById('nextActionModal').classList.add('show');
+  document.getElementById('nextActionModal').onclick = function () {
+    document.getElementById('nextActionModal').classList.remove('show');
+  };
+}
+
+function joinGameRoom() {
+  var socket = io.connect(location.origin);
+  var gameRoom = "game_" + window.location.pathname.replace(/.*\//, '');
+  var playerName = getPlayersName();
+
+  socket.emit('createGame', gameRoom, playerName);
+  socket.on('displayActionModal', displayModal());
+}
+

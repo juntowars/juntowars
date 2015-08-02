@@ -190,5 +190,7 @@ function RenderMap(boardBackgroundMap) {
   GetMapUnits(cols, drawAllUnits);
 
   addHudListeners();
+
+  joinGameRoom();
 }
 
