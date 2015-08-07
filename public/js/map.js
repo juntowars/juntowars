@@ -47,9 +47,10 @@ function drawAllUnits(cols, units) {
   getRaceByPlayerName(playerName, gameName, cols, units, startDrawingUnits);
 
   function startDrawingUnits(cols, units, race) {
-    units.forEach(function (unitSet) {
-      drawUnits(race, cols, unitSet);
-    });
+    for (var i = 0; i < units.length; i++) {
+      drawUnits(race, cols, units[i]);
+    }
+    initSocketSession();
   }
 }
 
@@ -185,12 +186,7 @@ function RenderMap(boardBackgroundMap) {
     else
       hexes[i].className += " desert";
   }
-
-  // init game pieces
   GetMapUnits(cols, drawAllUnits);
-
   addHudListeners();
-
-  joinGameRoom();
 }
 

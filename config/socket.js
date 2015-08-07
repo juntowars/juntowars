@@ -17,11 +17,12 @@ module.exports = function (io) {
     socket.on('userReady', function (room, userName) {
 
       var playersToPlay = 2;
-      function updateClientsWithReadyStatus(room,arrayOfUsersStatus){
-        io.sockets.in(room).emit('refreshLobbyStatus',  {playerStatus: arrayOfUsersStatus[0]} );
+
+      function updateClientsWithReadyStatus(room, arrayOfUsersStatus) {
+        io.sockets.in(room).emit('refreshLobbyStatus', {playerStatus: arrayOfUsersStatus[0]});
 
         if (arrayOfUsersStatus[0].length == playersToPlay) {
-          var count=0;
+          var count = 0;
           for (var i = 0; i < playersToPlay; i++) {
             if (arrayOfUsersStatus[0][i].ready) count++;
             if (count == playersToPlay) io.sockets.in(room).emit('displayStartButton');
@@ -29,8 +30,8 @@ module.exports = function (io) {
         }
       }
 
-      function getLobbyReadyState(){
-        Games.getPlayersReadyStatus(room,updateClientsWithReadyStatus);
+      function getLobbyReadyState() {
+        Games.getPlayersReadyStatus(room, updateClientsWithReadyStatus);
       }
 
       Games.updatePlayersReadyStatus(room, userName, getLobbyReadyState);
@@ -38,19 +39,19 @@ module.exports = function (io) {
 
     socket.on('create', function (room, user) {
 
-      function updateLobby(room, arrayOfUsersStatus){
+      function updateLobby(room, arrayOfUsersStatus) {
         io.sockets.in(room).emit('refreshLobbyStatus', {playerStatus: arrayOfUsersStatus[0]});
       }
 
       function joinRoom(game) {
-          socket.join(room);
-          Games.getPlayersReadyStatus(game, updateLobby);
-          var message_text = socket.user + ' has joined the chat';
-          io.sockets.in(room).emit('message', {message: message_text});
+        socket.join(room);
+        Games.getPlayersReadyStatus(game, updateLobby);
+        var message_text = socket.user + ' has joined the chat';
+        io.sockets.in(room).emit('message', {message: message_text});
       }
 
       winston.log(user + " is in room " + room);
-      Games.addUserToList(room, user, socket, joinRoom );
+      Games.addUserToList(room, user, socket, joinRoom);
       socket.user = user;
     });
 
@@ -58,23 +59,24 @@ module.exports = function (io) {
       io.sockets.in(room).emit('redirect');
       Games.markLobbyAsClosed(room);
       Games.assignRaces(room);
+      Games.setWaitingOnToAll(room);
     });
 
-    socket.on('disconnect', function(){
-      function updateLobby(room, arrayOfUsersStatus){
+    socket.on('disconnect', function () {
+      function updateLobby(room, arrayOfUsersStatus) {
         io.sockets.in(room).emit('refreshLobbyStatus', {playerStatus: arrayOfUsersStatus[0]});
         var message_text = socket.user + ' has left the chat';
         io.sockets.in(room).emit('message', {message: message_text});
       }
 
-      function tellThePeople(gamesList){
-        gamesList.forEach(function(game){
+      function tellThePeople(gamesList) {
+        gamesList.forEach(function (game) {
           Games.getPlayersReadyStatus(game, updateLobby);
         });
       }
 
       function updateAffectedLobbies(err, res, user) {
-        Games.removeUserFromOpenLobbiesQuery(err, res, user,tellThePeople);
+        Games.removeUserFromOpenLobbiesQuery(err, res, user, tellThePeople);
       }
 
       Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
@@ -84,7 +86,22 @@ module.exports = function (io) {
     socket.on('createGame', function (room, user) {
       winston.info(user + " is in game: " + room);
       socket.user = user;
-      io.sockets.in(room).emit('displayActionModal', user);
+      io.sockets.emit('displayActionModal', user);
+    });
+
+    socket.on('gameOrdersSet', function (room, user) {
+      winston.info("USER: " + user + " has set orders for " + room);
+      var gameName = room;
+      Games.removeUserFromWaitingOnListAndCheckIfListIsEmpty(user, gameName, enableOrders);
+
+      function enableOrders(allOrdersAreSet) {
+        if (allOrdersAreSet) {
+          winston.info("enableMoves: room=" + room);
+          io.sockets.emit('enableMoves');
+        } else {
+          winston.info("Not yet, no . . . we wait");
+        }
+      }
     });
   });
 };

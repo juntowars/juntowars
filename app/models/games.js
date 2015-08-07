@@ -14,7 +14,10 @@ var GamesSchema = new Schema({
   name: {type: String, default: '', trim: true, unique: true},
   state: {
     round: {type: Number, default: '1'},
-    phase: {type: String, default: '1'},
+    phase: {
+      name: {type: String, default: 'Set Order Phase'},
+      waitingOn: []
+    },
     nextToMove: {type: String, default: ''},
     units: []
   },
@@ -38,11 +41,11 @@ var GamesSchema = new Schema({
   }],
   publicJoin: {type: Boolean, default: true},
   lobby: {
-    status:  {type: String, default: 'open'},
+    status: {type: String, default: 'open'},
     playerStatus: [
       {
-        uuid:{type: String, default: ''},
-        ready:{type: Boolean, default: false}
+        uuid: {type: String, default: ''},
+        ready: {type: Boolean, default: false}
       }
     ]
   },
@@ -72,21 +75,24 @@ GamesSchema.statics = {
       callback(req, _listOfGameNames);
     });
   },
-  updatePlayersReadyStatus: function(gameName,uuid,cb){
-      var updates = [];
-      updates.push(staticGames.update({"name" : gameName,"lobby.playerStatus.uuid":uuid},{$set :{"lobby.playerStatus.$.ready": true}}).exec());
-      Promise.all(updates).then(function () {
-        cb();
-      });
+  updatePlayersReadyStatus: function (gameName, uuid, cb) {
+    var updates = [];
+    updates.push(staticGames.update({
+      "name": gameName,
+      "lobby.playerStatus.uuid": uuid
+    }, {$set: {"lobby.playerStatus.$.ready": true}}).exec());
+    Promise.all(updates).then(function () {
+      cb();
+    });
   },
-  getPlayersReadyStatus: function(gameName,cb){
+  getPlayersReadyStatus: function (gameName, cb) {
     var currentLobbyStatus = [];
-    staticGames.find({"name" : gameName },{"lobby.playerStatus":1,"_id":0}, function(error, playerStatus){
+    staticGames.find({"name": gameName}, {"lobby.playerStatus": 1, "_id": 0}, function (error, playerStatus) {
       if (error) return winston.error(error);
-      playerStatus.forEach(function(status){
+      playerStatus.forEach(function (status) {
         currentLobbyStatus.push(status._doc.lobby.playerStatus)
       });
-      cb(gameName,currentLobbyStatus)
+      cb(gameName, currentLobbyStatus)
     })
   },
   getOpenGamesList: function (uuid, gameList, fn) {
@@ -123,7 +129,7 @@ GamesSchema.statics = {
       if (gameObject.userList.uuids.length < 6) {
         if (gameObject.userList.uuids.indexOf(user) == -1) {
           gameObject.userList.uuids.push(user);
-          gameObject.lobby.playerStatus.push({uuid:user});
+          gameObject.lobby.playerStatus.push({uuid: user});
           gameDoc[0].save(function (err) {
             if (err) winston.info("An error has occurred: " + err);
             callback(gameName);
@@ -142,9 +148,11 @@ GamesSchema.statics = {
   markLobbyAsClosed: function (gameName) {
     staticGames.update({"name": gameName, "lobby.status": "open"}, {$set: {"lobby.status": "closed"}}).exec();
   },
+  getPlayersInGame: function (room) {
+    return staticGames.find({"name": room}, {"userList.uuids": 1}).exec();
+  },
   assignRaces: function (gameName) {
-    Promise.all([staticGames.find({"name": gameName}, {"userList.uuids": 1}).exec()]
-    ).then(function (data) {
+    Promise.all([GamesSchema.statics.getPlayersInGame(gameName)]).then(function (data) {
       var listOfUsersToGiveRacesTo = data[0][0]._doc.userList.uuids;
       staticGames.update({"name": gameName}, {$set: {"userList.kingdomWatchers": listOfUsersToGiveRacesTo[0]}}).exec();
       staticGames.update({"name": gameName}, {$set: {"userList.periplaneta": listOfUsersToGiveRacesTo[1]}}).exec();
@@ -158,13 +166,34 @@ GamesSchema.statics = {
       gameDocs.forEach(function (game) {
         gamesList.push(game.name);
         updates.push(staticGames.update({"name": game.name}, {$pull: {"userList.uuids": user}}).exec());
-        updates.push(staticGames.update({"name": game.name}, { $pull: { "lobby.playerStatus" : { uuid: user }}}).exec());
+        updates.push(staticGames.update({"name": game.name}, {$pull: {"lobby.playerStatus": {uuid: user}}}).exec());
       });
 
       Promise.all(updates).then(function () {
         cb(gamesList);
       });
     }
+  },
+  removeUserFromWaitingOnList: function (gameName, user) {
+    return staticGames.update({"name": gameName}, {$pull: {"state.phase.waitingOn": user}}).exec();
+  },
+  removeUserFromWaitingOnListAndCheckIfListIsEmpty: function (user, gameName, callback) {
+    Promise.all([GamesSchema.statics.removeUserFromWaitingOnList(gameName, user)]).then(function () {
+      staticGames.find({"name": gameName}, {"state.phase.waitingOn": 1}).exec().then(function (data) {
+        data[0]._doc.state.phase.waitingOn.length > 0 ? callback(false) : callback(true);
+      });
+    });
+  },
+  setWaitingOnToAll: function (gameName) {
+    Promise.all([GamesSchema.statics.getPlayersInGame(gameName)]).then(function (data) {
+      var userList = data[0][0]._doc.userList.uuids;
+      for (var i = 0; i < userList.length; i++) {
+        staticGames.update(
+        {"name": gameName},
+        {$push: {"state.phase.waitingOn": userList[i]}}
+        ).exec();
+      }
+    });
   }
 };
 

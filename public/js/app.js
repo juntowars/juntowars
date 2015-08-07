@@ -10,7 +10,7 @@ function lockInAction(element, icon) {
   var menuOpenButton = element.parentElement.getElementsByClassName('menu-open-button')[0];
   menuOpenButton.style.background = "green";
 
-  if (document.getElementsByClassName('fa-plus').length == 0) enableMoveActions();
+  if (document.getElementsByClassName('fa-plus').length == 0) game_socket.emit('gameOrdersSet', gameRoom, playerName);
 }
 
 function removeOnClickEvent(element) {
@@ -303,12 +303,5 @@ function displayModal() {
   };
 }
 
-function joinGameRoom() {
-  var socket = io.connect(location.origin);
-  var gameRoom = "game_" + window.location.pathname.replace(/.*\//, '');
-  var playerName = getPlayersName();
 
-  socket.emit('createGame', gameRoom, playerName);
-  socket.on('displayActionModal', displayModal());
-}
 

@@ -78,6 +78,7 @@ window.onload = function () {
   }
 
   sendMessageButton.onclick = submitMessage;
+
   messageInput.onkeypress = function () {
     if (event.keyCode == 13) {
       submitMessage();
