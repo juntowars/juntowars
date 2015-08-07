@@ -8,7 +8,7 @@ function changedHUDView(id_name) {
       hudDisplay.classList.add('hudContainer');
     } else {
       var activeHud = document.getElementsByClassName('activeHud')[0];
-      if(activeHud){
+      if (activeHud) {
         activeHud.classList.remove('activeHud');
         activeHud.classList.add('hudContainer');
       }
@@ -16,7 +16,7 @@ function changedHUDView(id_name) {
       hudDisplay.classList.add('activeHud');
     }
 
-    if (hudDisplay.id == 'units') {
+    if (hudDisplay.id == 'units_hud') {
       updateUnitsStrength(data, 'units_hud');
     }
   }
@@ -37,9 +37,7 @@ function addHudListeners() {
   document.getElementById('game_progress_tab').onclick = function () {
     changedHUDView('game_progress_hud');
   };
-
   document.getElementById('player_display_tab').onclick = function () {
     changedHUDView('player_display_hud');
   };
 }
-
