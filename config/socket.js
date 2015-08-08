@@ -84,20 +84,20 @@ module.exports = function (io) {
 
     //game Methods
     socket.on('createGame', function (room, user) {
+      socket.join(room);
       winston.info(user + " is in game: " + room);
       socket.user = user;
-      io.sockets.emit('displayActionModal', user);
+      io.sockets.in(room).emit('displayActionModal', user);
     });
 
     socket.on('gameOrdersSet', function (room, user) {
       winston.info("USER: " + user + " has set orders for " + room);
-      var gameName = room;
-      Games.removeUserFromWaitingOnListAndCheckIfListIsEmpty(user, gameName, enableOrders);
+      Games.removeUserFromWaitingOnListAndCheckIfListIsEmpty(user, room, enableOrders);
 
       function enableOrders(allOrdersAreSet) {
         if (allOrdersAreSet) {
           winston.info("enableMoves: room=" + room);
-          io.sockets.emit('enableMoves');
+          io.sockets.in(room).emit('enableMoves');
         } else {
           winston.info("Not yet, no . . . we wait");
         }
