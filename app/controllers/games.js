@@ -94,9 +94,15 @@ function buildDashboard(req, res) {
 exports.viewGame = function (req, res) {
   var gameTitle = req.url.replace("/games/view/", "");
   winston.info("Viewing gameTitle: " + gameTitle);
-  Games.getGameByTitle(req.user._doc.username, gameTitle, doRender);
-  function doRender(gameDoc) {
-    res.render('games/viewGame', {gameList: gameDoc, username : req.user._doc.username});
+  var gameDoc;
+
+  Games.getGameByTitle(req.user._doc.username, gameTitle, setGameDoc);
+  function setGameDoc(data) {
+    gameDoc = data;
+  }
+  Games.getPlayersRace(gameTitle, req.user._doc.username, doRender);
+  function doRender(race) {
+    res.render('games/viewGame', {gameList: gameDoc, username : req.user._doc.username, raceName: race});
   }
 };
 

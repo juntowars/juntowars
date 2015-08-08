@@ -194,6 +194,33 @@ GamesSchema.statics = {
         ).exec();
       }
     });
+  },
+  getPlayersRace: function (gameName, user, cb) {
+    var _query = staticGames.find({"name": gameName}, {"userList": 1});
+    _query.exec(function (err, data) {
+      if (err) return winston.info("getPlayersRace failed with: " + err);
+
+      var userList = data[0]._doc.userList;
+      switch (user) {
+        case userList.guardians:
+          cb("guardians");
+          break;
+        case userList.reduviidae:
+          cb("reduviidae");
+          break;
+        case userList.periplaneta:
+          cb("periplaneta");
+          break;
+        case userList.kingdomWatchers:
+          cb("kingdomWatchers");
+          break;
+        case userList.settlers:
+          cb("settlers");
+          break;
+        case userList.geoEngineers:
+          cb("geoEngineers");
+      }
+    });
   }
 };
 

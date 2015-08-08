@@ -11,14 +11,14 @@ function GetMap(callback) {
   request.send();
 }
 
-function getRaceByPlayerName(playerName, gameName, cols, units, callback) {
+function getRaceByPlayerName(playerName, gameName, callback) {
   var request = new XMLHttpRequest();
   var getPlayersRaceUrl = location.origin + '/getPlayersRace/' + playerName + "/" + gameName;
   request.open('GET', getPlayersRaceUrl, true);
 
   request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
-      callback(cols, units, JSON.parse(request.responseText).race);
+      callback(JSON.parse(request.responseText).race);
     }
   };
   request.send();
@@ -44,14 +44,15 @@ function getPlayersName() {
 function drawAllUnits(cols, units) {
   var playerName = getPlayersName();
   var gameName = getGameName();
-  getRaceByPlayerName(playerName, gameName, cols, units, startDrawingUnits);
+  var race = getRaceByPlayerName(playerName, gameName, startDrawingUnits);
 
-  function startDrawingUnits(cols, units, race) {
+  function startDrawingUnits(race) {
     for (var i = 0; i < units.length; i++) {
       drawUnits(race, cols, units[i]);
     }
     initSocketSession();
   }
+  startDrawingUnits(race);
 }
 
 function getGameName() {
@@ -59,18 +60,21 @@ function getGameName() {
 }
 
 function GetHudStatistics(callback) {
-  var request = new XMLHttpRequest();
-  var gameName = getGameName();
-  //todo hardcoded for now. Add race variable to query
-  var race = "kingdomWatchers";
 
-  request.open('GET', location.origin + '/getHudStatistics/' + gameName + '/' + race, true);
-  request.onload = function () {
-    if (request.status >= 200 && request.status < 400) {
-      callback(JSON.parse(request.responseText));
-    }
-  };
-  request.send();
+  var gameName = getGameName();
+  var playerName = getPlayersName();
+  getRaceByPlayerName(playerName, gameName, sendRequest);
+
+  function sendRequest(race) {
+    var request = new XMLHttpRequest();
+    request.open('GET', location.origin + '/getHudStatistics/' + gameName + '/' + race, true);
+    request.onload = function () {
+      if (request.status >= 200 && request.status < 400) {
+        callback(JSON.parse(request.responseText));
+      }
+    };
+    request.send();
+  }
 }
 
 function getMenu(index) {
