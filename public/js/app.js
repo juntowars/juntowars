@@ -71,27 +71,30 @@ function handleMoveAction(index, movementAction, turnOn) {
   }
 }
 
-function enableMoveActions() {
-  var listOfMoves = document.getElementsByClassName('fa-arrow-right');
+function enableMoveActions(userToEnableMovesFor, playerName) {
 
-  for (var i = 0; i < listOfMoves.length; i++) {
-    var movementAction = listOfMoves[i];
-    movementAction.parentElement.style.background = 'orange';
+  if (userToEnableMovesFor == playerName) {
+    var listOfMoves = document.getElementsByClassName('fa-arrow-right');
+    for (var i = 0; i < listOfMoves.length; i++) {
+      var movementAction = listOfMoves[i];
+      movementAction.parentElement.style.background = 'orange';
+      movementAction.parentElement.onclick = function () {
 
-    movementAction.parentElement.onclick = function () {
+        //Mark as active and handle move
+        var activeTileInputTag = this.parentElement.getElementsByTagName('input')[0];
+        var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
+        this.classList.add('ACTIVE');
+        handleMoveAction(index, this, true);
 
-      //Mark as active and handle move
-      var activeTileInputTag = this.parentElement.getElementsByTagName('input')[0];
-      var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
-      this.classList.add('ACTIVE');
-      handleMoveAction(index, this, true);
-
-      //End move with second click
-      this.onclick = function () {
-        handleMoveAction(index, this, false);
-        removeActionMenu(this.parentElement);
-      }
-    };
+        //End move with second click
+        this.onclick = function () {
+          handleMoveAction(index, this, false);
+          removeActionMenu(this.parentElement);
+        }
+      };
+    }
+  } else {
+    displayModal("Hold onto your butts", "Waiting on " + userToEnableMovesFor + " to place a move");
   }
 }
 
@@ -296,7 +299,9 @@ function tileHasUnits(tileElement) {
   return (tileElement[0].parentElement.getElementsByTagName('g').length > 0);
 }
 
-function displayModal() {
+function displayModal(heading, text) {
+  document.getElementById('nextActionModalHeading').innerText = heading;
+  document.getElementById('nextActionModalText').innerText = text;
   document.getElementById('nextActionModal').classList.add('show');
   document.getElementById('nextActionModal').onclick = function () {
     document.getElementById('nextActionModal').classList.remove('show');

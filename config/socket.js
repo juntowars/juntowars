@@ -87,7 +87,11 @@ module.exports = function (io) {
       socket.join(room);
       winston.info(user + " is in game: " + room);
       socket.user = user;
-      io.sockets.in(room).emit('displayActionModal', user);
+      io.sockets.in(room).emit('displayActionModal',
+      {
+        heading: "Welcome to the Game",
+        message: "Place your Orders Mother fuckers!"
+      });
     });
 
     socket.on('gameOrdersSet', function (room, user) {
@@ -97,7 +101,7 @@ module.exports = function (io) {
       function enableOrders(allOrdersAreSet) {
         if (allOrdersAreSet) {
           winston.info("enableMoves: room=" + room);
-          io.sockets.in(room).emit('enableMoves');
+          io.sockets.in(room).emit('enableMoves', user);
         } else {
           winston.info("Not yet, no . . . we wait");
         }

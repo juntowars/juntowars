@@ -5,13 +5,11 @@ var gameRoom = window.location.pathname.replace(/.*\//, '');
 var playerName;
 
 game_socket.on('displayActionModal', function (data) {
-  console.log("displayActionModal fired " + data);
-  displayModal();
+  displayModal(data.heading, data.message);
 });
 
-game_socket.on('enableMoves', function () {
-  console.log("enableMoves fired ");
-  enableMoveActions();
+game_socket.on('enableMoves', function (data) {
+  enableMoveActions(data, playerName);
 });
 
 function initSocketSession() {
