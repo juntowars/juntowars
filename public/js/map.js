@@ -83,10 +83,10 @@ function getMenu(index) {
     '<label class="menu-open-button" for="menu-open' + index + '">',
     '<i class="fa fa-plus rotate action-display" ></i>',
     '</label>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\')"> <i class="fa fa-arrow-right move-action"></i> </a>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\')"> <i class="fa fa-shield defence-action"></i> </a>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\')"> <i class="fa fa-bug recruit-action"></i> </a>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\')"> <i class="fa fa-cog harvest-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\',\'move\',' + index + ')"> <i class="fa fa-arrow-right move-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\',\'defence\',' + index + ')"> <i class="fa fa-shield defence-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\',\'recruit\',' + index + ')"> <i class="fa fa-bug recruit-action"></i> </a>',
+    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\',\'harvest\',' + index + ')"> <i class="fa fa-cog harvest-action"></i> </a>',
     '</nav>'].join("");
 }
 

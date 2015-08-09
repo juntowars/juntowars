@@ -1,4 +1,4 @@
-function lockInAction(element, icon) {
+function lockInAction(element, icon, action, index) {
   var middleIcon = element.parentElement.getElementsByClassName('action-display')[0];
   middleIcon.classList.add(icon);
   middleIcon.classList.remove('fa-plus');
@@ -10,7 +10,9 @@ function lockInAction(element, icon) {
   var menuOpenButton = element.parentElement.getElementsByClassName('menu-open-button')[0];
   menuOpenButton.style.background = "green";
 
-  if (document.getElementsByClassName('fa-plus').length == 0) game_socket.emit('gameOrdersSet', gameRoom, playerName);
+  game_socket.emit('lockInOrder', action, playerName, gameRoom, index);
+
+  if (document.getElementsByClassName('fa-plus').length == 0) game_socket.emit('allOrdersAreSet', gameRoom, playerName);
 }
 
 function removeOnClickEvent(element) {

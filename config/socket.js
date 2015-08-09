@@ -85,7 +85,7 @@ module.exports = function (io) {
     //game Methods
     socket.on('createGame', function (room, user) {
       socket.join(room);
-      winston.info(user + " is in game: " + room);
+      winston.info(user + " has joined the game " + room);
       socket.user = user;
       io.sockets.in(room).emit('displayActionModal',
       {
@@ -94,16 +94,23 @@ module.exports = function (io) {
       });
     });
 
-    socket.on('gameOrdersSet', function (room, user) {
-      winston.info("USER: " + user + " has set orders for " + room);
+    socket.on('lockInOrder', function (action, playerName, gameRoom, index) {
+      winston.info(playerName + " has locked in a " + action + ' order for tile ' + index);
+      Games.lockInPlayerOrder(action, playerName, gameRoom, index);
+    });
+
+    socket.on('allOrdersAreSet', function (room, user) {
+      winston.info("Player " + user + " has set all there orders for " + room);
       Games.removeUserFromWaitingOnListAndCheckIfListIsEmpty(user, room, enableOrders);
 
       function enableOrders(allOrdersAreSet) {
         if (allOrdersAreSet) {
-          winston.info("enableMoves: room=" + room);
+          Games.setPhase(room, "movement");
+          winston.info("All player orders have been set for game " + room);
+          winston.info("Enabling move for  " + user);
           io.sockets.in(room).emit('enableMoves', user);
         } else {
-          winston.info("Not yet, no . . . we wait");
+          winston.info("Waiting for other players place orders . .");
         }
       }
     });

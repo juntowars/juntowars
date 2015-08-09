@@ -15,7 +15,7 @@ var GamesSchema = new Schema({
   state: {
     round: {type: Number, default: '1'},
     phase: {
-      name: {type: String, default: 'Set Order Phase'},
+      name: {type: String, default: 'orders'},
       waitingOn: []
     },
     nextToMove: {type: String, default: ''},
@@ -221,6 +221,15 @@ GamesSchema.statics = {
           cb("geoEngineers");
       }
     });
+  },
+  lockInPlayerOrder: function (action, playerName, gameName, index) {
+    staticGames.update({
+      "name": gameName,
+      "state.units": {$elemMatch: {"index": index}}
+    }, {$set: {"state.units.$.order": action}}).exec();
+  },
+  setPhase: function (gameName, phase) {
+    staticGames.update({"name": gameName}, {$set: {"state.phase.name": phase}}).exec();
   }
 };
 
