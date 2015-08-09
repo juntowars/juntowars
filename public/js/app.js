@@ -76,16 +76,26 @@ function handleMoveAction(index, movementAction, turnOn) {
 function enableMoveActions(userToEnableMovesFor, playerName) {
 
   if (userToEnableMovesFor == playerName) {
-    var listOfMoves = document.getElementsByClassName('fa-arrow-right');
+    var listOfMoves = document.getElementsByClassName('action-display fa-arrow-right');
     for (var i = 0; i < listOfMoves.length; i++) {
       var movementAction = listOfMoves[i];
       movementAction.parentElement.style.background = 'orange';
       movementAction.parentElement.onclick = function () {
 
-        //Mark as active and handle move
+        //Mark as active
         var activeTileInputTag = this.parentElement.getElementsByTagName('input')[0];
         var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
         this.classList.add('ACTIVE');
+
+        // Reset other tiles
+        for (var i = 0; i < listOfMoves.length; i++) {
+          var notSelected = !listOfMoves[i].parentElement.classList.contains('ACTIVE');
+          if (notSelected) {
+            listOfMoves[i].parentElement.style.background = 'green';
+            removeOnClickEvent(listOfMoves[i].parentElement);
+          }
+        }
+        //Handle move
         handleMoveAction(index, this, true);
 
         //End move with second click
