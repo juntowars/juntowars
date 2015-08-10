@@ -95,7 +95,7 @@ function displayInfantryUnits(race, numberOfUnits) {
     return "";
   } else {
     var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" id="inf" class="';
-    var infantrySvgClose = '"></circle><text x="25" y="65" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
+    var infantrySvgClose = ' infantry"></circle><text x="25" y="65" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
     return [infantrySvgOpen, race, infantrySvgClose].join('');
   }
 }
@@ -105,7 +105,7 @@ function displayRangedUnits(race, numberOfUnits) {
     return "";
   } else {
     var rangedSvgOpen = '<g><polygon points="60,5 40,40 80,40" class="';
-    var rangedSvgClose = '"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
+    var rangedSvgClose = ' ranged"/><text x="55" y="35" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
     return [rangedSvgOpen, race, rangedSvgClose].join('');
   }
 }
@@ -115,7 +115,7 @@ function displayTankUnits(race, numberOfUnits) {
     return "";
   } else {
     var svgOpen = '<g><rect x="50" y="50" width="40" height="40" class="';
-    var svgClose = '" /><text x="60" y="75" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text> </g>';
+    var svgClose = ' tanks" /><text x="60" y="75" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text> </g>';
     return [svgOpen, race, svgClose].join('');
   }
 }
@@ -155,15 +155,15 @@ function RenderMap(boardBackgroundMap) {
   var mapHolder = document.getElementById('mapHolder');
 
   // Generate a row of hexes as html.
-  var rowHtml = "<div>";
+  var rowHtml = "";
   for (var i = 0; i < cols; i++)
-    rowHtml += '<div class="hex"><svg height="100" width="100"></svg></div>';
+    rowHtml += '<div class="hex" id="x_' + i + '"><svg height="100" width="100"></svg></div>';
   rowHtml += "</div>";
 
   // Main map html.
   var mapHtml = "";
   for (i = 0; i < rows; i++)
-    mapHtml += rowHtml;
+    mapHtml += ('<div id="y_' + i + '">' + rowHtml);
 
   // Set map contents.
   mapHolder.innerHTML = mapHtml;

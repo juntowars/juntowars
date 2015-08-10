@@ -173,7 +173,7 @@ function attackerWins(arrayOfDefendingUnits, defendingUnitsSvgElement, arrayOfAt
   var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
   for (var i = 0; i < unitsToMoveIn.length; i++) {
     moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i]);
-    resetUnit(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
+    removeSelectedState(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
   }
 
   if (defendingUnitsSvgElement.parentElement.childElementCount == 2) {
@@ -247,7 +247,7 @@ function getRaceOfUnit(selectedUnitsShapesToMove) {
 function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
   while (selectedUnitsShapesToMove.length > 0) {
     var shapeToMove = selectedUnitsShapesToMove[0];
-    resetUnit(shapeToMove);
+    removeSelectedState(shapeToMove);
 
     if (tileHasUnits(targetTile)) {
       if (unitMergeRequired(targetTile, shapeToMove)) {
@@ -262,10 +262,19 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
 }
 
 function moveToNonHostileTarget(target, unit) {
-  var oldTileUnits = unit.parentElement;
+  var originTile = unit.parentElement;
+
+  // persist movement
+  var originIndex = getIndexValue(originTile);
+  var targetIndex = getIndexValue(target[0]);
+  var unitType = getUnitType(unit);
+  var unitValue = getUnitValue(unit);
+  var unitRace = getUnitRace(unit);
+  game_socket.emit('peacefulMove', gameRoom, originIndex, targetIndex, unitType, unitValue, unitRace);
+
   target[0].parentElement.getElementsByTagName('svg')[0].appendChild(unit);
-  if (oldTileUnits.childElementCount == 0) {
-    removeActionMenu(oldTileUnits.parentElement.childNodes[0]);
+  if (originTile.childElementCount == 0) {
+    removeActionMenu(originTile.parentElement.childNodes[0]);
   }
 }
 
@@ -278,7 +287,7 @@ function removeActionMenu(menu) {
   }
 }
 
-function resetUnit(shapeToMove) {
+function removeSelectedState(shapeToMove) {
   shapeToMove.classList.remove('selected');
   removeOnClickEvent(shapeToMove.parentElement);
 }
@@ -318,6 +327,30 @@ function displayModal(heading, text) {
   document.getElementById('nextActionModal').onclick = function () {
     document.getElementById('nextActionModal').classList.remove('show');
   };
+}
+
+function getXValue(element) {
+  return parseInt(element.parentElement.id.replace("x_", ""));
+}
+
+function getYValue(element) {
+  return parseInt(element.parentElement.parentElement.id.replace("y_", ""));
+}
+
+function getIndexValue(element) {
+  return getXValue(element) + (getYValue(element) * 24);
+}
+
+function getUnitType(element) {
+  return element.childNodes[0].classList[1];
+}
+
+function getUnitRace(element) {
+  return element.childNodes[0].classList[0];
+}
+
+function getUnitValue(element) {
+  return parseInt(element.childNodes[1].textContent);
 }
 
 

@@ -34,7 +34,7 @@ module.exports = function (io) {
         Games.getPlayersReadyStatus(room, updateClientsWithReadyStatus);
       }
 
-      Games.updatePlayersReadyStatus(room, userName, getLobbyReadyState);
+      Games.setPlayersReadyStatus(room, userName, getLobbyReadyState);
     });
 
     socket.on('create', function (room, user) {
@@ -51,14 +51,14 @@ module.exports = function (io) {
       }
 
       winston.log(user + " is in room " + room);
-      Games.addUserToList(room, user, socket, joinRoom);
+      Games.setUserInLobby(room, user, socket, joinRoom);
       socket.user = user;
     });
 
     socket.on('startGame', function (room) {
       io.sockets.in(room).emit('redirect');
-      Games.markLobbyAsClosed(room);
-      Games.assignRaces(room);
+      Games.setLobbyToClosed(room);
+      Games.setPlayerRaces(room);
       Games.setWaitingOnToAll(room);
     });
 
@@ -79,7 +79,7 @@ module.exports = function (io) {
         Games.removeUserFromOpenLobbiesQuery(err, res, user, tellThePeople);
       }
 
-      Games.findUserInOpenLobbiesQuery(socket.user, updateAffectedLobbies);
+      Games.getUsersOpenLobbiesList(socket.user, updateAffectedLobbies);
     });
 
     //game Methods
@@ -96,7 +96,7 @@ module.exports = function (io) {
 
     socket.on('lockInOrder', function (action, playerName, gameRoom, index) {
       winston.info(playerName + " has locked in a " + action + ' order for tile ' + index);
-      Games.lockInPlayerOrder(action, playerName, gameRoom, index);
+      Games.setPlayerOrder(action, playerName, gameRoom, index);
     });
 
     socket.on('allOrdersAreSet', function (room, user) {
@@ -113,6 +113,25 @@ module.exports = function (io) {
           winston.info("Waiting for other players place orders . .");
         }
       }
+    });
+
+    socket.on('peacefulMove', function (gameRoom, originIndex, targetIndex, unitType, unitValue, unitRace) {
+      function setTargetTileValue() {
+        Games.setUnitValue(gameRoom, targetIndex, unitType, unitValue, unitRace);
+      }
+
+      function checkIfTileShouldBeRemoved() {
+        if (Games.getDoesTileHaveUnits(gameRoom, originIndex)) {
+          winston.info(originIndex + " still has units");
+        } else {
+          winston.info("removing unit doc from index " + originIndex);
+          Games.removeUnitsDoc(gameRoom, originIndex);
+        }
+      }
+
+      winston.info("peacefulMove " + gameRoom + " " + originIndex + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
+      Games.setUnitValue(gameRoom, originIndex, unitType, 0, unitRace, checkIfTileShouldBeRemoved);
+      Games.setUnitDocForIndex(gameRoom, targetIndex, setTargetTileValue);
     });
   });
 };
