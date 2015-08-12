@@ -1,5 +1,5 @@
 <div class="panel panel-primary">
-    <div class="panel-body" style="background-color: #C09853">
+    <div class="panel-body">
         <div id="race_bio" style="width:150px;margin-right: 20px;float: left">
             <div id="player_pic">
                 <img src="/img/leader_profiles/{{raceName}}.jpg" class="img-responsive" alt="Kingdom Watchers" width="150"
@@ -7,10 +7,10 @@
             </div>
         </div>
         <div>
-            <a href="#" class="btn btn-info" style="position: relative;width: 145px;">Race Bio</a>
+            <a href="#" onclick="displayModal('{{ raceName }}', '{{ raceName }}')" class="btn btn-primary" style="position: relative;width: 145px;">Race Bio</a>
         </div>
         <div>
-            <a href="#" class="btn btn-info" style="position: relative;width: 145px;">Leader Info</a>
+            <a href="#" class="btn btn-primary" style="position: relative;width: 145px;">Leader Info</a>
         </div>
         <div id="game_stats_player_display" style="float: right">
             <div id="army_strength_player_display">

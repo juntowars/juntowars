@@ -321,12 +321,39 @@ function tileHasUnits(tileElement) {
 }
 
 function displayModal(heading, text) {
-  document.getElementById('nextActionModalHeading').innerText = heading;
-  document.getElementById('nextActionModalText').innerText = text;
-  document.getElementById('nextActionModal').classList.add('show');
-  document.getElementById('nextActionModal').onclick = function () {
-    document.getElementById('nextActionModal').classList.remove('show');
-  };
+  var races = ["kingdomWatchers", "periplaneta"];
+
+  if (races.indexOf(heading) > -1) {
+    function loadJSON(callback) {
+      var http = new XMLHttpRequest();
+      http.overrideMimeType("application/json");
+      http.open('GET', location.origin + '/getRaceHistory/' + heading, true);
+      http.onload = function () {
+        if (http.readyState == 4 && http.status == "200") {
+          callback(http.responseText);
+        }
+      };
+      http.send();
+    }
+
+    loadJSON(function (response) {
+      var actual_JSON = JSON.parse(response);
+      heading = actual_JSON.header;
+      text = actual_JSON.text;
+      populateModal();
+    });
+
+  } else{
+    populateModal();
+  }
+  function populateModal() {
+    document.getElementById('nextActionModalHeading').innerHTML = heading;
+    document.getElementById('nextActionModalText').innerHTML = text;
+    document.getElementById('nextActionModal').classList.add('show');
+    document.getElementById('nextActionModal').onclick = function () {
+      document.getElementById('nextActionModal').classList.remove('show');
+    };
+  }
 }
 
 function getXValue(element) {
