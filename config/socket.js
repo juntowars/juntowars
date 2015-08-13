@@ -89,8 +89,7 @@ module.exports = function (io) {
       socket.user = user;
       io.sockets.in(room).emit('displayActionModal',
       {
-        heading: "Welcome to the Game",
-        message: "Place your Orders Mother fuckers!"
+        message: "<h1>Welcome to the Game</h1><p>Place your Orders Mother fuckers!</p>"
       });
     });
 

@@ -5,7 +5,7 @@ var gameRoom = window.location.pathname.replace(/.*\//, '');
 var playerName;
 
 game_socket.on('displayActionModal', function (data) {
-  displayModal(data.heading, data.message);
+  displayModal(data.message);
 });
 
 game_socket.on('enableMoves', function (data) {
@@ -13,7 +13,7 @@ game_socket.on('enableMoves', function (data) {
 });
 
 function initSocketSession() {
-  document.getElementById('nextActionModal').classList.remove('show');
+  document.getElementById('gameModal').classList.remove('show');
   playerName = getPlayersName();
   game_socket.emit('createGame', gameRoom, playerName);
   console.log('createGame ' + gameRoom + " " + playerName);

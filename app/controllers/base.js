@@ -16,7 +16,15 @@ exports.getMap = function (req, res) {
 
 exports.getRaceHistory = function (req, res) {
   var race = req.url.replace(/\/getRaceHistory.*\//, "");
-  var data = Base.schema.raceHistory[race];
+  var data = Base.schema.flavourText[race].history;
+  res.setHeader("Content-Type", 'application/jsonp');
+  res.jsonp(data);
+};
+
+exports.getLeaderBio = function (req, res) {
+  var leader = req.url.replace(/\/getLeaderBio.*\//, "");
+  var race = req.url.replace("/getLeaderBio/", "").replace("/" + leader, "");
+  var data = Base.schema.flavourText[race].leaderBio[leader];
   res.setHeader("Content-Type", 'application/jsonp');
   res.jsonp(data);
 };

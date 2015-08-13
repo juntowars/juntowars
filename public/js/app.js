@@ -106,7 +106,7 @@ function enableMoveActions(userToEnableMovesFor, playerName) {
       };
     }
   } else {
-    displayModal("Hold onto your butts", "Waiting on " + userToEnableMovesFor + " to place a move");
+    displayModal("<h1>Hold onto your butts</h1><p>Waiting on " + userToEnableMovesFor + " to place a move</p>");
   }
 }
 
@@ -320,40 +320,50 @@ function tileHasUnits(tileElement) {
   return (tileElement[0].parentElement.getElementsByTagName('g').length > 0);
 }
 
-function displayModal(heading, text) {
+function displayModal(modalBody, requiredInfo) {
   var races = ["kingdomWatchers", "periplaneta"];
 
-  if (races.indexOf(heading) > -1) {
-    function loadJSON(callback) {
-      var http = new XMLHttpRequest();
-      http.overrideMimeType("application/json");
-      http.open('GET', location.origin + '/getRaceHistory/' + heading, true);
-      http.onload = function () {
-        if (http.readyState == 4 && http.status == "200") {
-          callback(http.responseText);
-        }
-      };
-      http.send();
-    }
-
-    loadJSON(function (response) {
-      var actual_JSON = JSON.parse(response);
-      heading = actual_JSON.header;
-      text = actual_JSON.text;
-      populateModal();
+  if (races.indexOf(modalBody) > -1) {
+    getRequiredInfo(modalBody, requiredInfo, function(data) {
+      populateModal(data);
     });
-
-  } else{
-    populateModal();
+  } else {
+    populateModal(modalBody);
   }
-  function populateModal() {
-    document.getElementById('nextActionModalHeading').innerHTML = heading;
-    document.getElementById('nextActionModalText').innerHTML = text;
-    document.getElementById('nextActionModal').classList.add('show');
-    document.getElementById('nextActionModal').onclick = function () {
-      document.getElementById('nextActionModal').classList.remove('show');
+  function populateModal(gameModalBody) {
+    document.getElementById('gameModalBody').innerHTML = gameModalBody;
+    document.getElementById('gameModal').classList.add('show');
+    document.getElementById('gameModal').onclick = function () {
+      document.getElementById('gameModal').classList.remove('show');
     };
   }
+}
+
+function getRequiredInfo(modalBody, requiredInfo, cb) {
+  function loadJSON(callback) {
+    var url;
+    if (requiredInfo == "history") {
+      url = '/getRaceHistory/' + modalBody;
+    } else if (requiredInfo == "leaderBio") {
+      //leader hardcoded for now
+      //TODO create controller for leader retrieval
+      url = '/getLeaderBio/' + modalBody + '/leader_1';
+    }
+
+    var http = new XMLHttpRequest();
+    http.overrideMimeType("application/json");
+    http.open('GET', location.origin + url, true);
+    http.onload = function () {
+      if (http.readyState == 4 && http.status == "200") {
+        callback(http.responseText);
+      }
+    };
+    http.send();
+  }
+
+  loadJSON(function (response) {
+    cb(JSON.parse(response));
+  });
 }
 
 function getXValue(element) {

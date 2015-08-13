@@ -43,6 +43,7 @@ module.exports = function (app, passport) {
   app.get('/getPlayersRace/:player/:game', games.getPlayersRace);
   app.get('/getHudStatistics/:game/:race', games.getHudStatistics);
   app.get('/getRaceHistory/:race', base.getRaceHistory);
+  app.get('/getLeaderBio/:race/:leader', base.getLeaderBio);
   app.get('/games', games.index);
   app.get('/games/user/:userId', auth.requiresLogin, games.dashboard);
   app.post('/games/user/:userId', auth.requiresLogin, games.create);
