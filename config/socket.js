@@ -116,20 +116,22 @@ module.exports = function (io) {
 
     socket.on('peacefulMove', function (gameRoom, originIndex, targetIndex, unitType, unitValue, unitRace) {
       function setTargetTileValue() {
-        Games.setUnitValue(gameRoom, targetIndex, unitType, unitValue, unitRace);
+        Games.setUnitValueInTile(gameRoom, targetIndex, unitType, unitValue, unitRace);
       }
 
       function checkIfTileShouldBeRemoved() {
-        if (Games.getDoesTileHaveUnits(gameRoom, originIndex)) {
-          winston.info(originIndex + " still has units");
-        } else {
-          winston.info("removing unit doc from index " + originIndex);
-          Games.removeUnitsDoc(gameRoom, originIndex);
-        }
+        Games.getDoesTileHaveUnits(gameRoom, originIndex, function (isTileEmpty) {
+          if (isTileEmpty) {
+            winston.info(originIndex + " still has units");
+          } else {
+            winston.info("removing unit doc from index " + originIndex);
+            Games.removeUnitsDoc(gameRoom, originIndex);
+          }
+        });
       }
 
       winston.info("peacefulMove " + gameRoom + " " + originIndex + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
-      Games.setUnitValue(gameRoom, originIndex, unitType, 0, unitRace, checkIfTileShouldBeRemoved);
+      Games.setUnitValueInTile(gameRoom, originIndex, unitType, 0, unitRace, checkIfTileShouldBeRemoved);
       Games.setUnitDocForIndex(gameRoom, targetIndex, setTargetTileValue);
     });
   });
