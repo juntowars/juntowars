@@ -245,7 +245,9 @@ function getRaceOfUnit(selectedUnitsShapesToMove) {
 }
 
 function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
-  while (selectedUnitsShapesToMove.length > 0) {
+  function moveUnit(selectedUnitsShapesToMove) {
+    if (selectedUnitsShapesToMove.length == 0) return;
+
     var shapeToMove = selectedUnitsShapesToMove[0];
     removeSelectedState(shapeToMove);
 
@@ -253,24 +255,33 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
       if (unitMergeRequired(targetTile, shapeToMove)) {
         mergeUnits(shapeToMove, targetTile);
       } else {
-        moveToNonHostileTarget(targetTile, shapeToMove.parentElement);
+        moveToNonHostileTarget(targetTile, shapeToMove.parentElement, waitForUpdateAndLoopIfNeeded);
       }
     } else {
-      moveToNonHostileTarget(targetTile, shapeToMove.parentElement);
+      moveToNonHostileTarget(targetTile, shapeToMove.parentElement, waitForUpdateAndLoopIfNeeded);
     }
   }
+
+  function waitForUpdateAndLoopIfNeeded() {
+    if (selectedUnitsShapesToMove.length > 0) moveUnit(selectedUnitsShapesToMove);
+  }
+
+  moveUnit(selectedUnitsShapesToMove);
 }
 
-function moveToNonHostileTarget(target, unit) {
+function moveToNonHostileTarget(target, unit, cb) {
   var originTile = unit.parentElement;
 
-  // persist movement
-  var originIndex = getIndexValue(originTile);
-  var targetIndex = getIndexValue(target[0]);
-  var unitType = getUnitType(unit);
-  var unitValue = getUnitValue(unit);
-  var unitRace = getUnitRace(unit);
-  game_socket.emit('peacefulMove', gameRoom, originIndex, targetIndex, unitType, unitValue, unitRace);
+  var movementDetails = {
+    gameRoom: gameRoom,
+    originIndex: getIndexValue(originTile),
+    targetIndex: getIndexValue(target[0]),
+    unitType: getUnitType(unit),
+    unitValue: getUnitValue(unit),
+    unitRace: getUnitRace(unit)
+  };
+
+  game_socket.emit('peacefulMove', movementDetails, cb);
 
   target[0].parentElement.getElementsByTagName('svg')[0].appendChild(unit);
   if (originTile.childElementCount == 0) {
@@ -324,7 +335,7 @@ function displayModal(modalBody, requiredInfo) {
   var races = ["kingdomWatchers", "periplaneta"];
 
   if (races.indexOf(modalBody) > -1) {
-    getRequiredInfo(modalBody, requiredInfo, function(data) {
+    getRequiredInfo(modalBody, requiredInfo, function (data) {
       populateModal(data);
     });
   } else {

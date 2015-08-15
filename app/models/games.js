@@ -138,11 +138,11 @@ GamesSchema.statics = {
       callback(gameDoc);
     });
   },
-  getDoesTileHaveUnits: function (gameName, index, callback) {
+  doesTheTileContainUnits: function (gameName, index, callback) {
     Promise.all([GamesSchema.statics.getTilesUnits(gameName, index)])
     .then(function (data) {
       var tile = data[0][0]._doc.state.units[0];
-      winston.info("getDoesTileHaveUnits " + tile.infantry + " " + tile.ranged + " " + tile.tanks);
+      winston.info("doesTheTileContainUnits " + tile.infantry + " " + tile.ranged + " " + tile.tanks);
       var isTileEmpty = (tile.infantry + tile.ranged + tile.tanks) > 0;
       winston.info("isTileEmpty" + isTileEmpty + " value of units is " + (tile.infantry + tile.ranged + tile.tanks));
       callback((tile.infantry + tile.ranged + tile.tanks) > 0);
@@ -252,7 +252,7 @@ GamesSchema.statics = {
       }
     });
   },
-  setUnitValueInTile: function (gameName, index, unitType, unitValue, unitRace, callback) {
+  updateUnitsValues: function (gameName, index, unitType, unitValue, unitRace, callback) {
     //todo find the current value and add unitValue
     if (unitType == "infantry") {
       staticGames.update(

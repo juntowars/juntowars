@@ -3,6 +3,7 @@ var games = require('../app/controllers/games');
 var base = require('../app/controllers/base');
 var mongoose = require('mongoose');
 var winston = require('winston');
+var Promise = require("bluebird");
 var Games = mongoose.model('Games');
 
 module.exports = function (io) {
@@ -114,25 +115,30 @@ module.exports = function (io) {
       }
     });
 
-    socket.on('peacefulMove', function (gameRoom, originIndex, targetIndex, unitType, unitValue, unitRace) {
-      function setTargetTileValue() {
-        Games.setUnitValueInTile(gameRoom, targetIndex, unitType, unitValue, unitRace);
-      }
+    socket.on('peacefulMove', function (movementDetails, cb) {
+      var gameRoom = movementDetails.gameRoom;
+      var originIndex = movementDetails.originIndex;
+      var targetIndex = movementDetails.targetIndex;
+      var unitType = movementDetails.unitType;
+      var unitValue = movementDetails.unitValue;
+      var unitRace = movementDetails.unitRace;
 
-      function checkIfTileShouldBeRemoved() {
-        Games.getDoesTileHaveUnits(gameRoom, originIndex, function (isTileEmpty) {
-          if (isTileEmpty) {
-            winston.info(originIndex + " still has units");
-          } else {
-            winston.info("removing unit doc from index " + originIndex);
+      winston.info("peacefulMove " + movementDetails);
+
+      var removeUnitFromOrigin = Games.updateUnitsValues(gameRoom, originIndex, unitType, 0, unitRace, function () {
+        Games.doesTheTileContainUnits(gameRoom, originIndex, function (tileContainsUnits) {
+          if (!tileContainsUnits) {
+            winston.info("Tile " + originIndex + " has no units, removing unit doc");
             Games.removeUnitsDoc(gameRoom, originIndex);
           }
         });
-      }
+      });
 
-      winston.info("peacefulMove " + gameRoom + " " + originIndex + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
-      Games.setUnitValueInTile(gameRoom, originIndex, unitType, 0, unitRace, checkIfTileShouldBeRemoved);
-      Games.setUnitDocForIndex(gameRoom, targetIndex, setTargetTileValue);
+      var addUnitToTarget = Games.setUnitDocForIndex(gameRoom, targetIndex, function () {
+        Games.updateUnitsValues(gameRoom, targetIndex, unitType, unitValue, unitRace);
+      });
+
+      Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
     });
   });
 };
