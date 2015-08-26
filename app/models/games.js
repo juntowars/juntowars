@@ -249,6 +249,8 @@ GamesSchema.statics = {
             }
           }
         }).exec(callback);
+      } else {
+        callback();
       }
     });
   },

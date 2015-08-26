@@ -123,18 +123,19 @@ module.exports = function (io) {
       var unitValue = movementDetails.unitValue;
       var unitRace = movementDetails.unitRace;
 
-      winston.info("peacefulMove " + movementDetails);
+      winston.info("peacefulMove " + unitType);
 
       var removeUnitFromOrigin = Games.updateUnitsValues(gameRoom, originIndex, unitType, 0, unitRace, function () {
         Games.doesTheTileContainUnits(gameRoom, originIndex, function (tileContainsUnits) {
           if (!tileContainsUnits) {
-            winston.info("Tile " + originIndex + " has no units, removing unit doc");
+            winston.info("Tile " + originIndex + " has no units, removing unit doc " + unitType);
             Games.removeUnitsDoc(gameRoom, originIndex);
           }
         });
       });
 
       var addUnitToTarget = Games.setUnitDocForIndex(gameRoom, targetIndex, function () {
+        winston.info("updateUnitsValues " + gameRoom + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
         Games.updateUnitsValues(gameRoom, targetIndex, unitType, unitValue, unitRace);
       });
 

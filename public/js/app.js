@@ -253,11 +253,14 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
 
     if (tileHasUnits(targetTile)) {
       if (unitMergeRequired(targetTile, shapeToMove)) {
+        console.log("mergeUnits " + shapeToMove.toString)
         mergeUnits(shapeToMove, targetTile);
       } else {
+        console.log("moveToNonHostileTarget " + shapeToMove.toString)
         moveToNonHostileTarget(targetTile, shapeToMove.parentElement, waitForUpdateAndLoopIfNeeded);
       }
     } else {
+      console.log("no tileHasUnits -  moveToNonHostileTarget " + shapeToMove.toString)
       moveToNonHostileTarget(targetTile, shapeToMove.parentElement, waitForUpdateAndLoopIfNeeded);
     }
   }
