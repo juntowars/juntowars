@@ -10,10 +10,12 @@ module.exports = new (function () {
     winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " starting test");
 
     client
-    .url('http://localhost:3000/login')
-    .setValue('#email', clientNumber + '@test.com')
-    .waitForElementVisible('#password', client.globals.WAIT)
-    .setValue('#password', 'test', function() {
+    .url(client.globals.BASE_URL + 'signup')
+    .waitForElementVisible('#name', client.globals.WAIT)
+    .setValue('#name', "created_user_" + clientNumber)
+    .setValue('#email', clientNumber + '@create.com')
+    .setValue('#username', "created" + clientNumber)
+    .setValue('#password', 'test', function () {
       client.click('button[type=submit]');
     })
     .waitForElementVisible('a[title="Your Games"]', client.globals.WAIT)
@@ -46,23 +48,21 @@ module.exports = new (function () {
       });
     }
 
-      function startTheGame() {
-        winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " in startTheGame");
+    function startTheGame() {
+      winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " in startTheGame");
 
-          client
-          .waitForElementPresent('#initGameButton', client.globals.WAIT)
-          .click('#initGameButton')
-          .waitForElementPresent('#map', client.globals.WAIT)
-          .assert.elementPresent('#map');
-      }
-    };
-
-    testCases.after = function (client) {
-      winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " finished test");
       client
-      .end();
-    };
-  }
-  )
-    ;
+      .waitForElementPresent('#initGameButton', client.globals.WAIT)
+      .click('#initGameButton')
+      .waitForElementPresent('#map', client.globals.WAIT)
+      .assert.elementPresent('#map');
+    }
+  };
+
+  testCases.after = function (client) {
+    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " finished test");
+    client.end();
+  };
+
+});
 
