@@ -58,20 +58,34 @@ module.exports = new (function () {
 
     function startTheGame() {
       if (cNum == 1) {
-        client
-        .waitForElementPresent('#initGameButton', wait)
-        .click('#initGameButton')
-        .waitForElementPresent('#map', wait)
-        .assert.elementPresent('#map');
+        client.waitForElementPresent('#initGameButton', wait)
+        .click('#initGameButton');
       }
       else {
-        client.pause(1000)
+        client.pause(1000);
       }
+      client.waitForElementPresent('#map', wait)
+      .assert.elementPresent('#map');
     }
   };
 
   testCases['Part 3: Both player proceed to place there orders'] = function (client) {
-    client.pause(10000);
+    client
+    .waitForElementPresent('#gameModal', wait)
+    .click('#gameModal')
+    .pause(1000)
+    .elements('id', 'order', function (order) {
+      for (var i = 0; i < order.value.length; i++) {
+        client
+        .elementIdClick(order.value[i].ELEMENT)  //this line was a fucking nightmare to figure out, fuck you world
+        .pause(1000)
+        .elements('class name', 'move-action', function (movecommand) {
+          for (var i = 0; i < movecommand.value.length; i++) {
+            client.elementIdClick(movecommand.value[i].ELEMENT).pause(1000);
+          }
+        });
+      }
+    }).pause(10000);
   };
 
   testCases.after = function (client) {

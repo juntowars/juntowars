@@ -80,7 +80,7 @@ function GetHudStatistics(callback) {
 function getMenu(index) {
   return ['<nav class="menu" >',
     '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
-    '<label class="menu-open-button" for="menu-open' + index + '">',
+    '<label class="menu-open-button" for="menu-open' + index + '" id="order">',
     '<i class="fa fa-plus rotate action-display" ></i>',
     '</label>',
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\',\'move\',' + index + ')"> <i class="fa fa-arrow-right move-action"></i> </a>',
