@@ -3,44 +3,52 @@ var winston = require('winston');
 module.exports = new (function () {
   winston.log('info', 'Winston recording Lobby.js!');
 
+  var BASE_URL = "http://localhost:3000/";
+  var wait = 2000;
+  var signUpUrl = BASE_URL + 'signup';
   var testCases = this;
-  var clientNumber = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
-  testCases['players login and join games lobby'] = function (client) {
-    winston.level = 'debug';
-    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " starting test");
+  var cNum = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
+  var game = "testgame";
+  var gameExpander = '#expand-' + game;
+  var goToGameLobby = '#goto-' + game;
 
+  testCases['Part 1: Two players sign up and join a lovely game'] = function (client) {
     client
-    .url(client.globals.BASE_URL + 'signup')
-    .waitForElementVisible('#name', client.globals.WAIT)
-    .setValue('#name', "created_user_" + clientNumber)
-    .setValue('#email', clientNumber + '@create.com')
-    .setValue('#username', "created" + clientNumber)
-    .setValue('#password', 'test', function () {
-      client.click('button[type=submit]');
+    .url(signUpUrl)
+    .waitForElementVisible('#name', wait)
+    .setValue('#name', "created_user_" + cNum)
+    .setValue('#email', cNum + '@create.com')
+    .setValue('#username', "created" + cNum)
+    .setValue('#password', 'test')
+    .click('#signUpButton')
+    .waitForElementVisible('#games-tab', wait)
+    .assert.containsText('#games-tab', 'Games')
+    .click('#games-tab', function () {
+      if (cNum == 1) {
+        client
+        .pause(500)
+        .setValue('#gameTitle', game)
+        .click('#createNewGameButton');
+      } else {
+        client.pause(1000).click('#games-tab');
+      }
     })
-    .waitForElementVisible('a[title="Your Games"]', client.globals.WAIT)
-    .assert.containsText('a[title="Your Games"]', 'Games')
-    .click('a[title="Your Games"]')
-    .waitForElementVisible('#accordion > div > div.panel-heading > h4', client.globals.WAIT)
-    .click('#accordion > div > div.panel-heading > h4')
-    .waitForElementVisible('#test > div > a', client.globals.WAIT)
-    .click('#test > div > a');
-    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " has clicked javascript dropdown");
+    .waitForElementVisible(gameExpander, wait)
+    .click(gameExpander)
+    .waitForElementVisible(goToGameLobby, wait)
+    .click(goToGameLobby);
   };
 
-
-  testCases['once all players ready, first user clicks start button'] = function (client) {
+  testCases['Part 2: Once all players ready, user one clicks start button'] = function (client) {
 
     recheckButtonClicked();
 
     function recheckButtonClicked() {
-      winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " in recheck");
       client.pause(2000)
       .isVisible('#readyButton', function (result) {
         winston.log('debug', "readyButton is " + result.value);
         if (result.value == true) {
-          client
-          .click("#readyButton", startTheGame);
+          client.click("#readyButton", startTheGame);
         }
         else {
           recheckButtonClicked();
@@ -49,18 +57,24 @@ module.exports = new (function () {
     }
 
     function startTheGame() {
-      winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " in startTheGame");
-
-      client
-      .waitForElementPresent('#initGameButton', client.globals.WAIT)
-      .click('#initGameButton')
-      .waitForElementPresent('#map', client.globals.WAIT)
-      .assert.elementPresent('#map');
+      if (cNum == 1) {
+        client
+        .waitForElementPresent('#initGameButton', wait)
+        .click('#initGameButton')
+        .waitForElementPresent('#map', wait)
+        .assert.elementPresent('#map');
+      }
+      else {
+        client.pause(1000)
+      }
     }
   };
 
+  testCases['Part 3: Both player proceed to place there orders'] = function (client) {
+    client.pause(10000);
+  };
+
   testCases.after = function (client) {
-    winston.log('debug', process.env.__NIGHTWATCH_ENV_KEY + " finished test");
     client.end();
   };
 

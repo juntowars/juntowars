@@ -13,10 +13,10 @@
       <ul class="nav navbar-nav">
         {% if (req.isAuthenticated()) %}
           <li class="{% if (isActive('/games')) %}active{% endif %}">
-            <a href="{{ '/games/user/' + req.user.id }}" title="Your Games">Games</a>
+            <a href="{{ '/games/user/' + req.user.id }}" title="Your Games" id="games-tab">Games</a>
           </li>
           <li class="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
-            <a href="{{ '/users/' + req.user.id }}" title="Profile">Profile</a>
+            <a href="{{ '/users/' + req.user.id }}" id="profile-tab" title="Profile">Profile</a>
           </li>
           <li>
             <a href="/logout" title="logout">Logout</a>
