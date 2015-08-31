@@ -78,7 +78,8 @@ function GetHudStatistics(callback) {
 }
 
 function getMenu(index) {
-  return ['<nav class="menu" >',
+  return [
+    '<nav class="menu" >',
     '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
     '<label class="menu-open-button" for="menu-open' + index + '" id="order">',
     '<i class="fa fa-plus rotate action-display" ></i>',
@@ -87,14 +88,15 @@ function getMenu(index) {
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\',\'defence\',' + index + ')"> <i class="fa fa-shield defence-action"></i> </a>',
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\',\'recruit\',' + index + ')"> <i class="fa fa-bug recruit-action"></i> </a>',
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\',\'harvest\',' + index + ')"> <i class="fa fa-cog harvest-action"></i> </a>',
-    '</nav>'].join("");
+    '</nav>'
+  ].join("");
 }
 
 function displayInfantryUnits(race, numberOfUnits) {
   if (numberOfUnits == 0) {
     return "";
   } else {
-    var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" id="inf" class="';
+    var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" class="';
     var infantrySvgClose = ' infantry"></circle><text x="25" y="65" font-family="Verdana" font-size="20" fill="black">' + numberOfUnits + '</text></g>';
     return [infantrySvgOpen, race, infantrySvgClose].join('');
   }

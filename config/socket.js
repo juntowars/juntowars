@@ -84,7 +84,7 @@ module.exports = function (io) {
     });
 
     //game Methods
-    socket.on('createGame', function (room, user) {
+    socket.on('joinGame', function (room, user) {
       socket.join(room);
       winston.info(user + " has joined the game " + room);
       socket.user = user;

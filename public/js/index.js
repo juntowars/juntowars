@@ -15,7 +15,6 @@ game_socket.on('enableMoves', function (data) {
 function initSocketSession() {
   document.getElementById('gameModal').classList.remove('show');
   playerName = getPlayersName();
-  game_socket.emit('createGame', gameRoom, playerName);
-  console.log('createGame ' + gameRoom + " " + playerName);
+  game_socket.emit('joinGame', gameRoom, playerName);
 }
 

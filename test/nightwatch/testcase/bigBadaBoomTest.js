@@ -7,24 +7,26 @@ module.exports = new (function () {
   var wait = 2000;
   var signUpUrl = BASE_URL + 'signup';
   var testCases = this;
-  var cNum = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
+  var player = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
   var game = "testgame";
   var gameExpander = '#expand-' + game;
   var goToGameLobby = '#goto-' + game;
 
   testCases['Part 1: Two players sign up and join a lovely game'] = function (client) {
+    client.resizeWindow(800, 800);
+
     client
     .url(signUpUrl)
     .waitForElementVisible('#name', wait)
-    .setValue('#name', "created_user_" + cNum)
-    .setValue('#email', cNum + '@create.com')
-    .setValue('#username', "created" + cNum)
+    .setValue('#name', "created_user_" + player)
+    .setValue('#email', player + '@create.com')
+    .setValue('#username', "created" + player)
     .setValue('#password', 'test')
     .click('#signUpButton')
     .waitForElementVisible('#games-tab', wait)
     .assert.containsText('#games-tab', 'Games')
     .click('#games-tab', function () {
-      if (cNum == 1) {
+      if (player == 1) {
         client
         .pause(500)
         .setValue('#gameTitle', game)
@@ -39,14 +41,13 @@ module.exports = new (function () {
     .click(goToGameLobby);
   };
 
-  testCases['Part 2: Once all players ready, user one clicks start button'] = function (client) {
+  testCases['Part 2: Once all players ready, player one clicks the start button'] = function (client) {
 
     recheckButtonClicked();
 
     function recheckButtonClicked() {
       client.pause(2000)
       .isVisible('#readyButton', function (result) {
-        winston.log('debug', "readyButton is " + result.value);
         if (result.value == true) {
           client.click("#readyButton", startTheGame);
         }
@@ -57,7 +58,7 @@ module.exports = new (function () {
     }
 
     function startTheGame() {
-      if (cNum == 1) {
+      if (player == 1) {
         client.waitForElementPresent('#initGameButton', wait)
         .click('#initGameButton');
       }
@@ -69,27 +70,49 @@ module.exports = new (function () {
     }
   };
 
-  testCases['Part 3: Both player proceed to place there orders'] = function (client) {
+  testCases['Part 3: Both players proceed to place their orders'] = function (client) {
     client
     .waitForElementPresent('#gameModal', wait)
     .click('#gameModal')
     .pause(1000)
-    .elements('id', 'order', function (order) {
+    .elements('xpath', "//i[contains(@class, 'fa fa-plus rotate action-display')]", function (order) {
       for (var i = 0; i < order.value.length; i++) {
         client
         .elementIdClick(order.value[i].ELEMENT)  //this line was a fucking nightmare to figure out, fuck you world
-        .pause(1000)
-        .elements('class name', 'move-action', function (movecommand) {
+        .pause(250)
+        .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right move-action')]", function (movecommand) {
           for (var i = 0; i < movecommand.value.length; i++) {
-            client.elementIdClick(movecommand.value[i].ELEMENT).pause(1000);
+            client.elementIdClick(movecommand.value[i].ELEMENT);
           }
         });
       }
-    }).pause(10000);
+    });
+  };
+
+  testCases['Part 4: Player one makes a peaceful move'] = function (client) {
+    if (player == 1) {
+      client.elements('xpath', "//i[contains(@class, 'fa rotate action-display fa-arrow-right')]", function (move) {
+        var orderOfInterest = move.value[1].ELEMENT;
+        client
+        .elementIdClick(orderOfInterest)
+        .pause(100)
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')
+        .pause(100)
+        .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]')
+        .pause(100)
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')
+        .pause(100)
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[2]/*[2]')
+        .pause(100)
+        .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]');
+      });
+    } else {
+      client.waitForElementVisible('#gameModal', wait).click('#gameModal'); // doesn't work?
+    }
   };
 
   testCases.after = function (client) {
-    client.end();
+    client.pause(10000).end();
   };
 
 });

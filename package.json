@@ -22,8 +22,7 @@
     "debug": "DEBUG=* NODE_PATH=./config:./app/controllers NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "start": "NODE_PATH=./config:./app/controllers NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "test": "/usr/local/bin/node test/nightwatch.js -c nightwatch.json --env chrome,chrome",
-    "pretest": "mongo junto test/support/resetTestData.js",
-    "posttest": "mongo junto test/support/resetTestData.js"
+    "pretest": "mongo junto test/support/resetTestData.js"
   },
   "dependencies": {
     "async": "1.2.1",
