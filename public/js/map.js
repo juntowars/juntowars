@@ -77,7 +77,24 @@ function GetHudStatistics(callback) {
   }
 }
 
-function getMenu(index) {
+function getMenu(index, order) {
+  switch(order) {
+    case "notSet":
+      return notSetMenu(index);
+    case "move":
+      return presetMoveOrder(index);
+    case "defense":
+      return presetDefenceOrder(index);
+    case "recruit":
+      return presetRecruitOrder(index);
+    case "harvest":
+      return presetHarvestOrder(index);
+    default:
+      return "";
+  }
+}
+
+function notSetMenu(index) {
   return [
     '<nav class="menu" >',
     '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
@@ -88,6 +105,50 @@ function getMenu(index) {
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\',\'defence\',' + index + ')"> <i class="fa fa-shield defence-action"></i> </a>',
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\',\'recruit\',' + index + ')"> <i class="fa fa-bug recruit-action"></i> </a>',
     '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\',\'harvest\',' + index + ')"> <i class="fa fa-cog harvest-action"></i> </a>',
+    '</nav>'
+  ].join("");
+}
+
+function presetDefenceOrder(index) {
+  return [
+    '<nav class="menu" >',
+    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+    '<i class="fa fa-shield rotate action-display" ></i>',
+    '</label>',
+    '</nav>'
+  ].join("");
+}
+
+function presetRecruitOrder(index) {
+  return [
+    '<nav class="menu" >',
+    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+    '<i class="fa fa-bug rotate action-display" ></i>',
+    '</label>',
+    '</nav>'
+  ].join("");
+}
+
+function presetHarvestOrder(index) {
+  return [
+    '<nav class="menu" >',
+    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+    '<i class="fa fa-cog rotate action-display" ></i>',
+    '</label>',
+    '</nav>'
+  ].join("");
+}
+
+function presetMoveOrder(index) {
+  return [
+    '<nav class="menu" >',
+    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+    '<i class="fa fa-arrow-right rotate action-display" ></i>',
+    '</label>',
     '</nav>'
   ].join("");
 }
@@ -135,7 +196,7 @@ function drawUnits(race, cols, unitSet) {
   for (var i = 0; i < hexes.length; i++) {
     if (((unitSet.posY * cols) + unitSet.posX) == i) {
       if (race == unitSet.race) {
-        hexes[i].innerHTML = getMenu(i) + getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
+        hexes[i].innerHTML = getMenu(i, unitSet.order) + getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
       } else {
         hexes[i].innerHTML = getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
       }

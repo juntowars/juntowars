@@ -105,7 +105,7 @@ module.exports = new (function () {
         .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[2]/*[2]')
         .pause(100)
         .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]');
-      });
+        });
     } else {
       client.waitForElementVisible('#gameModal', wait).click('#gameModal'); // doesn't work?
     }

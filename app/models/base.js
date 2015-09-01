@@ -27,7 +27,7 @@ BaseSchema.statics = {
         "infantry": 1,
         "ranged": 1,
         "tanks": 1,
-        "order": null
+        "order": "notSet"
       },
       {
         "posX": 4,
@@ -37,7 +37,7 @@ BaseSchema.statics = {
         "infantry": 2,
         "ranged": 2,
         "tanks": 4,
-        "order": null
+        "order": "notSet"
       },
       {
         "posX": 5,
@@ -47,7 +47,7 @@ BaseSchema.statics = {
         "infantry": 1,
         "ranged": 2,
         "tanks": 1,
-        "order": null
+        "order": "notSet"
       }
     ];
   }

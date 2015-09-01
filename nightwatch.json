@@ -3,7 +3,7 @@
     "test/nightwatch"
   ],
   "output_folder": "test/nightwatch/build/tests/nightwatch",
-  "live_output": false,
+  "live_output": true,
   "selenium": {
     "start_process": true,
     "server_path": "node_modules/selenium-server-standalone-jar/jar/selenium-server-standalone-2.45.0.jar",
