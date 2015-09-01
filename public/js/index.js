@@ -6,6 +6,7 @@ var playerName;
 
 game_socket.on('displayActionModal', function (data) {
   displayModal(data.message);
+  game_socket.emit('markModalAsSeen', gameRoom, playerName);
 });
 
 game_socket.on('enableMoves', function (data) {

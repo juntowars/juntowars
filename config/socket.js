@@ -88,8 +88,13 @@ module.exports = function (io) {
       socket.join(room);
       winston.info(user + " has joined the game " + room);
       socket.user = user;
-      io.sockets.in(room).emit('displayActionModal', {
-        message: "<h1>Welcome to the Game</h1><p>Place your Orders Mother fuckers!</p>"
+
+      Games.displayOpeningModalCheck(room, function (modalShouldBeDisplayed) {
+        if (modalShouldBeDisplayed) {
+          io.sockets.in(room).emit('displayActionModal', {
+            message: "<h1>Welcome to the Game</h1><p>Place your Orders Mother fuckers!</p>"
+          });
+        }
       });
     });
 
@@ -143,6 +148,11 @@ module.exports = function (io) {
 
     socket.on('refreshUsersInGame', function (room) {
       io.sockets.in(room).emit('refreshMapView');
+    });
+
+    socket.on('markModalAsSeen', function (room, user) {
+      winston.info("markModalAsSeen " + user);
+      Games.markOpeningModalAsSeen(room);
     });
   });
 };

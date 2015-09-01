@@ -40,6 +40,7 @@ var GamesSchema = new Schema({
     createdAt: {type: Date, default: Date.now}
   }],
   publicJoin: {type: Boolean, default: true},
+  displayOpeningModal: {type: String, default: 1},
   lobby: {
     status: {type: String, default: 'open'},
     playerStatus: [
@@ -220,6 +221,20 @@ GamesSchema.statics = {
   },
   setPhase: function (gameName, phase) {
     staticGames.update({"name": gameName}, {$set: {"state.phase.name": phase}}).exec();
+  },
+  displayOpeningModalCheck: function (gameName, cb) {
+    staticGames.find({"name": gameName}).exec(function (err, data) {
+      cb(data[0]._doc.displayOpeningModal == 1);
+    });
+  },
+  markOpeningModalAsSeen: function (gameName) {
+    staticGames.update(
+    {"name": gameName},
+    {
+      $set: {
+        "displayOpeningModal": 0
+      }
+    }).exec();
   },
   setUnitDocForIndex: function (gameName, index, callback) {
     var posX = index % 24;
