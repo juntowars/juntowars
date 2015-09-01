@@ -253,7 +253,7 @@ GamesSchema.statics = {
         {
           $push: {
             "state.units": {
-              "order": "notSet",
+              "order": "done",
               "tanks": 0,
               "ranged": 0,
               "infantry": 0,
