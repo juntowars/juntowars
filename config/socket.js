@@ -88,8 +88,7 @@ module.exports = function (io) {
       socket.join(room);
       winston.info(user + " has joined the game " + room);
       socket.user = user;
-      io.sockets.in(room).emit('displayActionModal',
-      {
+      io.sockets.in(room).emit('displayActionModal', {
         message: "<h1>Welcome to the Game</h1><p>Place your Orders Mother fuckers!</p>"
       });
     });
@@ -140,6 +139,10 @@ module.exports = function (io) {
       });
 
       Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
+    });
+
+    socket.on('refreshUsersInGame', function (room) {
+      io.sockets.in(room).emit('refreshMapView');
     });
   });
 };

@@ -298,6 +298,7 @@ function removeActionMenu(menu) {
   menu.parentElement.removeChild(menu);
   if (activeMenu) {
     highlightMoveOptions(index, false);
+    game_socket.emit('refreshUsersInGame', gameRoom);
   }
 }
 

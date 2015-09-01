@@ -12,6 +12,10 @@ game_socket.on('enableMoves', function (data) {
   enableMoveActions(data, playerName);
 });
 
+game_socket.on('refreshMapView', function () {
+  GetMap(RenderMap);
+});
+
 function initSocketSession() {
   document.getElementById('gameModal').classList.remove('show');
   playerName = getPlayersName();
