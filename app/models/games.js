@@ -140,14 +140,19 @@ GamesSchema.statics = {
     });
   },
   doesTheTileContainUnits: function (gameName, index, callback) {
-    Promise.all([GamesSchema.statics.getTilesUnits(gameName, index)])
-    .then(function (data) {
-      var tile = data[0][0]._doc.state.units[0];
-      winston.info("doesTheTileContainUnits " + tile.infantry + " " + tile.ranged + " " + tile.tanks);
-      var isTileEmpty = (tile.infantry + tile.ranged + tile.tanks) > 0;
-      winston.info("isTileEmpty" + isTileEmpty + " value of units is " + (tile.infantry + tile.ranged + tile.tanks));
-      callback((tile.infantry + tile.ranged + tile.tanks) > 0);
-    });
+    if (!(typeof index !== 'undefined' && index)) {
+      console.log("index is undefined . . ");
+      callback(true);
+    } else {
+      Promise.all([GamesSchema.statics.getTilesUnits(gameName, index)])
+      .then(function (data) {
+        var tile = data[0][0]._doc.state.units[0];
+        winston.info("doesTheTileContainUnits " + tile.infantry + " " + tile.ranged + " " + tile.tanks);
+        var isTileEmpty = (tile.infantry + tile.ranged + tile.tanks) > 0;
+        winston.info("isTileEmpty" + isTileEmpty + " value of units is " + (tile.infantry + tile.ranged + tile.tanks));
+        callback((tile.infantry + tile.ranged + tile.tanks) > 0);
+      });
+    }
   },
   getTilesUnits: function (gameName, index) {
     return staticGames.find({
@@ -270,7 +275,6 @@ GamesSchema.statics = {
     });
   },
   updateUnitsValues: function (gameName, index, unitType, unitValue, unitRace, callback) {
-    //todo find the current value and add unitValue
     if (unitType == "infantry") {
       staticGames.update(
       {"name": gameName, "state.units": {$elemMatch: {"index": index}}},
@@ -297,6 +301,39 @@ GamesSchema.statics = {
           "state.units.$.tanks": unitValue,
           "state.units.$.race": unitRace
         }
+      }).exec(callback);
+    }
+  },
+  addToCurrentUnitValue: function (gameName, index, unitType, unitValue, unitRace, callback) {
+    if (unitType == "infantry") {
+      staticGames.update({
+        "name": gameName,
+        "state.units": {
+          $elemMatch: {"index": index}
+        }
+      }, {
+        $inc: {"quantity": 1, "state.units.$.infantry": unitValue}
+      }
+      ).exec(callback);
+    } else if (unitType == "ranged") {
+      staticGames.update(
+      {
+        "name": gameName,
+        "state.units": {
+          $elemMatch: {"index": index}
+        }
+      }, {
+        $inc: {"quantity": 1, "state.units.$.ranged": unitValue}
+      }).exec(callback);
+    } else {
+      staticGames.update(
+      {
+        "name": gameName,
+        "state.units": {
+          $elemMatch: {"index": index}
+        }
+      }, {
+        $inc: {"quantity": 1, "state.units.$.tanks": unitValue}
       }).exec(callback);
     }
   },

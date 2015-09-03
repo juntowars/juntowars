@@ -12,7 +12,9 @@
     - Clone Repo
 	
     - cd ./juntowars
-	
+    
+    - mongod  --dbpath /var/mongo
+    	
     - npm install
 	
     - npm start

@@ -253,14 +253,14 @@ function resolvePeacefulMovement(targetTile, selectedUnitsShapesToMove) {
 
     if (tileHasUnits(targetTile)) {
       if (unitMergeRequired(targetTile, shapeToMove)) {
-        console.log("mergeUnits " + shapeToMove.toString)
-        mergeUnits(shapeToMove, targetTile);
+        console.log("mergeUnits " + shapeToMove.toString);
+        mergeUnits(shapeToMove, targetTile, waitForUpdateAndLoopIfNeeded);
       } else {
-        console.log("moveToNonHostileTarget " + shapeToMove.toString)
+        console.log("moveToNonHostileTarget " + shapeToMove.toString);
         moveToNonHostileTarget(targetTile, shapeToMove.parentElement, waitForUpdateAndLoopIfNeeded);
       }
     } else {
-      console.log("no tileHasUnits -  moveToNonHostileTarget " + shapeToMove.toString)
+      console.log("no tileHasUnits -  moveToNonHostileTarget " + shapeToMove.toString);
       moveToNonHostileTarget(targetTile, shapeToMove.parentElement, waitForUpdateAndLoopIfNeeded);
     }
   }
@@ -307,7 +307,9 @@ function removeSelectedState(shapeToMove) {
   removeOnClickEvent(shapeToMove.parentElement);
 }
 
-function mergeUnits(shapeToMove, targetTile) {
+function mergeUnits(shapeToMove, targetTile, cb) {
+  var svgElement = shapeToMove.parentElement.parentElement;
+
   var newForces = parseInt(shapeToMove.parentElement
   .getElementsByTagName('text')[0]
   .innerHTML);
@@ -324,7 +326,23 @@ function mergeUnits(shapeToMove, targetTile) {
   .getElementsByTagName('text')[0]
   .innerHTML = newForces + existingForces;
 
-  shapeToMove.parentElement.parentElement.removeChild(shapeToMove.parentElement);
+  var movementDetails = {
+    gameRoom: gameRoom,
+    originIndex: getIndexValue(svgElement),
+    targetIndex: getIndexValue(targetTile[0]),
+    unitType: getUnitType(shapeToMove.parentElement),
+    unitValue: getUnitValue(shapeToMove.parentElement),
+    unitRace: getUnitRace(shapeToMove.parentElement)
+  };
+
+  game_socket.emit('peacefulMerge', movementDetails, cb);
+
+  var anyUnitsLeft = svgElement.childElementCount - 1;
+  svgElement.removeChild(shapeToMove.parentElement);
+
+  if (anyUnitsLeft == 0) {
+    removeActionMenu(svgElement.parentElement.childNodes[0]);
+  }
 }
 
 function unitMergeRequired(tile, shapeToMove) {
@@ -390,6 +408,7 @@ function getYValue(element) {
 }
 
 function getIndexValue(element) {
+  //hardcoded 24 Ciaran. . .tut tut
   return getXValue(element) + (getYValue(element) * 24);
 }
 

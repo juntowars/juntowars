@@ -146,6 +146,33 @@ module.exports = function (io) {
       Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
     });
 
+    socket.on('peacefulMerge', function (movementDetails, cb) {
+      var gameRoom = movementDetails.gameRoom;
+      var originIndex = movementDetails.originIndex;
+      var targetIndex = movementDetails.targetIndex;
+      var unitType = movementDetails.unitType;
+      var unitValue = movementDetails.unitValue;
+      var unitRace = movementDetails.unitRace;
+
+      winston.info("peacefulMerge " + unitType);
+
+      var removeUnitFromOrigin = Games.updateUnitsValues(gameRoom, originIndex, unitType, 0, unitRace, function () {
+        Games.doesTheTileContainUnits(gameRoom, originIndex, function (tileContainsUnits) {
+          if (!tileContainsUnits) {
+            winston.info("Tile " + originIndex + " has no units, removing unit doc " + unitType);
+            Games.removeUnitsDoc(gameRoom, originIndex);
+          }
+        });
+      });
+
+      var addUnitToTarget = Games.setUnitDocForIndex(gameRoom, targetIndex, function () {
+        winston.info("updateUnitsValues " + gameRoom + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
+        Games.addToCurrentUnitValue(gameRoom, targetIndex, unitType, unitValue, unitRace);
+      });
+
+      Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
+    });
+
     socket.on('refreshUsersInGame', function (room) {
       io.sockets.in(room).emit('refreshMapView');
     });

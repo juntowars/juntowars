@@ -4,7 +4,7 @@ module.exports = new (function () {
   winston.log('info', 'Winston recording Lobby.js!');
 
   var BASE_URL = "http://localhost:3000/";
-  var wait = 2000;
+  var wait = 3000;
   var signUpUrl = BASE_URL + 'signup';
   var testCases = this;
   var player = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
@@ -96,15 +96,15 @@ module.exports = new (function () {
         client
         .elementIdClick(orderOfInterest)
         .pause(100)
-        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click infantry unit
         .pause(100)
-        .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]')
+        .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]')                  // click empty tile below
         .pause(100)
-        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
         .pause(100)
-        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[2]/*[2]')
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[2]/*[2]')   // click tank unit
         .pause(100)
-        .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]');
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]');                 // click friendly tile above
         });
     } else {
       client.waitForElementVisible('#gameModal', wait).click('#gameModal'); // doesn't work?
