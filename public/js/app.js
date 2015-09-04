@@ -299,6 +299,7 @@ function removeActionMenu(menu) {
   var activeMenu = menu.getElementsByTagName('label')[0].classList.contains('ACTIVE');
   var index = parseInt(menu.getElementsByTagName('input')[0].name.replace("menu-open", ""));
   menu.parentElement.removeChild(menu);
+  game_socket.emit('lockInOrder', "done", playerName, gameRoom, index);
   if (activeMenu) {
     highlightMoveOptions(index, false);
     game_socket.emit('refreshUsersInGame', gameRoom);
