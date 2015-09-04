@@ -1,4 +1,4 @@
-GetMap(RenderMap);
+GetMap(RenderMap, true);
 
 var game_socket = io.connect(location.origin);
 var gameRoom = window.location.pathname.replace(/.*\//, '');
@@ -14,7 +14,7 @@ game_socket.on('enableMoves', function (data) {
 });
 
 game_socket.on('refreshMapView', function () {
-  GetMap(RenderMap);
+  GetMap(RenderMap, false);
 });
 
 function initSocketSession() {

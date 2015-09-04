@@ -4,7 +4,7 @@ module.exports = new (function () {
   winston.log('info', 'Winston recording Lobby.js!');
 
   var BASE_URL = "http://localhost:3000/";
-  var wait = 3000;
+  var wait = 7000;
   var signUpUrl = BASE_URL + 'signup';
   var testCases = this;
   var player = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);

@@ -1,11 +1,11 @@
-function GetMap(callback) {
+function GetMap(callback, flag) {
   var request = new XMLHttpRequest();
   var getBaseBoardUrl = location.origin + '/getBaseBoard';
   request.open('GET', getBaseBoardUrl, true);
 
   request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
-      callback(JSON.parse(request.responseText)[0].map);
+      callback(JSON.parse(request.responseText)[0].map, flag);
     }
   };
   request.send();
@@ -52,6 +52,7 @@ function drawAllUnits(cols, units) {
     }
     initSocketSession();
   }
+
   startDrawingUnits(race);
 }
 
@@ -78,7 +79,7 @@ function GetHudStatistics(callback) {
 }
 
 function getMenu(index, order) {
-  switch(order) {
+  switch (order) {
     case "notSet":
       return notSetMenu(index);
     case "move":
@@ -204,17 +205,25 @@ function drawUnits(race, cols, unitSet) {
   }
 }
 
-function RenderMap(boardBackgroundMap) {
+function RenderMap(boardBackgroundMap, isFirstInitializationOfMap) {
+
+  if (isFirstInitializationOfMap) {
+    document.getElementsByTagName('body')[0].innerHTML += '<div id="map"></div>';
+  }
+
   // Board element.
-  document.getElementsByTagName('body')[0].innerHTML += '<div id="map"></div>';
   var map = document.getElementById('map');
 
   // Board size.
   var rows = boardBackgroundMap.length;
   var cols = boardBackgroundMap[0].length;
 
-  // Inner, scrollable map container.
-  map.innerHTML += '<div id="mapHolder" style="width: ' + (cols * 94) + 'px"></div>';
+  //Inner, scrollable map container.
+  if (isFirstInitializationOfMap) {
+    map.innerHTML += '<div id="mapHolder" style="width: ' + (cols * 94) + 'px"></div>';
+  } else {
+    map.innerHTML = '<div id="mapHolder" style="width: ' + (cols * 94) + 'px"></div>';
+  }
   var mapHolder = document.getElementById('mapHolder');
 
   // Generate a row of hexes as html.
