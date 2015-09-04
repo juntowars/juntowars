@@ -208,7 +208,9 @@ function deleteChild(parentTile, unitsToKill) {
 }
 
 function killUnits(unitsToKill, parentTile, killAll, damageTaken) {
+  var tilesIndex = getIndexValue(unitsToKill[0].parentElement);
   if (killAll) {
+    game_socket.emit('removeAllUnitsInTile', gameRoom, tilesIndex);
     while (unitsToKill.length > 0) {
       deleteChild(parentTile, unitsToKill);
     }
@@ -216,6 +218,7 @@ function killUnits(unitsToKill, parentTile, killAll, damageTaken) {
     var valueOfUnitsKilled = 0;
     while (damageTaken > valueOfUnitsKilled) {
       var currentUnitValue = parseInt(unitsToKill[0].getElementsByTagName('text')[0].innerHTML) - 1;
+      game_socket.emit('minusOneFromUnitValue', gameRoom, tilesIndex, getUnitType(unitsToKill[0]));
       if (currentUnitValue == 0) {
         deleteChild(parentTile, unitsToKill);
       } else {

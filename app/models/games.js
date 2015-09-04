@@ -312,7 +312,7 @@ GamesSchema.statics = {
           $elemMatch: {"index": index}
         }
       }, {
-        $inc: {"quantity": 1, "state.units.$.infantry": unitValue}
+        $inc: {"state.units.$.infantry": unitValue}
       }
       ).exec(callback);
     } else if (unitType == "ranged") {
@@ -323,7 +323,7 @@ GamesSchema.statics = {
           $elemMatch: {"index": index}
         }
       }, {
-        $inc: {"quantity": 1, "state.units.$.ranged": unitValue}
+        $inc: {"state.units.$.ranged": unitValue}
       }).exec(callback);
     } else {
       staticGames.update(
@@ -333,8 +333,41 @@ GamesSchema.statics = {
           $elemMatch: {"index": index}
         }
       }, {
-        $inc: {"quantity": 1, "state.units.$.tanks": unitValue}
+        $inc: {"state.units.$.tanks": unitValue}
       }).exec(callback);
+    }
+  },
+  minusOneFromUnitValue: function (gameName, index, unitType) {
+    if (unitType == "infantry") {
+      staticGames.update({
+        "name": gameName,
+        "state.units": {
+          $elemMatch: {"index": index}
+        }
+      }, {
+        $inc: {"state.units.$.infantry": -1}
+      }
+      ).exec();
+    } else if (unitType == "ranged") {
+      staticGames.update(
+      {
+        "name": gameName,
+        "state.units": {
+          $elemMatch: {"index": index}
+        }
+      }, {
+        $inc: {"state.units.$.ranged": -1}
+      }).exec();
+    } else {
+      staticGames.update(
+      {
+        "name": gameName,
+        "state.units": {
+          $elemMatch: {"index": index}
+        }
+      }, {
+        $inc: {"state.units.$.tanks": -1}
+      }).exec();
     }
   },
   removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {

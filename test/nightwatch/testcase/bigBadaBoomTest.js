@@ -8,11 +8,11 @@ module.exports = new (function () {
   var signUpUrl = BASE_URL + 'signup';
   var testCases = this;
   var player = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
-  var game = "testgame";
-  var gameExpander = '#expand-' + game;
-  var goToGameLobby = '#goto-' + game;
 
   testCases['Part 1: Two players sign up and join a lovely game'] = function (client) {
+    var game = "testgame";
+    var gameExpander = '#expand-' + game;
+    var goToGameLobby = '#goto-' + game;
     client.resizeWindow(800, 800);
 
     client
@@ -89,7 +89,7 @@ module.exports = new (function () {
     });
   };
 
-  testCases['Part 4: Player one makes a peaceful move'] = function (client) {
+  testCases['Part 4: Player one makes a move'] = function (client) {
     if (player == 1) {
       client.elements('xpath', "//i[contains(@class, 'fa rotate action-display fa-arrow-right')]", function (move) {
         var orderOfInterest = move.value[1].ELEMENT;
@@ -102,12 +102,14 @@ module.exports = new (function () {
         .pause(100)
         .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
         .pause(100)
-        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[2]/*[2]')   // click tank unit
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]')                  // click friendly tile above
         .pause(100)
-        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]');                 // click friendly tile above
+        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click tank unit
+        .pause(100)
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');                  // click Enemy tile adjacent
         });
     } else {
-      client.waitForElementVisible('#gameModal', wait).click('#gameModal'); // doesn't work?
+      client.waitForElementVisible('#gameModal', wait).click('#gameModal');
     }
   };
 

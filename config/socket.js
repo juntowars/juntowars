@@ -173,6 +173,16 @@ module.exports = function (io) {
       Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
     });
 
+    socket.on('removeAllUnitsInTile', function (gameRoom, removeUnitsFromThisTile) {
+      winston.info("removeAllUnitsInTile " + removeUnitsFromThisTile);
+      Games.removeUnitsDoc(gameRoom, removeUnitsFromThisTile);
+    });
+
+    socket.on('minusOneFromUnitValue', function (gameRoom, index, unitType) {
+      winston.info("minusOneFromUnitValue " + index + " " + unitType);
+      Games.minusOneFromUnitValue(gameRoom, index, unitType);
+    });
+
     socket.on('refreshUsersInGame', function (room) {
       io.sockets.in(room).emit('refreshMapView');
     });

@@ -4,6 +4,8 @@
 
     - An instance of mongod needs to be running and configured in config.js
     
+       $ mongod  --dbpath /var/mongo
+    
     - After which the setup/db_init.js script can be run to create the mongo schema
        $ mongo -h localhost junto < ./setup/db.init.js
 
@@ -12,8 +14,6 @@
     - Clone Repo
 	
     - cd ./juntowars
-    
-    - mongod  --dbpath /var/mongo
     	
     - npm install
 	
