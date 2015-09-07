@@ -5,6 +5,8 @@ var mongoose = require('mongoose');
 var winston = require('winston');
 var Promise = require("bluebird");
 var Games = mongoose.model('Games');
+var Base = mongoose.model('Base');
+var NUMBER_OF_PLAYERS = 2;
 
 module.exports = function (io) {
 
@@ -111,8 +113,7 @@ module.exports = function (io) {
         if (allOrdersAreSet) {
           Games.setPhase(room, "movement");
           winston.info("All player orders have been set for game " + room);
-          winston.info("Enabling move for  " + user);
-          io.sockets.in(room).emit('enableMoves', user);
+          nextAction(room);
         } else {
           winston.info("Waiting for other players place orders . .");
         }
@@ -185,11 +186,55 @@ module.exports = function (io) {
 
     socket.on('refreshUsersInGame', function (room) {
       io.sockets.in(room).emit('refreshMapView');
+
+      setTimeout(function() {
+        nextAction(room);
+      }, 2000);
     });
 
     socket.on('markModalAsSeen', function (room, user) {
       winston.info("markModalAsSeen " + user);
       Games.markOpeningModalAsSeen(room);
     });
+
+    function nextAction(room) {
+      Games.getActivePlayer(room, function (activePlayer) {
+        if (activePlayer == '') {
+          Games.setActivePlayer(room, "kingdomWatchers", function (playerName) {
+            winston.info(playerName + " has been set as next active player.");
+            enableMoveAndCycleThroughPlayers(room, playerName);
+          });
+        } else {
+          enableMoveAndCycleThroughPlayers(room, activePlayer);
+        }
+      });
+
+      function enableMoveAndCycleThroughPlayers(room, activePlayer) {
+        winston.info("Enabling move for  " + activePlayer);
+        io.sockets.in(room).emit('enableMoves', activePlayer);
+        Games.getPlayersRace(room, activePlayer, function (currentPlayersRace) {
+          var raceOrder = {"kingdomWatchers": "periplaneta", "periplaneta": "kingdomWatchers"};
+          var counterToSeeIfNoOneHasMoves = 0;
+          var checkIfRaceHasMoveOrders = function (room, race) {
+            Games.cycleThroughPlayerMoveOrder(room, race, function (moveOrdersAreRemaining) {
+              if (moveOrdersAreRemaining) {
+                Games.setActivePlayer(room, race, function (playerName) {
+                  winston.info(playerName + " has been set as next active player.");
+                });
+              } else {
+                if (counterToSeeIfNoOneHasMoves >= NUMBER_OF_PLAYERS) {
+                  Games.setPhase(room, "actions");
+                  io.sockets.in(room).emit('refreshMapView');
+                } else {
+                  counterToSeeIfNoOneHasMoves++;
+                  checkIfRaceHasMoveOrders(room, raceOrder[race]);
+                }
+              }
+            });
+          };
+          checkIfRaceHasMoveOrders(room, raceOrder[currentPlayersRace]);
+        });
+      }
+    }
   });
 };
