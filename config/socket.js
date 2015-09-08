@@ -186,10 +186,6 @@ module.exports = function (io) {
 
     socket.on('refreshUsersInGame', function (room) {
       io.sockets.in(room).emit('refreshMapView');
-
-      setTimeout(function() {
-        nextAction(room);
-      }, 2000);
     });
 
     socket.on('markModalAsSeen', function (room, user) {
