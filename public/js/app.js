@@ -106,7 +106,7 @@ function enableMoveActions(userToEnableMovesFor, playerName) {
       };
     }
   } else {
-    displayModal("<h1>Hold onto your butts</h1><p>Waiting on " + userToEnableMovesFor + " to place a move</p>");
+    displayModal("<h1>Hold onto your butts</h1><p>Its " + userToEnableMovesFor + " turn</p>");
   }
 }
 
@@ -172,7 +172,8 @@ function attackerWins(arrayOfDefendingUnits, defendingUnitsSvgElement, arrayOfAt
   killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
   var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
   for (var i = 0; i < unitsToMoveIn.length; i++) {
-    moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i]);
+    moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i], function () {
+    });
     removeSelectedState(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
   }
 
@@ -305,7 +306,7 @@ function removeActionMenu(menu) {
     game_socket.emit('refreshUsersInGame', gameRoom);
     setTimeout(function() {
       game_socket.emit('allOrdersAreSet', gameRoom, playerName);
-    }, 2000);
+    }, 1000);
   }
 }
 
@@ -430,6 +431,3 @@ function getUnitRace(element) {
 function getUnitValue(element) {
   return parseInt(element.childNodes[1].textContent);
 }
-
-
-

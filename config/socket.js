@@ -6,7 +6,6 @@ var winston = require('winston');
 var Promise = require("bluebird");
 var Games = mongoose.model('Games');
 var Base = mongoose.model('Base');
-var NUMBER_OF_PLAYERS = 2;
 
 module.exports = function (io) {
 
@@ -113,9 +112,41 @@ module.exports = function (io) {
         if (allOrdersAreSet) {
           Games.setPhase(room, "movement");
           winston.info("All player orders have been set for game " + room);
-          nextAction(room);
+          nextMovementAction(room);
         } else {
           winston.info("Waiting for other players place orders . .");
+        }
+
+        function nextMovementAction(room) {
+          Games.getRacesWithMovesAvailableOrderList(room, function (racesWithMovesAvailableOrderList) {
+            if (racesWithMovesAvailableOrderList.length == 0) {
+              winston.info("Moving to harvest phase");
+              Games.setPhase(room, "harvest");
+              io.sockets.in(room).emit('displayActionModal', {
+                message: "<h1>The harvest has come</h1><p>Check your harvest count in the hud</p>"
+              });
+            } else {
+              Games.getActivePlayer(room, function (activePlayer) {
+                if (activePlayer == '') {
+                  Games.setActivePlayer(room, racesWithMovesAvailableOrderList[0], function (activePlayer) {
+                    enableMovesForActivePlayer(activePlayer);
+                  });
+                } else {
+                  enableMovesForActivePlayer(activePlayer);
+                }
+
+                function enableMovesForActivePlayer(playerUUID) {
+                  io.sockets.in(room).emit('enableMoves', playerUUID);
+                  Games.getPlayersRace(room, playerUUID, function (activePlayersRace) {
+                    var nextActivePlayerRaceIndex = (racesWithMovesAvailableOrderList.indexOf(activePlayersRace) + 1 ) % racesWithMovesAvailableOrderList.length;
+                    var nextActivePlayerRace = racesWithMovesAvailableOrderList[nextActivePlayerRaceIndex];
+                    Games.setActivePlayer(room, nextActivePlayerRace, function () {
+                    });
+                  });
+                }
+              });
+            }
+          });
         }
       }
     });
@@ -193,44 +224,5 @@ module.exports = function (io) {
       Games.markOpeningModalAsSeen(room);
     });
 
-    function nextAction(room) {
-      Games.getActivePlayer(room, function (activePlayer) {
-        if (activePlayer == '') {
-          Games.setActivePlayer(room, "kingdomWatchers", function (playerName) {
-            winston.info(playerName + " has been set as next active player.");
-            enableMoveAndCycleThroughPlayers(room, playerName);
-          });
-        } else {
-          enableMoveAndCycleThroughPlayers(room, activePlayer);
-        }
-      });
-
-      function enableMoveAndCycleThroughPlayers(room, activePlayer) {
-        winston.info("Enabling move for  " + activePlayer);
-        io.sockets.in(room).emit('enableMoves', activePlayer);
-        Games.getPlayersRace(room, activePlayer, function (currentPlayersRace) {
-          var raceOrder = {"kingdomWatchers": "periplaneta", "periplaneta": "kingdomWatchers"};
-          var counterToSeeIfNoOneHasMoves = 0;
-          var checkIfRaceHasMoveOrders = function (room, race) {
-            Games.cycleThroughPlayerMoveOrder(room, race, function (moveOrdersAreRemaining) {
-              if (moveOrdersAreRemaining) {
-                Games.setActivePlayer(room, race, function (playerName) {
-                  winston.info(playerName + " has been set as next active player.");
-                });
-              } else {
-                if (counterToSeeIfNoOneHasMoves >= NUMBER_OF_PLAYERS) {
-                  Games.setPhase(room, "actions");
-                  io.sockets.in(room).emit('refreshMapView');
-                } else {
-                  counterToSeeIfNoOneHasMoves++;
-                  checkIfRaceHasMoveOrders(room, raceOrder[race]);
-                }
-              }
-            });
-          };
-          checkIfRaceHasMoveOrders(room, raceOrder[currentPlayersRace]);
-        });
-      }
-    }
   });
 };

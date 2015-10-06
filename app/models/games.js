@@ -79,6 +79,29 @@ GamesSchema.statics = {
   getPlayersInGame: function (room) {
     return staticGames.find({"name": room}, {"userList.uuids": 1}).exec();
   },
+  getRacesWithMovesAvailableOrderList: function (room, cb) {
+
+    var racesWithMovesAvailableOrderList = [];
+    staticGames.find({"name": room}).exec(function (err, data) {
+      var allTilesWithUnits = data[0].state.units;
+      for (var i = 0; i < allTilesWithUnits.length; i++) {
+        if (allTilesWithUnits[i].order == "move") {
+          if (racesWithMovesAvailableOrderList.indexOf(allTilesWithUnits[i].race) < 0) {
+            racesWithMovesAvailableOrderList.push(allTilesWithUnits[i].race);
+          }
+        }
+      }
+      winston.info("racesWithMovesAvailableOrderList " + racesWithMovesAvailableOrderList.sort());
+      cb(racesWithMovesAvailableOrderList.sort());
+    });
+  },
+  getUuidByRace: function (room, race, cb) {
+    staticGames.find({"name": room}).exec(function (err, data) {
+      if (err) winston.info("getRacesWithMovesAvailableOrderList failed with: " + err);
+      cb(eval("data[0]._doc.userList." + race));
+    }
+    );
+  },
   getPlayersRace: function (gameName, user, cb) {
     var _query = staticGames.find({"name": gameName}, {"userList": 1});
     _query.exec(function (err, data) {
@@ -224,34 +247,30 @@ GamesSchema.statics = {
       "state.units": {$elemMatch: {"index": index}}
     }, {$set: {"state.units.$.order": action}}).exec();
   },
-  getActivePlayer: function (gameName, cb) {
-    this.find({"name": gameName }).exec( function (err, res) {
-      if (err) {
-        winston.debug("Error getting activePlayer: " + err);
-      }
-        cb(res[0]._doc.state.activePlayer);
-    });
-  },
-  cycleThroughPlayerMoveOrder: function (gameName, race, cb) {
-    this.find({"name":gameName, "state.units.race": race, "state.units.order": "move"}).count().exec(function(err, res) {
-      res >= 1 ? cb(true) : cb(false);
-    });
-  },
   setActivePlayer: function (gameName, nextActiveRace, cb) {
-    var playerQueryRequest = {};
-    playerQueryRequest["userList." + nextActiveRace] = 1;
-    this.find({"name": gameName}, playerQueryRequest).exec(function(err, res) {
-      if(err) throw err;
-      var playerName =eval("res[0]._doc.userList." + nextActiveRace);
-      staticGames.update(
-        {"name": gameName}, {$set: { "state.activePlayer": playerName }}
-      ).exec(function(err) {
-        if(err) throw err;
-        cb(playerName);
-      })
+    staticGames.find({"name": gameName}).exec(function (err, res) {
+      if (err) throw err;
+      var playerName = eval("res[0]._doc.userList." + nextActiveRace);
+      staticGames.update({"name": gameName}, {$set: {"state.activePlayer": playerName}}).exec(cb(playerName));
     });
-  }
-  ,
+  },
+  getActivePlayer: function (gameName, cb) {
+    this.find({"name": gameName}).exec(function (err, res) {
+      if (err) winston.debug("Error getting activePlayer: " + err);
+      var activePlayer = res[0]._doc.state.activePlayer;
+      cb(activePlayer);
+    });
+  },
+  checkIfPlayerHasMovesLeft: function (gameName, race, cb) {
+    staticGames.find({
+      "name": gameName,
+      "state.units.race": race,
+      "state.units.order": "move"
+    }).count().exec(function (err, res) {
+      if (err) winston.log("checkIfPlayerHasMovesLeft: " + err);
+      return res;
+    });
+  },
   setPhase: function (gameName, phase) {
     staticGames.update({"name": gameName}, {$set: {"state.phase.name": phase}}).exec();
   },
