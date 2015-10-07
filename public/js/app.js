@@ -305,7 +305,7 @@ function removeActionMenu(menu) {
     highlightMoveOptions(index, false);
     game_socket.emit('refreshUsersInGame', gameRoom);
     setTimeout(function() {
-      game_socket.emit('allOrdersAreSet', gameRoom, playerName);
+      game_socket.emit('moveOrderComplete', gameRoom, playerName);
     }, 1000);
   }
 }

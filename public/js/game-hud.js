@@ -23,6 +23,9 @@ function changedHUDView(id_name) {
   GetHudStatistics(DisplayHudStatics);
 }
 
+function updateHarvestPoints(harvest) {
+  document.getElementById('harvest-point').innerHTML = " " + harvest + " points";
+}
 
 function updateUnitsStrength(data, hud_id) {
   document.getElementById('tank_' + hud_id).innerHTML = data.tank;

@@ -1,6 +1,7 @@
 var users = require('../app/controllers/users');
 var games = require('../app/controllers/games');
 var base = require('../app/controllers/base');
+var phaseHandler = require('./phaseHandler.js');
 var mongoose = require('mongoose');
 var winston = require('winston');
 var Promise = require("bluebird");
@@ -106,49 +107,12 @@ module.exports = function (io) {
 
     socket.on('allOrdersAreSet', function (room, user) {
       winston.info("Player " + user + " has set all there orders for " + room);
-      Games.removeUserFromWaitingOnListAndCheckIfListIsEmpty(user, room, enableOrders);
+      phaseHandler.allOrdersAreSet(room, user, io);
+    });
 
-      function enableOrders(allOrdersAreSet) {
-        if (allOrdersAreSet) {
-          Games.setPhase(room, "movement");
-          winston.info("All player orders have been set for game " + room);
-          nextMovementAction(room);
-        } else {
-          winston.info("Waiting for other players place orders . .");
-        }
-
-        function nextMovementAction(room) {
-          Games.getRacesWithMovesAvailableOrderList(room, function (racesWithMovesAvailableOrderList) {
-            if (racesWithMovesAvailableOrderList.length == 0) {
-              winston.info("Moving to harvest phase");
-              Games.setPhase(room, "harvest");
-              io.sockets.in(room).emit('displayActionModal', {
-                message: "<h1>The harvest has come</h1><p>Check your harvest count in the hud</p>"
-              });
-            } else {
-              Games.getActivePlayer(room, function (activePlayer) {
-                if (activePlayer == '') {
-                  Games.setActivePlayer(room, racesWithMovesAvailableOrderList[0], function (activePlayer) {
-                    enableMovesForActivePlayer(activePlayer);
-                  });
-                } else {
-                  enableMovesForActivePlayer(activePlayer);
-                }
-
-                function enableMovesForActivePlayer(playerUUID) {
-                  io.sockets.in(room).emit('enableMoves', playerUUID);
-                  Games.getPlayersRace(room, playerUUID, function (activePlayersRace) {
-                    var nextActivePlayerRaceIndex = (racesWithMovesAvailableOrderList.indexOf(activePlayersRace) + 1 ) % racesWithMovesAvailableOrderList.length;
-                    var nextActivePlayerRace = racesWithMovesAvailableOrderList[nextActivePlayerRaceIndex];
-                    Games.setActivePlayer(room, nextActivePlayerRace, function () {
-                    });
-                  });
-                }
-              });
-            }
-          });
-        }
-      }
+    socket.on('moveOrderComplete', function (room, user) {
+      winston.info("Player " + user + " has completed a move order");
+      phaseHandler.moveOrderComplete(room, user, io);
     });
 
     socket.on('peacefulMove', function (movementDetails, cb) {

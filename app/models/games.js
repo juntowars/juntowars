@@ -30,6 +30,32 @@ var GamesSchema = new Schema({
     reduviidae: {type: String, default: ''},
     guardians: {type: String, default: ''}
   },
+  harvest: {
+    geoEngineers: {
+      currentAmount: {type: Number, default: 0},
+      collectionRate: {type: Number, default: 1}
+    },
+    settlers: {
+      currentAmount: {type: Number, default: 0},
+      collectionRate: {type: Number, default: 1}
+    },
+    kingdomWatchers: {
+      currentAmount: {type: Number, default: 0},
+      collectionRate: {type: Number, default: 1}
+    },
+    periplaneta: {
+      currentAmount: {type: Number, default: 0},
+      collectionRate: {type: Number, default: 2}
+    },
+    reduviidae: {
+      currentAmount: {type: Number, default: 0},
+      collectionRate: {type: Number, default: 1}
+    },
+    guardians: {
+      currentAmount: {type: Number, default: 0},
+      collectionRate: {type: Number, default: 1}
+    }
+  },
   chatLog: [{
     body: {type: String, default: ''},
     user: {type: String},
@@ -436,7 +462,7 @@ GamesSchema.statics = {
   removeUserFromWaitingOnList: function (gameName, user) {
     return staticGames.update({"name": gameName}, {$pull: {"state.phase.waitingOn": user}}).exec();
   },
-  removeUserFromWaitingOnListAndCheckIfListIsEmpty: function (user, gameName, callback) {
+  updateWaitingOnListAndCheckIfEmpty: function (user, gameName, callback) {
     Promise.all([GamesSchema.statics.removeUserFromWaitingOnList(gameName, user)]).then(function () {
       staticGames.find({"name": gameName}, {"state.phase.waitingOn": 1}).exec().then(function (data) {
         data[0]._doc.state.phase.waitingOn.length > 0 ? callback(false) : callback(true);
