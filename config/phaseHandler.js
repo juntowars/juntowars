@@ -4,11 +4,9 @@ var Games = mongoose.model('Games');
 var Base = mongoose.model('Base');
 
 exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
-  Games.updateWaitingOnListAndCheckIfEmpty(user, room, movementTurnHandler);
-
-  function movementTurnHandler(allPlayerOrdersAreSet) {
+  Games.updateWaitingOnListAndCheckIfEmpty(user, room, function (allPlayerOrdersAreSet) {
     allPlayerOrdersAreSet ? moveToMovementPhase(room, io) : winston.info("Waiting for other players place orders . .");
-  }
+  });
 };
 
 exports.moveOrderComplete = function moveOrderComplete(room, user, io) {

@@ -48,6 +48,16 @@ BaseSchema.statics = {
         "ranged": 2,
         "tanks": 1,
         "order": "notSet"
+      },
+      {
+        "posX": 5,
+        "posY": 3,
+        "index": 77,
+        "race": "periplaneta",
+        "infantry": 0,
+        "ranged": 0,
+        "tanks": 1,
+        "order": "notSet"
       }
     ];
   }
