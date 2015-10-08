@@ -7,11 +7,7 @@ exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
   Games.updateWaitingOnListAndCheckIfEmpty(user, room, movementTurnHandler);
 
   function movementTurnHandler(allPlayerOrdersAreSet) {
-    if (allPlayerOrdersAreSet) {
-      moveToMovementPhase(room, io);
-    } else {
-      winston.info("Waiting for other players place orders . .");
-    }
+    allPlayerOrdersAreSet ? moveToMovementPhase(room, io) : winston.info("Waiting for other players place orders . .");
   }
 };
 
@@ -26,14 +22,8 @@ function moveToMovementPhase(room, io) {
 }
 
 function nextMovementAction(room, io) {
-  var raceTurnOrder = [];
   Games.getRacesWithMovesAvailableOrderList(room, function (racesWithMovementsLeft) {
-    raceTurnOrder = racesWithMovementsLeft;
-    if (raceTurnOrder.length == 0) {
-      moveToHarvestPhase(io, room);
-    } else {
-      cycleThroughMoves(room, io, raceTurnOrder);
-    }
+    racesWithMovementsLeft.length == 0 ? moveToHarvestPhase(io, room) : cycleThroughMoves(room, io, racesWithMovementsLeft);
   });
 }
 
