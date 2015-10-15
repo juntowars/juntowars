@@ -44,16 +44,13 @@ function getPlayersName() {
 function drawAllUnits(cols, units) {
   var playerName = getPlayersName();
   var gameName = getGameName();
-  var race = getRaceByPlayerName(playerName, gameName, startDrawingUnits);
-
-  function startDrawingUnits(race) {
+  getRaceByPlayerName(playerName, gameName, function(race) {
     for (var i = 0; i < units.length; i++) {
       drawUnits(race, cols, units[i]);
     }
     initSocketSession();
-  }
+  });
 
-  startDrawingUnits(race);
 }
 
 function getGameName() {

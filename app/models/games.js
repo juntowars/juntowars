@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 
+var util = require('util');
 var mongoose = require('mongoose');
 var Promise = require("bluebird");
 var winston = require('winston');
@@ -18,7 +19,7 @@ var GamesSchema = new Schema({
       name: {type: String, default: 'orders'},
       waitingOn: []
     },
-    activePlayer: {type: String, default:""},
+    activePlayer: {type: String, default: ""},
     units: []
   },
   userList: {
@@ -66,7 +67,7 @@ var GamesSchema = new Schema({
     createdAt: {type: Date, default: Date.now}
   }],
   publicJoin: {type: Boolean, default: true},
-  displayOpeningModal: {type: String, default: 1},
+  displayOpeningModal: [String],
   lobby: {
     status: {type: String, default: 'open'},
     playerStatus: [
@@ -300,19 +301,22 @@ GamesSchema.statics = {
   setPhase: function (gameName, phase) {
     staticGames.update({"name": gameName}, {$set: {"state.phase.name": phase}}).exec();
   },
-  displayOpeningModalCheck: function (gameName, cb) {
+  displayOpeningModalCheck: function (gameName, user, cb) {
     staticGames.find({"name": gameName}).exec(function (err, data) {
-      cb(data[0]._doc.displayOpeningModal == 1);
+      if (data[0]._doc.displayOpeningModal.indexOf(user) < 0) {
+        winston.info('adding ' + user + ' to displayOpeningModal seen list');
+        staticGames.update({"name": gameName}, {$addToSet: {displayOpeningModal: user}}
+        ).exec(cb(true));
+      } else {
+        winston.info(user + ' has seen the opening Modal');
+        cb(false);
+      }
     });
   },
-  markOpeningModalAsSeen: function (gameName) {
-    staticGames.update(
-    {"name": gameName},
-    {
-      $set: {
-        "displayOpeningModal": 0
-      }
-    }).exec();
+  getHarvestInformation: function (gameName, cb) {
+    staticGames.find({"name": gameName}).exec(function (err, data) {
+      cb(data[0]._doc.harvest);
+    });
   },
   setUnitDocForIndex: function (gameName, index, callback) {
     var posX = index % 24;

@@ -13,6 +13,10 @@ game_socket.on('enableMoves', function (data) {
   enableMoveActions(data, playerName);
 });
 
+game_socket.on('updateHarvestInformation', function (data) {
+  updateHarvestInformation(data);
+});
+
 game_socket.on('refreshMapView', function () {
   GetMap(RenderMap, false);
 });

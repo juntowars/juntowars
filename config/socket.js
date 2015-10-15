@@ -1,7 +1,8 @@
 var users = require('../app/controllers/users');
 var games = require('../app/controllers/games');
 var base = require('../app/controllers/base');
-var phaseHandler = require('./phaseHandler.js');
+var ph = require('./phaseHandler.js');
+var eh = require('./eventHandler.js');
 var mongoose = require('mongoose');
 var winston = require('winston');
 var Promise = require("bluebird");
@@ -91,13 +92,8 @@ module.exports = function (io) {
       winston.info(user + " has joined the game " + room);
       socket.user = user;
 
-      Games.displayOpeningModalCheck(room, function (modalShouldBeDisplayed) {
-        if (modalShouldBeDisplayed) {
-          io.sockets.in(room).emit('displayActionModal', {
-            message: "<h1>Welcome to the Game</h1><p>Place your Orders Mother fuckers!</p>"
-          });
-        }
-      });
+      eh.updateHarvestInformation(room, io);
+      eh.displayOpeningModal(room, io, user);
     });
 
     socket.on('lockInOrder', function (action, playerName, gameRoom, index) {
@@ -107,12 +103,12 @@ module.exports = function (io) {
 
     socket.on('allOrdersAreSet', function (room, user) {
       winston.info("Player " + user + " has set all there orders for " + room);
-      phaseHandler.allOrdersAreSet(room, user, io);
+      ph.allOrdersAreSet(room, user, io);
     });
 
     socket.on('moveOrderComplete', function (room, user) {
       winston.info("Player " + user + " has completed a move order");
-      phaseHandler.moveOrderComplete(room, user, io);
+      ph.moveOrderComplete(room, user, io);
     });
 
     socket.on('peacefulMove', function (movementDetails, cb) {
@@ -181,11 +177,6 @@ module.exports = function (io) {
 
     socket.on('refreshUsersInGame', function (room) {
       io.sockets.in(room).emit('refreshMapView');
-    });
-
-    socket.on('markModalAsSeen', function (room, user) {
-      winston.info("markModalAsSeen " + user);
-      Games.markOpeningModalAsSeen(room);
     });
 
   });

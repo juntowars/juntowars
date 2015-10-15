@@ -361,6 +361,13 @@ function tileHasUnits(tileElement) {
   return (tileElement[0].parentElement.getElementsByTagName('g').length > 0);
 }
 
+function updateHarvestInformation(data) {
+  document.getElementById('kingdomWatchers-harvest-count').innerHTML = String(data.kingdomWatchers.currentAmount);
+  document.getElementById('kingdomWatchers-harvest-rate').innerHTML = String(data.kingdomWatchers.collectionRate);
+  document.getElementById('periplaneta-harvest-count').innerHTML = String(data.periplaneta.currentAmount);
+  document.getElementById('periplaneta-harvest-rate').innerHTML = String(data.periplaneta.collectionRate);
+}
+
 function displayModal(modalBody, requiredInfo) {
   var races = ["kingdomWatchers", "periplaneta"];
 
