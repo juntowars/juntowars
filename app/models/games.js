@@ -41,11 +41,11 @@ var GamesSchema = new Schema({
       collectionRate: {type: Number, default: 1}
     },
     kingdomWatchers: {
-      currentAmount: {type: Number, default: 0},
+      currentAmount: {type: Number, default: 10},
       collectionRate: {type: Number, default: 1}
     },
     periplaneta: {
-      currentAmount: {type: Number, default: 0},
+      currentAmount: {type: Number, default: 11},
       collectionRate: {type: Number, default: 2}
     },
     reduviidae: {
