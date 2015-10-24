@@ -17,6 +17,10 @@ game_socket.on('updateHarvestInformation', function (data) {
   updateHarvestInformation(data);
 });
 
+game_socket.on('removeHarvestTokens', function () {
+  removeHarvestTokens();
+});
+
 game_socket.on('refreshMapView', function () {
   GetMap(RenderMap, false);
 });

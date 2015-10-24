@@ -93,7 +93,7 @@ module.exports = new (function () {
       }
     })
     .pause(200)
-    .elements('xpath', "//i[contains(@class, 'fa fa-cog harvest-action')]/..", function (harvestCommand) {
+    .elements('xpath', "//i[contains(@class, 'fa fa-diamond harvest-action')]/..", function (harvestCommand) {
       if (playerNumber == 2) {
         //console.log(util.inspect(harvestCommand, false, null));
         client.elementIdClick(harvestCommand.value[1].ELEMENT);  // select movement for second order
@@ -169,9 +169,9 @@ module.exports = new (function () {
     }
   };
 
-  testCases.after = function (client) {
-    client.pause(10000).end();
-  };
+  //testCases.after = function (client) {
+  //  client.pause(10000).end();
+  //};
 
 });
 

@@ -100,9 +100,10 @@ exports.viewGame = function (req, res) {
   function setGameDoc(data) {
     gameDoc = data;
   }
+
   Games.getPlayersRace(gameTitle, req.user._doc.username, doRender);
   function doRender(race) {
-    res.render('games/viewGame', {gameList: gameDoc, username : req.user._doc.username, raceName: race});
+    res.render('games/viewGame', {gameList: gameDoc, username: req.user._doc.username, raceName: race});
   }
 };
 
@@ -210,11 +211,13 @@ function getArmyStrength(race, units, game) {
   var infantry = 0;
   var ranged = 0;
   var tank = 0;
-  units.forEach(function(army) {
-    if(army.race.toLowerCase() == race.toLowerCase()) {
-      infantry += army.infantry;
-      ranged += army.ranged;
-      tank += army.tanks;
+  units.forEach(function (army) {
+    if (army.race != null) {
+      if (army.race.toLowerCase() == race.toLowerCase()) {
+        infantry += army.infantry;
+        ranged += army.ranged;
+        tank += army.tanks;
+      }
     }
   });
   return ({infantry: infantry, ranged: ranged, tank: tank, game: game});

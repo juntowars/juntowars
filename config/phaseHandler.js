@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var winston = require('winston');
 var Games = mongoose.model('Games');
 var Base = mongoose.model('Base');
+var eh = require('./eventHandler.js');
+
 
 exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
   Games.updateWaitingOnListAndCheckIfEmpty(user, room, function (allPlayerOrdersAreSet) {
@@ -45,6 +47,23 @@ function moveToHarvestPhase(io, room) {
   Games.setPhase(room, "harvest");
   io.sockets.in(room).emit('displayActionModal', {
     message: "<h1>The harvest has come</h1><p>Check your harvest count in the hud</p>"
+  });
+  io.sockets.in(room).emit('removeHarvestTokens');
+  processHarvestTokens(room, io);
+  setTimeout(function () {
+    moveToNextRound(io, room);
+  }, 3000);
+}
+
+function moveToNextRound(io, room) {
+  io.sockets.in(room).emit('displayActionModal', {
+    message: '<h1>End of Round One</h1><img style="-webkit-user-select: none; cursor: zoom-in;" src="https://33.media.tumblr.com/b2e22e5618455c48e176d6e4c977fdde/tumblr_mtax9fianJ1r06nmco1_500.gif">'
+  });
+}
+
+function processHarvestTokens(room, io) {
+  Games.updateHarvestCounts(room, function () {
+    eh.updateHarvestInformation(room, io);
   });
 }
 

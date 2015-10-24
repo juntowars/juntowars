@@ -103,7 +103,7 @@ function notSetMenu(index, isActivePlayersMenu) {
       '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\',\'move\',' + index + ')"> <i class="fa fa-arrow-right move-action"></i> </a>',
       '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\',\'defence\',' + index + ')"> <i class="fa fa-shield defence-action"></i> </a>',
       '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\',\'recruit\',' + index + ')"> <i class="fa fa-bug recruit-action"></i> </a>',
-      '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\',\'harvest\',' + index + ')"> <i class="fa fa-cog harvest-action"></i> </a>',
+      '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-diamond\',\'harvest\',' + index + ')"> <i class="fa fa-diamond harvest-action"></i> </a>',
       '</nav>'
     ].join("");
   } else {
@@ -165,7 +165,7 @@ function presetHarvestOrder(index, isActivePlayersMenu) {
       '<nav class="menu" >',
       '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
       '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
-      '<i class="fa fa-cog rotate action-display" ></i>',
+      '<i class="fa fa-diamond rotate action-display" ></i>',
       '</label>',
       '</nav>'
     ].join("");
@@ -173,7 +173,7 @@ function presetHarvestOrder(index, isActivePlayersMenu) {
     return [
       '<nav class="disabled-menu" >',
       '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
-      '<i class="fa fa-cog"></i>',
+      '<i class="fa fa-diamond rotate"></i>',
       '</label>',
       '</nav>'
     ].join("");

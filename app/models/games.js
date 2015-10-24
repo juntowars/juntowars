@@ -210,6 +210,37 @@ GamesSchema.statics = {
       "state.units": {$elemMatch: {"index": index}}
     }, {"state.units.$.order": 1}).exec();
   },
+  updateHarvestCounts: function (gameName, callback) {
+    var updates = [];
+    staticGames.find({"name": gameName}).exec(function (err, data) {
+      if (err) {
+        winston.info("updateHarvestCounts failed with " + err);
+      } else {
+        var unitList = data[0].state.units;
+        for (var i = 0; i < unitList.length; i++) {
+          if (unitList[i].order == "harvest") {
+            var race = unitList[i].race;
+            var raceCollectionRate = eval("data[0].harvest." + race + ".collectionRate");
+            var raceCurrentAmount = eval("data[0].harvest." + race + ".currentAmount");
+            var newAmount = raceCollectionRate + raceCurrentAmount;
+
+            updates.push(staticGames.update({
+              "name": gameName,
+              "state.units": {$elemMatch: {"index": unitList[i].index}}
+            },
+            {$set: {"state.units.$.order": "done"}}).exec());
+
+            var updateHarvestCount = {};
+            updateHarvestCount["harvest." + race + ".currentAmount"] = newAmount;
+            updates.push(staticGames.update({"name": gameName}, {$set: updateHarvestCount}).exec());
+          }
+        }
+      }
+      Promise.all(updates).then(function () {
+        callback();
+      });
+    });
+  },
   getUsersOpenLobbiesList: function (user, cb) {
     this.find({"lobby.status": "open", "userList.uuids": {$in: [user]}}, function (err, res) {
       err ? cb(err, null, user) : cb(null, res, user);

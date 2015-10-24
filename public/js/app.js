@@ -304,7 +304,7 @@ function removeActionMenu(menu) {
   if (activeMenu) {
     highlightMoveOptions(index, false);
     game_socket.emit('refreshUsersInGame', gameRoom);
-    setTimeout(function() {
+    setTimeout(function () {
       game_socket.emit('moveOrderComplete', gameRoom, playerName);
     }, 1000);
   }
@@ -359,6 +359,16 @@ function unitMergeRequired(tile, shapeToMove) {
 
 function tileHasUnits(tileElement) {
   return (tileElement[0].parentElement.getElementsByTagName('g').length > 0);
+}
+
+function removeHarvestTokens() {
+  var diamonds = document.getElementsByClassName("fa-diamond rotate");
+  for (var i = 0; i < diamonds.length; i++) {
+    if (diamonds[i].parentElement != null) {
+      var tile = diamonds[i].parentElement.parentElement.parentElement;
+      tile.removeChild(tile.childNodes[0]);
+    }
+  }
 }
 
 function updateHarvestInformation(data) {
