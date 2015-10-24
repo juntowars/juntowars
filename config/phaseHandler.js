@@ -57,7 +57,13 @@ function moveToHarvestPhase(io, room) {
 
 function moveToNextRound(io, room) {
   io.sockets.in(room).emit('displayActionModal', {
-    message: '<h1>End of Round One</h1><img style="-webkit-user-select: none; cursor: zoom-in;" src="https://33.media.tumblr.com/b2e22e5618455c48e176d6e4c977fdde/tumblr_mtax9fianJ1r06nmco1_500.gif">'
+    message: '<h1>New Round</h1><img style="-webkit-user-select: none; width: 301px;cursor: zoom-in;" src="http://www.storychurch.org/wp-content/uploads/2012/09/The-Next-Chapter-1-470x264.jpg">'
+  });
+  Games.setAllOrdersToNotSet(room, function () {
+    setTimeout(function () {
+      Games.setPhase(room, "orders");
+      io.sockets.in(room).emit('refreshMapView');
+    }, 1000);
   });
 }
 

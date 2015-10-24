@@ -299,6 +299,20 @@ GamesSchema.statics = {
       }
     });
   },
+  setAllOrdersToNotSet: function (gameName, callback) {
+    var updates = [];
+    staticGames.find({"name": gameName}).exec(function (err, data) {
+      var unitList = data[0].state.units;
+      for (var i = 0; i < unitList.length; i++) {
+        var resetOrder = {};
+        resetOrder["state.units." + i + ".order"] = "notSet";
+        updates.push(staticGames.update({"name": gameName}, {$set: resetOrder}).exec());
+      }
+      Promise.all(updates).then(function () {
+        callback();
+      });
+    });
+  },
   setPlayerOrder: function (action, playerName, gameName, index) {
     staticGames.update({
       "name": gameName,
