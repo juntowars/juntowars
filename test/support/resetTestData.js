@@ -1,4 +1,4 @@
 db.games.remove({"name": "testgame"});
-db.users.remove({"username": "created1"});
-db.users.remove({"username": "created2"});
+db.users.remove({"username": "player1"});
+db.users.remove({"username": "player2"});
 

@@ -1,4 +1,5 @@
 var winston = require('winston');
+var util = require('util');
 
 module.exports = new (function () {
   winston.log('info', 'Winston recording Lobby.js!');
@@ -7,7 +8,7 @@ module.exports = new (function () {
   var wait = 7000;
   var signUpUrl = BASE_URL + 'signup';
   var testCases = this;
-  var player = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
+  var playerNumber = process.env.__NIGHTWATCH_ENV_KEY.toString().slice(-1);
 
   testCases['Part 1: Two players sign up and join a lovely game'] = function (client) {
     var game = "testgame";
@@ -18,15 +19,15 @@ module.exports = new (function () {
     client
     .url(signUpUrl)
     .waitForElementVisible('#name', wait)
-    .setValue('#name', "created_user_" + player)
-    .setValue('#email', player + '@create.com')
-    .setValue('#username', "created" + player)
+    .setValue('#name', "player_user_" + playerNumber)
+    .setValue('#email', playerNumber + '@junto.com')
+    .setValue('#username', "player" + playerNumber)
     .setValue('#password', 'test')
     .click('#signUpButton')
     .waitForElementVisible('#games-tab', wait)
     .assert.containsText('#games-tab', 'Games')
     .click('#games-tab', function () {
-      if (player == 1) {
+      if (playerNumber == 1) {
         client
         .pause(500)
         .setValue('#gameTitle', game)
@@ -58,7 +59,7 @@ module.exports = new (function () {
     }
 
     function startTheGame() {
-      if (player == 1) {
+      if (playerNumber == 1) {
         client.waitForElementPresent('#initGameButton', wait)
         .click('#initGameButton');
       }
@@ -82,7 +83,7 @@ module.exports = new (function () {
     })
     .pause(100)
     .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right move-action')]", function (moveCommand) {
-      if (player == 1) {
+      if (playerNumber == 1) {
         client
         .elementIdClick(moveCommand.value[0].ELEMENT)   // select movement for first order
         .pause(100)
@@ -93,17 +94,18 @@ module.exports = new (function () {
     })
     .pause(200)
     .elements('xpath', "//i[contains(@class, 'fa fa-cog harvest-action')]/..", function (harvestCommand) {
-      if (player == 2) {
+      if (playerNumber == 2) {
         //console.log(util.inspect(harvestCommand, false, null));
         client.elementIdClick(harvestCommand.value[1].ELEMENT);  // select movement for second order
       }
     })
-    .pause(500);
+    .pause(2000);
   };
 
   testCases['Part 4: Player 1 takes his 1st move'] = function (client) {
-    if (player == 1) {
-      client.elements('xpath', "//i[contains(@class, 'fa rotate action-display fa-arrow-right')]", function (move) {
+    if (playerNumber == 1) {
+      client.pause(1000).elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
+        //console.log(util.inspect(move, false, null));
         var orderOfInterest = move.value[1].ELEMENT;
         client
         .elementIdClick(orderOfInterest)
@@ -121,12 +123,12 @@ module.exports = new (function () {
         .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');                  // click Enemy tile adjacent  (to test combat )
       });
     } else {
-      client.waitForElementVisible('#gameModal', wait).click('#gameModal');
+      client.waitForElementVisible('#gameModal', wait).pause(1000).click('#gameModal');
     }
   };
 
   testCases['Part 5: Player 2 takes his 1st move'] = function (client) {
-    if (player == 2) {
+    if (playerNumber == 2) {
       client
       .pause(2500)
       .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
@@ -146,7 +148,7 @@ module.exports = new (function () {
   };
 
   testCases['Part 6: Player 1 takes his 2nd move'] = function (client) {
-    if (player == 1) {
+    if (playerNumber == 1) {
       client
       .pause(2500)
       .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {

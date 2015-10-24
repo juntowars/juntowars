@@ -14,9 +14,12 @@ exports.moveOrderComplete = function moveOrderComplete(room, user, io) {
 };
 
 function moveToMovementPhase(room, io) {
+  io.sockets.in(room).emit('refreshMapView');
   winston.info("All player orders have been set for game " + room + "switching to movement phase");
   Games.setPhase(room, "movement");
-  nextMovementAction(room, io);
+  setTimeout(function () {
+    nextMovementAction(room, io);
+  }, 1000);
 }
 
 function nextMovementAction(room, io) {
