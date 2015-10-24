@@ -44,7 +44,7 @@ function getPlayersName() {
 function drawAllUnits(cols, units) {
   var playerName = getPlayersName();
   var gameName = getGameName();
-  getRaceByPlayerName(playerName, gameName, function(race) {
+  getRaceByPlayerName(playerName, gameName, function (race) {
     for (var i = 0; i < units.length; i++) {
       drawUnits(race, cols, units[i]);
     }
@@ -75,80 +75,130 @@ function GetHudStatistics(callback) {
   }
 }
 
-function getMenu(index, order) {
+function getMenu(index, order, isActivePlayersMenu) {
   switch (order) {
     case "notSet":
-      return notSetMenu(index);
+      return notSetMenu(index, isActivePlayersMenu);
     case "move":
-      return presetMoveOrder(index);
+      return presetMoveOrder(index, isActivePlayersMenu);
     case "defense":
-      return presetDefenceOrder(index);
+      return presetDefenceOrder(index, isActivePlayersMenu);
     case "recruit":
-      return presetRecruitOrder(index);
+      return presetRecruitOrder(index, isActivePlayersMenu);
     case "harvest":
-      return presetHarvestOrder(index);
+      return presetHarvestOrder(index, isActivePlayersMenu);
     default:
       return "";
   }
 }
 
-function notSetMenu(index) {
-  return [
-    '<nav class="menu" >',
-    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
-    '<label class="menu-open-button" for="menu-open' + index + '" id="order">',
-    '<i class="fa fa-plus rotate action-display" ></i>',
-    '</label>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\',\'move\',' + index + ')"> <i class="fa fa-arrow-right move-action"></i> </a>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\',\'defence\',' + index + ')"> <i class="fa fa-shield defence-action"></i> </a>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\',\'recruit\',' + index + ')"> <i class="fa fa-bug recruit-action"></i> </a>',
-    '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\',\'harvest\',' + index + ')"> <i class="fa fa-cog harvest-action"></i> </a>',
-    '</nav>'
-  ].join("");
+function notSetMenu(index, isActivePlayersMenu) {
+  if (isActivePlayersMenu) {
+    return [
+      '<nav class="menu" >',
+      '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+      '<label class="menu-open-button" for="menu-open' + index + '" id="order">',
+      '<i class="fa fa-plus rotate action-display" ></i>',
+      '</label>',
+      '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-arrow-right\',\'move\',' + index + ')"> <i class="fa fa-arrow-right move-action"></i> </a>',
+      '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-shield\',\'defence\',' + index + ')"> <i class="fa fa-shield defence-action"></i> </a>',
+      '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-bug\',\'recruit\',' + index + ')"> <i class="fa fa-bug recruit-action"></i> </a>',
+      '<a href="#" class="menu-item" onclick="lockInAction(this,\'fa-cog\',\'harvest\',' + index + ')"> <i class="fa fa-cog harvest-action"></i> </a>',
+      '</nav>'
+    ].join("");
+  } else {
+    return [
+      '<nav class="disabled-menu" >',
+      '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
+      '<i class="fa fa-ban"></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  }
 }
 
-function presetDefenceOrder(index) {
-  return [
-    '<nav class="menu" >',
-    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
-    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
-    '<i class="fa fa-shield rotate action-display" ></i>',
-    '</label>',
-    '</nav>'
-  ].join("");
+function presetDefenceOrder(index, isActivePlayersMenu) {
+  if (isActivePlayersMenu) {
+    return [
+      '<nav class="menu" >',
+      '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+      '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+      '<i class="fa fa-shield rotate action-display" ></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  } else {
+    return [
+      '<nav class="disabled-menu" >',
+      '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
+      '<i class="fa fa-shield"></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  }
 }
 
-function presetRecruitOrder(index) {
-  return [
-    '<nav class="menu" >',
-    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
-    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
-    '<i class="fa fa-bug rotate action-display" ></i>',
-    '</label>',
-    '</nav>'
-  ].join("");
+function presetRecruitOrder(index, isActivePlayersMenu) {
+  if (isActivePlayersMenu) {
+    return [
+      '<nav class="menu" >',
+      '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+      '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+      '<i class="fa fa-bug rotate action-display" ></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  } else {
+    return [
+      '<nav class="disabled-menu" >',
+      '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
+      '<i class="fa fa-bug"></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  }
 }
 
-function presetHarvestOrder(index) {
-  return [
-    '<nav class="menu" >',
-    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
-    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
-    '<i class="fa fa-cog rotate action-display" ></i>',
-    '</label>',
-    '</nav>'
-  ].join("");
+function presetHarvestOrder(index, isActivePlayersMenu) {
+  if (isActivePlayersMenu) {
+    return [
+      '<nav class="menu" >',
+      '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+      '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+      '<i class="fa fa-cog rotate action-display" ></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  } else {
+    return [
+      '<nav class="disabled-menu" >',
+      '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
+      '<i class="fa fa-cog"></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  }
 }
 
-function presetMoveOrder(index) {
-  return [
-    '<nav class="menu" >',
-    '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
-    '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
-    '<i class="fa fa-arrow-right rotate action-display" ></i>',
-    '</label>',
-    '</nav>'
-  ].join("");
+function presetMoveOrder(index, isActivePlayersMenu) {
+  if (isActivePlayersMenu) {
+    return [
+      '<nav class="menu" >',
+      '<input type="checkbox" href="#" class="menu-open" name="menu-open' + index + '" id="menu-open' + index + '"/>',
+      '<label class="menu-open-button" for="menu-open' + index + '" id="order" style="background: green">',
+      '<i class="fa fa-arrow-right rotate action-display" ></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  } else {
+    return [
+      '<nav class="disabled-menu" >',
+      '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
+      '<i class="fa fa-arrow-right"></i>',
+      '</label>',
+      '</nav>'
+    ].join("");
+  }
 }
 
 function displayInfantryUnits(race, numberOfUnits) {
@@ -194,9 +244,9 @@ function drawUnits(race, cols, unitSet) {
   for (var i = 0; i < hexes.length; i++) {
     if (((unitSet.posY * cols) + unitSet.posX) == i) {
       if (race == unitSet.race) {
-        hexes[i].innerHTML = getMenu(i, unitSet.order) + getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
+        hexes[i].innerHTML = getMenu(i, unitSet.order, true) + getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
       } else {
-        hexes[i].innerHTML = getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
+        hexes[i].innerHTML = getMenu(i, unitSet.order, false) + getSvgForUnits(unitSet.race, unitSet.infantry, unitSet.ranged, unitSet.tanks);
       }
     }
   }

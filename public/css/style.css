@@ -193,6 +193,29 @@ a {
     transform: translate3d(-40px, 25px, 0);
 }
 
+.disabled-menu {
+    background: #8bc34a;
+    color: white;
+    text-align: center;
+}
+
+.disabled-menu-item, .disabled-menu-open-button {
+    background: #949494;
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    margin-left: -40px;
+    position: absolute;
+    color: white;
+    text-align: center;
+    line-height: 25px;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transition: -webkit-transform ease-out 200ms;
+    transition: transform ease-out 200ms;
+}
+
+
 .rotate{
     -webkit-transition: all 0.2s linear;
     transition: all 0.5s linear;

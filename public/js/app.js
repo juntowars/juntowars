@@ -362,14 +362,13 @@ function tileHasUnits(tileElement) {
 }
 
 function updateHarvestInformation(data) {
+  //todo make this dynamic
   document.getElementById('kingdomWatchers-harvest-count').innerHTML = String(data.kingdomWatchers.currentAmount);
   document.getElementById('kingdomWatchers-harvest-rate').innerHTML = 'x' + String(data.kingdomWatchers.collectionRate);
   document.getElementById('periplaneta-harvest-count').innerHTML = String(data.periplaneta.currentAmount);
   document.getElementById('periplaneta-harvest-rate').innerHTML = 'x' + String(data.periplaneta.collectionRate);
   document.getElementById("geoEngineers-harvest").style.display = "none";
   document.getElementById("settlers-harvest").style.display = "none";
-  //document.getElementById("kingdomWatchers-harvest").style.display = "none";
-  //document.getElementById("periplaneta-harvest").style.display = "none";
   document.getElementById("reduviidae-harvest").style.display = "none";
   document.getElementById("guardians-harvest").style.display = "none";
 }
@@ -429,7 +428,6 @@ function getYValue(element) {
 }
 
 function getIndexValue(element) {
-  //hardcoded 24 Ciaran. . .tut tut
   return getXValue(element) + (getYValue(element) * 24);
 }
 

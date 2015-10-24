@@ -1,5 +1,4 @@
 var winston = require('winston');
-var util = require('util');
 
 module.exports = new (function () {
   winston.log('info', 'Winston recording Lobby.js!');
@@ -42,7 +41,7 @@ module.exports = new (function () {
     .click(goToGameLobby);
   };
 
-  testCases['Part 2: Once all players ready, player one clicks the start button'] = function (client) {
+  testCases['Part 2: Once all players are ready, player 1 starts the game'] = function (client) {
 
     recheckButtonClicked();
 
@@ -102,7 +101,7 @@ module.exports = new (function () {
     .pause(500);
   };
 
-  testCases['Part 4: Player one takes his first move'] = function (client) {
+  testCases['Part 4: Player 1 takes his 1st move'] = function (client) {
     if (player == 1) {
       client.elements('xpath', "//i[contains(@class, 'fa rotate action-display fa-arrow-right')]", function (move) {
         var orderOfInterest = move.value[1].ELEMENT;
@@ -120,13 +119,13 @@ module.exports = new (function () {
         .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click tank unit
         .pause(100)
         .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');                  // click Enemy tile adjacent  (to test combat )
-        });
+      });
     } else {
       client.waitForElementVisible('#gameModal', wait).click('#gameModal');
     }
   };
 
-  testCases['Part 5: Player two takes his first move'] = function (client) {
+  testCases['Part 5: Player 2 takes his 1st move'] = function (client) {
     if (player == 2) {
       client
       .pause(2500)
@@ -146,7 +145,7 @@ module.exports = new (function () {
     }
   };
 
-  testCases['Part 6: Player one takes his second move'] = function (client) {
+  testCases['Part 6: Player 1 takes his 2nd move'] = function (client) {
     if (player == 1) {
       client
       .pause(2500)
