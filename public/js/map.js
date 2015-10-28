@@ -110,7 +110,7 @@ function notSetMenu(index, isActivePlayersMenu) {
     return [
       '<nav class="disabled-menu" >',
       '<label class="disabled-menu-open-button" for="disabled-menu-open' + index + '" id="order">',
-      '<i class="fa fa-ban"></i>',
+      '<i class="fa fa-question"></i>',
       '</label>',
       '</nav>'
     ].join("");

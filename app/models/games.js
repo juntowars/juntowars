@@ -221,18 +221,15 @@ GamesSchema.statics = {
           if (unitList[i].order == "harvest") {
             var race = unitList[i].race;
             var raceCollectionRate = eval("data[0].harvest." + race + ".collectionRate");
-            var raceCurrentAmount = eval("data[0].harvest." + race + ".currentAmount");
-            var newAmount = raceCollectionRate + raceCurrentAmount;
 
             updates.push(staticGames.update({
               "name": gameName,
               "state.units": {$elemMatch: {"index": unitList[i].index}}
-            },
-            {$set: {"state.units.$.order": "done"}}).exec());
+            }, {$set: {"state.units.$.order": "done"}}).exec());
 
             var updateHarvestCount = {};
-            updateHarvestCount["harvest." + race + ".currentAmount"] = newAmount;
-            updates.push(staticGames.update({"name": gameName}, {$set: updateHarvestCount}).exec());
+            updateHarvestCount["harvest." + race + ".currentAmount"] = raceCollectionRate;
+            updates.push(staticGames.update({"name": gameName}, {$inc: updateHarvestCount}).exec());
           }
         }
       }
@@ -526,6 +523,9 @@ GamesSchema.statics = {
         "state.units": {"index": index}
       }
     }).exec();
+  },
+  incrementRoundNumber: function (gameName) {
+    staticGames.update({"name": gameName}, {$inc: {"state.round": 1}}).exec();
   }
 };
 

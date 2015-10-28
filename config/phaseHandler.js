@@ -65,11 +65,14 @@ function moveToNextRound(io, room) {
       io.sockets.in(room).emit('refreshMapView');
     }, 1000);
   });
+  Games.setWaitingOnToAll(room);
+  Games.incrementRoundNumber(room);
 }
 
 function processHarvestTokens(room, io) {
   Games.updateHarvestCounts(room, function () {
     eh.updateHarvestInformation(room, io);
+    winston.info("updateHarvestInformation for Game: " + room);
   });
 }
 

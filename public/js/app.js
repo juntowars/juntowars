@@ -364,10 +364,9 @@ function tileHasUnits(tileElement) {
 function removeHarvestTokens() {
   var diamonds = document.getElementsByClassName("fa-diamond rotate");
   for (var i = 0; i < diamonds.length; i++) {
-    if (diamonds[i].parentElement != null) {
       var tile = diamonds[i].parentElement.parentElement.parentElement;
-      tile.removeChild(tile.childNodes[0]);
-    }
+    var harvestOrderToken = tile.childNodes[0];
+    tile.removeChild(harvestOrderToken);
   }
 }
 
