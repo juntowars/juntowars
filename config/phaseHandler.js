@@ -50,7 +50,7 @@ function moveToHarvestPhase(io, room) {
 
     setTimeout(function () {
         moveToDeploymentPhase(room, io);
-    }, 3000);
+    }, 2000);
 }
 
 function moveToDeploymentPhase(room, io) {

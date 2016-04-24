@@ -29,7 +29,7 @@ game_socket.on('refreshMapView', function () {
 });
 
 function initSocketSession() {
-  document.getElementById('gameModal').classList.remove('show');
+  hideModal();
   playerName = getPlayersName();
   game_socket.emit('joinGame', gameRoom, playerName);
 }

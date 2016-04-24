@@ -41,6 +41,10 @@ function getPlayersName() {
   return document.getElementById('playerName').attributes[1].value;
 }
 
+function getPlayersRace() {
+  return document.getElementById('playerRace').attributes[1].value;
+}
+
 function drawAllUnits(cols, units) {
   var playerName = getPlayersName();
   var gameName = getGameName();

@@ -362,7 +362,7 @@ function tileHasUnits(tileElement) {
 }
 
 function removeHarvestTokens() {
-  displayModal("<h1>The harvest has come</h1><p>Check your harvest count in the hud</p>");
+  displayModal("<h2>The harvest has come!</h2><h3>Time to deploy</h3>");
   var diamonds = document.getElementsByClassName("fa-diamond rotate");
   for (var i = 0; i < diamonds.length; i++) {
       var tile = diamonds[i].parentElement.parentElement.parentElement;
@@ -372,8 +372,8 @@ function removeHarvestTokens() {
 }
 
 function deploymentPhase(playersDefaultDeployments){
-  displayDeployTab();
-  console.log("playersDefaultDeployments " + playersDefaultDeployments);
+  hideModal();
+  displayDeployTab(playersDefaultDeployments);
 }
 
 function updateHarvestInformation(data) {
@@ -382,13 +382,19 @@ function updateHarvestInformation(data) {
   document.getElementById('kingdomWatchers-harvest-rate').innerHTML = 'x' + String(data.kingdomWatchers.collectionRate);
   document.getElementById('periplaneta-harvest-count').innerHTML = String(data.periplaneta.currentAmount);
   document.getElementById('periplaneta-harvest-rate').innerHTML = 'x' + String(data.periplaneta.collectionRate);
+
   document.getElementById("geoEngineers-harvest").style.display = "none";
   document.getElementById("settlers-harvest").style.display = "none";
   document.getElementById("reduviidae-harvest").style.display = "none";
   document.getElementById("guardians-harvest").style.display = "none";
+
+  //update deployment hub view at the same time
+  var playersRace = getPlayersRace();
+  document.getElementById('harvest-value').innerHTML = String(data[playersRace].currentAmount);
 }
 
 function displayModal(modalBody, requiredInfo) {
+  //todo: fix this
   var races = ["kingdomWatchers", "periplaneta"];
 
   if (races.indexOf(modalBody) > -1) {
@@ -404,6 +410,13 @@ function displayModal(modalBody, requiredInfo) {
     document.getElementById('gameModal').onclick = function () {
       document.getElementById('gameModal').classList.remove('show');
     };
+  }
+}
+
+function hideModal() {
+  var gameModal = document.getElementById('gameModal');
+  if (gameModal.classList.contains('show')){
+    gameModal.classList.remove('show');
   }
 }
 
