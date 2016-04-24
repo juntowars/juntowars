@@ -35,41 +35,78 @@ function addHudListeners() {
   };
 }
 
+function removeFromDeploymentResources(valueToRemove) {
+  var defaultDeploymentValue = parseInt(document.getElementById('default-deployment-value').textContent);
+  var harvestValue = parseInt(document.getElementById('harvest-value').textContent);
+
+  if (defaultDeploymentValue >= valueToRemove){
+    document.getElementById('default-deployment-value').textContent = String(defaultDeploymentValue - valueToRemove);
+  } else {
+    document.getElementById('default-deployment-value').textContent = "0";
+    document.getElementById('harvest-value').textContent =  String((harvestValue + defaultDeploymentValue) - valueToRemove);
+  }
+}
+
+function addToDeploymentResources(valueToAdd){
+  var harvestValue = parseInt(document.getElementById('harvest-value').textContent);
+  document.getElementById('harvest-value').textContent =  String(harvestValue + valueToAdd);
+}
+
+
 function toggleDeploymentSubPanelButtons(activateButtons) {
   if (activateButtons) {
     document.getElementById("inc-tank").onclick = function () {
+      var tankCost = 2;
+      var defaultDeploymentValue = parseInt(document.getElementById('default-deployment-value').textContent);
+      var harvestValue = parseInt(document.getElementById('harvest-value').textContent);
       var tankCount = parseInt(document.getElementById("tank-value").textContent);
-      if (tankCount + 1 <= 10) {
+
+      if ((tankCount + 1 <= 10) && ( (harvestValue + defaultDeploymentValue) >= tankCost )) {
+        removeFromDeploymentResources(tankCost);
         document.getElementById("tank-value").textContent = String(tankCount + 1);
       }
     };
     document.getElementById("dec-tank").onclick = function () {
+      var tankCost = 2;
       var tankCount = parseInt(document.getElementById("tank-value").textContent);
-      if (tankCount - 1 >= 0) {
+      if ((tankCount - 1 >= 0)) {
+        addToDeploymentResources(tankCost);
         document.getElementById("tank-value").textContent = String(tankCount - 1);
       }
     };
     document.getElementById("inc-ranged").onclick = function () {
+      var rangedCost = 1;
+      var defaultDeploymentValue = parseInt(document.getElementById('default-deployment-value').textContent);
+      var harvestValue = parseInt(document.getElementById('harvest-value').textContent);
       var rangedCount = parseInt(document.getElementById("ranged-value").textContent);
-      if (rangedCount + 1 <= 10) {
+      if ((rangedCount + 1 <= 10) && ( (harvestValue + defaultDeploymentValue) >= rangedCost )) {
+        removeFromDeploymentResources(rangedCost);
         document.getElementById("ranged-value").textContent = String(rangedCount + 1);
       }
     };
     document.getElementById("dec-ranged").onclick = function () {
+      var rangedCost = 1;
       var rangedCount = parseInt(document.getElementById("ranged-value").textContent);
       if (rangedCount - 1 >= 0) {
+        addToDeploymentResources(rangedCost);
         document.getElementById("ranged-value").textContent = String(rangedCount - 1);
       }
     };
     document.getElementById("inc-infantry").onclick = function () {
+      var infantryCost = 1;
+      var defaultDeploymentValue = parseInt(document.getElementById('default-deployment-value').textContent);
+      var harvestValue = parseInt(document.getElementById('harvest-value').textContent);
       var infantryCount = parseInt(document.getElementById("infantry-value").textContent);
-      if (infantryCount + 1 <= 10) {
+      if ((infantryCount + 1 <= 10)  && ( (harvestValue + defaultDeploymentValue) >= infantryCost )) {
+        removeFromDeploymentResources(infantryCost);
         document.getElementById("infantry-value").textContent = String(infantryCount + 1);
       }
     };
     document.getElementById("dec-infantry").onclick = function () {
+      var infantryCost = 1;
       var infantryCount = parseInt(document.getElementById("infantry-value").textContent);
       if (infantryCount - 1 >= 0) {
+        addToDeploymentResources(infantryCost);
         document.getElementById("infantry-value").textContent = String(infantryCount - 1);
       }
     };
@@ -89,6 +126,5 @@ function displayDeployTab(deployData){
   toggleDeploymentSubPanelButtons(true);
 
   var playerRace = getPlayersRace();
-  var default_value = deployData[playerRace].defaultDeployment;
-  document.getElementById('default-deployment-value').innerHTML = default_value;
+  document.getElementById('default-deployment-value').innerHTML = deployData[playerRace].defaultDeployment;
 }

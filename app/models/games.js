@@ -80,7 +80,7 @@ var GamesSchema = new Schema({
             tanksToDeploy: {type: Number, default: 0}
         },
         periplaneta: {
-            defaultDeployment: {type: Number, default: 4},
+            defaultDeployment: {type: Number, default: 3},
             totalToDeploy: {type: Number, default: 0},
             infantryToDeploy: {type: Number, default: 0},
             rangedToDeploy: {type: Number, default: 0},
