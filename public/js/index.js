@@ -6,7 +6,6 @@ var playerName;
 
 game_socket.on('displayActionModal', function (data) {
   displayModal(data.message);
-  game_socket.emit('markModalAsSeen', gameRoom, playerName);
 });
 
 game_socket.on('enableMoves', function (data) {
@@ -19,6 +18,10 @@ game_socket.on('updateHarvestInformation', function (data) {
 
 game_socket.on('removeHarvestTokens', function () {
   removeHarvestTokens();
+});
+
+game_socket.on('deploymentPhase', function (playersDefaultDeployments) {
+  deploymentPhase(playersDefaultDeployments);
 });
 
 game_socket.on('refreshMapView', function () {

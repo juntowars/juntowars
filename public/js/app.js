@@ -362,12 +362,18 @@ function tileHasUnits(tileElement) {
 }
 
 function removeHarvestTokens() {
+  displayModal("<h1>The harvest has come</h1><p>Check your harvest count in the hud</p>");
   var diamonds = document.getElementsByClassName("fa-diamond rotate");
   for (var i = 0; i < diamonds.length; i++) {
       var tile = diamonds[i].parentElement.parentElement.parentElement;
     var harvestOrderToken = tile.childNodes[0];
     tile.removeChild(harvestOrderToken);
   }
+}
+
+function deploymentPhase(playersDefaultDeployments){
+  displayDeployTab();
+  console.log("playersDefaultDeployments " + playersDefaultDeployments);
 }
 
 function updateHarvestInformation(data) {

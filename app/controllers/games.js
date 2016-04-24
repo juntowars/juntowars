@@ -96,15 +96,17 @@ exports.viewGame = function (req, res) {
   winston.info("Viewing gameTitle: " + gameTitle);
   var gameDoc;
 
-  Games.getGameByTitle(req.user._doc.username, gameTitle, setGameDoc);
+  // To do: rewrite this nonsense
   function setGameDoc(data) {
     gameDoc = data;
   }
 
-  Games.getPlayersRace(gameTitle, req.user._doc.username, doRender);
   function doRender(race) {
     res.render('games/viewGame', {gameList: gameDoc, username: req.user._doc.username, raceName: race});
   }
+
+  Games.getGameByTitle(req.user._doc.username, gameTitle, setGameDoc);
+  Games.getPlayersRace(gameTitle, req.user._doc.username, doRender);
 };
 
 exports.viewGameLobby = function (req, res) {

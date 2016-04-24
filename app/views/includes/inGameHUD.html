@@ -1,10 +1,19 @@
 <nav role="navigation" class="navbar navbar-default navbar-fixed-bottom">
     <ul class="nav nav-tabs">
-        <li class=""><a id="game_hud_tab" href="#" data-toggle="tab" aria-expanded="false"
-                        style="color: #f6f6f6; background-color: #345498">Game information</a></li>
+        <li class="">
+            <a id="game_hud_tab" href="#" data-toggle="tab" aria-expanded="false" style="color: #f6f6f6;
+            background-color: #345498;">Game information</a>
+        </li>
+        <li class="">
+            <a id="game_hud_deployment_tab" href="#" data-toggle="tab" aria-expanded="false" style="color: #f6f6f6;
+            background-color: #98273b;">Deployment</a>
+        </li>
     </ul>
     <div class="container hudContainer" id="game_hud">
         {% include '../hud/game_hud.html' %}
+    </div>
+    <div class="container hudContainer" id="game_hud_deploy">
+        {% include '../hud/game_hud_deploy.html' %}
     </div>
 </nav>
 

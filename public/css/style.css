@@ -264,3 +264,109 @@ a {
     border-radius: 10px;
     background: -webkit-linear-gradient(#fff, #999);
 }
+
+.hidden-panel{
+    opacity: 0;
+}
+
+.show-panel{
+    animation: fadein 0.8s;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.deployment-panel-closed {
+    /*position: absolute;*/
+    z-index: 3000;
+    bottom: 10px;
+    background: #6c2636;
+    overflow: hidden;
+    transition: all 1s ease-in-out;
+    height: 5%;
+    width: 2%;
+}
+
+.deployment-panel-open {
+    /*position: absolute;*/
+    z-index: 3000;
+    bottom: 10px;
+    background: #1c456c;
+    overflow: hidden;
+    transition: all 1s ease-in-out;
+    width: 345px;
+    height: 175px;
+}
+
+#deployment-panel-expander-id {
+    color: white;
+    padding-left: 5px;
+}
+
+.rotate {
+    transition-duration: 1.5s;
+    transform:rotate(360deg);
+}
+
+.un_rotate {
+    transition-duration: 1.5s;
+    transform:rotate(-360deg);
+}
+
+.sub-panels {
+    float: right;
+    padding: 10px;
+}
+
+#reset-deploy-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+    color: #ffffff;
+    background-color: #d9534f;
+    margin-bottom: 0;
+    vertical-align: middle;
+    float: left;
+}
+
+#commit-deploy-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+    color: #ffffff;
+    background-color: #1d9d74;
+    margin-bottom: 0;
+    vertical-align: middle;
+    float: right;
+}
+
+#deployment-panel-button-group {
+    padding: 10px;
+}
+
+#deployment-panel-harvest-info {
+    padding: 27px 17px;
+    font-size: 14px;
+    line-height: 1.3333333;
+    color: #ffffff;
+    background-color: rgb(97, 118, 118);
+    margin-bottom: 0;
+    vertical-align: middle;
+    width: 120px;
+}
+
+#deployment-panel-default-deployment-info {
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+    color: #ffffff;
+    background-color: #607D8B;
+    margin-bottom: 0;
+    vertical-align: middle;
+    width: 120px;
+}
