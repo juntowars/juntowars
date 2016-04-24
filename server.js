@@ -9,7 +9,7 @@ var passport = require('passport');
 var config = require('./config/config');
 var winston = require('winston');
 
-winston.add(winston.transports.File, { filename: 'junto_server.log' });
+winston.add(winston.transports.File, { filename: 'junto_server.log', level : 'debug' });
 winston.remove(winston.transports.Console);
 
 var app = express();

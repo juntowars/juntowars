@@ -9,4 +9,4 @@ build
 lib/external_tools/.*
 *.log
 test/build/.*
-
+npm-debug.log.*
