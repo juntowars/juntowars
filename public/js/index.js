@@ -20,7 +20,7 @@ game_socket.on('removeHarvestTokens', function () {
   removeHarvestTokens();
 });
 
-game_socket.on('deploymentPhase', function (playersDefaultDeployments) {
+game_socket.on('deploymentCommitPhase', function (playersDefaultDeployments) {
   deploymentPhase(playersDefaultDeployments);
 });
 
@@ -32,5 +32,12 @@ function initSocketSession() {
   hideModal();
   playerName = getPlayersName();
   game_socket.emit('joinGame', gameRoom, playerName);
+ 
+  //todo: handle refreshes or disconnects by state 
+  // getGamePhase(gameRoom, function (phase) {
+  //   if(phase == 'deploymentCommitPhase'){
+  //    
+  //   }
+  // });
 }
 

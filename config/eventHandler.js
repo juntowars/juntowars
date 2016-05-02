@@ -1,5 +1,9 @@
+"use strict";
 var mongoose = require('mongoose');
 var winston = require('winston');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+var ph = require('./phaseHandler.js');
 var Games = mongoose.model('Games');
 var Base = mongoose.model('Base');
 
@@ -22,5 +26,43 @@ exports.displayOpeningModal = function displayOpeningModal(room, io, user) {
       }
     }
   });
+};
+
+exports.commitDeployment = function commitDeployment(deploymentInfo) {
+  let deploymentTasks = async(function (deploymentInfo) {
+    let totalDeploymentCost = deploymentInfo.infantryToDeploy + deploymentInfo.rangedToDeploy + deploymentInfo.tanksToDeploy;
+    
+    let game = await(Games.getGame(deploymentInfo.gameRoom));
+    let harvestAvailable = eval("game[0]._doc.harvest."+deploymentInfo.playerRace+".currentAmount");
+    let defaultDeployment = eval("game[0]._doc.deployment."+deploymentInfo.playerRace+".defaultDeployment");
+
+    if (totalDeploymentCost <= (harvestAvailable + defaultDeployment)) {
+      await(Games.commitDeploymentResources(deploymentInfo));
+      await(Games.removePlayerFromToDeployList(deploymentInfo));
+      winston.error("Values committed for  " + deploymentInfo.playerName );
+    } else {
+      //todo: Add a stop game and ban player feature
+      winston.error("I spy a hacker. . " + deploymentInfo.playerName );
+    }
+  });
+
+  return deploymentTasks(deploymentInfo);
+};
+
+exports.checkDeploymentCommitComplete = function checkDeploymentCommitComplete(io ,deploymentInfo) {
+  let checkThatCommitIsComplete = async(function (io, deploymentInfo) {
+    winston.info("commitDeploymentResources for player" + deploymentInfo.playerName);
+    let game = await(Games.getGame(deploymentInfo.gameRoom));
+    let playersLeftToDeploy = game[0]._doc.deployment.racesToDeploy;
+
+    if (playersLeftToDeploy.length > 0) {
+      winston.info("Still waiting on players to commit deployment totals");
+    } else {
+      winston.info("Time to start deploying");
+      ph.startDeploying(io, deploymentInfo.gameRoom);
+    }
+  });
+
+  return checkThatCommitIsComplete(io ,deploymentInfo);
 };
 

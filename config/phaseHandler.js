@@ -15,6 +15,10 @@ exports.moveOrderComplete = function moveOrderComplete(room, user, io) {
     nextMovementAction(room, io);
 };
 
+exports.startDeploying = function startDeploying(io, room) {
+    moveToDeploymentDeployPhase(io, room);
+};
+
 function moveToMovementPhase(room, io) {
     io.sockets.in(room).emit('refreshMapView');
     winston.info("All player orders have been set for game " + room + "switching to movement phase");
@@ -49,22 +53,30 @@ function moveToHarvestPhase(io, room) {
     processHarvestTokens(room, io);
 
     setTimeout(function () {
-        moveToDeploymentPhase(room, io);
+        moveToDeploymentCommitPhase(room, io);
     }, 2000);
 }
 
-function moveToDeploymentPhase(room, io) {
-    winston.info("Moving to harvest phase");
-    Games.setPhase(room, "deployment");
+function moveToDeploymentCommitPhase(room, io) {
+    winston.info("Moving to deployment commit phase");
+    Games.setPhase(room, "deploymentCommitPhase");
 
     Games.setDeploymentListToAllPlayersWithUnits(room, function (data) {
         winston.info("deploymentPhase: " + room);
-        io.sockets.in(room).emit('deploymentPhase', data);
+        io.sockets.in(room).emit('deploymentCommitPhase', data);
     });
+}
 
-    // setTimeout(function () {
-    //   moveToNextRound(io, room);
-    // }, 3000);
+function moveToDeploymentDeployPhase(io, room) {
+    winston.info("Moving to deployment !!deploy!! phase");
+    Games.setPhase(room, "deploymentDeployPhase");
+
+    // todo
+    // Set toDeploy list to people with units to deploy
+    // send first guy a deployment allotment
+    // add socket handler for action complete
+    // if next to deploy - > repeat
+    // else next phase
 }
 
 function moveToNextRound(io, room) {

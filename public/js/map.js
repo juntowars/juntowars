@@ -11,6 +11,19 @@ function GetMap(callback, flag) {
   request.send();
 }
 
+function getGamePhase(room, callback) {
+  var request = new XMLHttpRequest();
+  var getPhaseUrl = location.origin + '/getPhase/'+ room;
+  request.open('GET', getPhaseUrl, true);
+
+  request.onload = function () {
+    if (request.status >= 200 && request.status < 400) {
+      callback(JSON.parse(request.responseText)[0].phase);
+    }
+  };
+  request.send();
+}
+
 function getRaceByPlayerName(playerName, gameName, callback) {
   var request = new XMLHttpRequest();
   var getPlayersRaceUrl = location.origin + '/getPlayersRace/' + playerName + "/" + gameName;

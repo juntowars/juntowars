@@ -167,13 +167,6 @@ GamesSchema.statics = {
             cb(racesWithMovesAvailableOrderList.sort());
         });
     },
-    getUuidByRace: function (room, race, cb) {
-        staticGames.find({"name": room}).exec(function (err, data) {
-                if (err) winston.info("getRacesWithMovesAvailableOrderList failed with: " + err);
-                cb(eval("data[0]._doc.userList." + race));
-            }
-        );
-    },
     getPlayersRace: function (gameName, user, cb) {
         var _query = staticGames.find({"name": gameName}, {"userList": 1});
         _query.exec(function (err, data) {
@@ -319,6 +312,24 @@ GamesSchema.statics = {
             staticGames.update({"name": gameName}, {$set: {"userList.kingdomWatchers": listOfUsersToGiveRacesTo[0]}}).exec();
             staticGames.update({"name": gameName}, {$set: {"userList.periplaneta": listOfUsersToGiveRacesTo[1]}}).exec();
         });
+    },
+    commitDeploymentResources: function (deploymentInfo) {
+        winston.info("commitDeploymentResources 2");
+        var setDeployments = {};
+        setDeployments['deployment.' + deploymentInfo.playerRace + '.infantryToDeploy'] = deploymentInfo.infantryToDeploy;
+        setDeployments['deployment.' + deploymentInfo.playerRace + '.rangedToDeploy'] = deploymentInfo.rangedToDeploy;
+        setDeployments['deployment.' + deploymentInfo.playerRace + '.tanksToDeploy'] = deploymentInfo.tanksToDeploy;
+
+        return staticGames.update({"name": deploymentInfo.gameRoom}, {$set: setDeployments}).exec();
+    },
+    getGame: function (room) {
+        return staticGames.find({"name": room}).exec();
+    },
+    removePlayerFromToDeployList: function (deploymentInfo) {
+        return staticGames.update({"name": deploymentInfo.gameRoom},
+            {
+                $pull: {"deployment.racesToDeploy": deploymentInfo.playerName}
+            }).exec();
     },
     setPlayersReadyStatus: function (gameName, uuid, cb) {
         var updates = [];

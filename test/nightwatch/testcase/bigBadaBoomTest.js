@@ -147,27 +147,27 @@ module.exports = new (function () {
     }
   };
 
-  // testCases['Part 6: Player 1 takes his 2nd move'] = function (client) {
-  //   if (playerNumber == 1) {
-  //     client
-  //     .pause(2500)
-  //     .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
-  //       var orderOfInterest = move.value[0].ELEMENT;
-  //       client
-  //       .elementIdClick(orderOfInterest)
-  //       .pause(100)
-  //       .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
-  //       .pause(100)
-  //       .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[2]/*[2]')   // click tank unit
-  //       .pause(100)
-  //       .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[3]/*[2]')   // click infantry unit
-  //       .pause(100)
-  //       .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');
-  //     });
-  //   } else {
-  //     client.waitForElementVisible('#gameModal', wait).click('#gameModal');
-  //   }
-  // };
+  testCases['Part 6: Player 1 takes his 2nd move'] = function (client) {
+    if (playerNumber == 1) {
+      client
+      .pause(2500)
+      .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
+        var orderOfInterest = move.value[0].ELEMENT;
+        client
+        .elementIdClick(orderOfInterest)
+        .pause(100)
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
+        .pause(100)
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[2]/*[2]')   // click tank unit
+        .pause(100)
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[3]/*[2]')   // click infantry unit
+        .pause(100)
+        .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');
+      });
+    } else {
+      client.waitForElementVisible('#gameModal', wait).click('#gameModal');
+    }
+  };
 
   //testCases.after = function (client) {
   //  client.pause(10000).end();

@@ -52,7 +52,6 @@ function addToDeploymentResources(valueToAdd){
   document.getElementById('harvest-value').textContent =  String(harvestValue + valueToAdd);
 }
 
-
 function toggleDeploymentSubPanelButtons(activateButtons) {
   if (activateButtons) {
     document.getElementById("inc-tank").onclick = function () {
@@ -127,4 +126,25 @@ function displayDeployTab(deployData){
 
   var playerRace = getPlayersRace();
   document.getElementById('default-deployment-value').innerHTML = deployData[playerRace].defaultDeployment;
+
+  document.getElementById("commit-deploy-button").onclick = function (){
+    toggleDeploymentSubPanelButtons(false);
+    document.getElementById('game_hud_deployment_tab').style.display = 'none';
+    changedHUDView('game_hud_deploy');
+
+    var infantryToDeploy = parseInt(document.getElementById('infantry-value').textContent);
+    var rangedToDeploy = parseInt(document.getElementById('ranged-value').textContent);
+    var tanksToDeploy = parseInt(document.getElementById('tank-value').textContent);
+    
+    var deploymentInfo = {
+      infantryToDeploy : infantryToDeploy,
+      rangedToDeploy : rangedToDeploy,
+      tanksToDeploy : tanksToDeploy,
+      playerRace : playerRace,
+      playerName: playerName,
+      gameRoom : gameRoom
+    };
+    
+    game_socket.emit('commitDeploymentResources', deploymentInfo);
+  };
 }
