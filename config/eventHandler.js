@@ -38,8 +38,11 @@ exports.commitDeployment = function commitDeployment(deploymentInfo) {
 
     if (totalDeploymentCost <= (harvestAvailable + defaultDeployment)) {
       await(Games.commitDeploymentResources(deploymentInfo));
-      await(Games.removePlayerFromToDeployList(deploymentInfo));
-      winston.error("Values committed for  " + deploymentInfo.playerName );
+      await(Games.removePlayerFromToCommitList(deploymentInfo));
+      if (totalDeploymentCost > 0){
+        await(Games.addPlayerDeployList(deploymentInfo));
+      }
+      winston.debug("Values committed for  " + deploymentInfo.playerName );
     } else {
       //todo: Add a stop game and ban player feature
       winston.error("I spy a hacker. . " + deploymentInfo.playerName );
@@ -53,9 +56,9 @@ exports.checkDeploymentCommitComplete = function checkDeploymentCommitComplete(i
   let checkThatCommitIsComplete = async(function (io, deploymentInfo) {
     winston.info("commitDeploymentResources for player" + deploymentInfo.playerName);
     let game = await(Games.getGame(deploymentInfo.gameRoom));
-    let playersLeftToDeploy = game[0]._doc.deployment.racesToDeploy;
+    let playersLeftToCommit = game[0]._doc.deployment.racesToCommit;
 
-    if (playersLeftToDeploy.length > 0) {
+    if (playersLeftToCommit.length > 0) {
       winston.info("Still waiting on players to commit deployment totals");
     } else {
       winston.info("Time to start deploying");

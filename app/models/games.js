@@ -100,6 +100,7 @@ var GamesSchema = new Schema({
             rangedToDeploy: {type: Number, default: 0},
             tanksToDeploy: {type: Number, default: 0}
         },
+        racesToCommit: [],
         racesToDeploy: []
     },
     chatLog: [{
@@ -325,11 +326,15 @@ GamesSchema.statics = {
     getGame: function (room) {
         return staticGames.find({"name": room}).exec();
     },
-    removePlayerFromToDeployList: function (deploymentInfo) {
-        return staticGames.update({"name": deploymentInfo.gameRoom},
-            {
-                $pull: {"deployment.racesToDeploy": deploymentInfo.playerName}
-            }).exec();
+    removePlayerFromToCommitList: function (deploymentInfo) {
+        return staticGames.update({"name": deploymentInfo.gameRoom}, {
+            $pull: {"deployment.racesToCommit": deploymentInfo.playerName}
+        }).exec();
+    },
+    addPlayerDeployList: function (deploymentInfo) {
+        return staticGames.update({"name": deploymentInfo.gameRoom}, {
+            $push: {"deployment.racesToDeploy": deploymentInfo.playerName}
+        }).exec();
     },
     setPlayersReadyStatus: function (gameName, uuid, cb) {
         var updates = [];
@@ -352,13 +357,13 @@ GamesSchema.statics = {
             }
         });
     },
-    setDeploymentListToAllPlayersWithUnits: function (gameName, cb) {
+    setCommitListToAllPlayersWithUnits: function (gameName, cb) {
         Promise.all([GamesSchema.statics.getPlayersInGame(gameName)]).then(function (data) {
             var userList = data[0][0]._doc.userList.uuids;
             var updates = [];
             for (var i = 0; i < userList.length; i++) {
                 updates.push(
-                    staticGames.update({"name": gameName}, {$push: {"deployment.racesToDeploy": userList[i]}}).exec()
+                    staticGames.update({"name": gameName}, {$push: {"deployment.racesToCommit": userList[i]}}).exec()
                 );
             }
             Promise.all(updates).then(function () {
@@ -569,6 +574,9 @@ GamesSchema.statics = {
     },
     removeUserFromWaitingOnList: function (gameName, user) {
         return staticGames.update({"name": gameName}, {$pull: {"state.phase.waitingOn": user}}).exec();
+    },    
+    removeFromRacesToDeploy: function (gameName, user) {
+        return staticGames.update({"name": gameName}, {$pull: {"deployment.racesToDeploy": user}}).exec();
     },
     updateWaitingOnListAndCheckIfEmpty: function (user, gameName, callback) {
         Promise.all([GamesSchema.statics.removeUserFromWaitingOnList(gameName, user)]).then(function () {

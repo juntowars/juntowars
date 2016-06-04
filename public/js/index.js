@@ -5,39 +5,44 @@ var gameRoom = window.location.pathname.replace(/.*\//, '');
 var playerName;
 
 game_socket.on('displayActionModal', function (data) {
-  displayModal(data.message);
+    displayModal(data.message);
 });
 
 game_socket.on('enableMoves', function (data) {
-  enableMoveActions(data, playerName);
+    enableMoveActions(data, playerName);
 });
 
 game_socket.on('updateHarvestInformation', function (data) {
-  updateHarvestInformation(data);
+    updateHarvestInformation(data);
 });
 
 game_socket.on('removeHarvestTokens', function () {
-  removeHarvestTokens();
+    removeHarvestTokens();
 });
 
 game_socket.on('deploymentCommitPhase', function (playersDefaultDeployments) {
-  deploymentPhase(playersDefaultDeployments);
+    deploymentCommitPhase(playersDefaultDeployments);
+});
+
+game_socket.on('deploymentDeployPhase', function (nextPlayer, deploymentInfo) {
+    deployingUnits(nextPlayer, deploymentInfo);
 });
 
 game_socket.on('refreshMapView', function () {
-  GetMap(RenderMap, false);
+    GetMap(RenderMap, false);
 });
 
+
 function initSocketSession() {
-  hideModal();
-  playerName = getPlayersName();
-  game_socket.emit('joinGame', gameRoom, playerName);
- 
-  //todo: handle refreshes or disconnects by state 
-  // getGamePhase(gameRoom, function (phase) {
-  //   if(phase == 'deploymentCommitPhase'){
-  //    
-  //   }
-  // });
+    hideModal();
+    playerName = getPlayersName();
+    game_socket.emit('joinGame', gameRoom, playerName);
+
+    //todo: handle refreshes or disconnects by state 
+    // getGamePhase(gameRoom, function (phase) {
+    //   if(phase == 'deploymentCommitPhase'){
+    //    
+    //   }
+    // });
 }
 

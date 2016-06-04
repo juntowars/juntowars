@@ -27,13 +27,14 @@
     background-color: transparent;
     border: transparent;
 }
+
 .nav.nav-tabs {
     background-color: transparent;
 }
 
 .hudContainer {
     display: none;
-    height:170px;
+    height: 170px;
 }
 
 /* Board hexes. */
@@ -45,33 +46,39 @@
     width: 120px;
 }
 
-.settlers{
-    fill : #00FFCC;
-    stroke : black;
+.settlers {
+    fill: #00FFCC;
+    stroke: black;
 }
-.geoEngineers{
-    fill : #00CCFF;
-    stroke : black;
+
+.geoEngineers {
+    fill: #00CCFF;
+    stroke: black;
 }
-.kingdomWatchers{
-    fill : #CCCC00;
-    stroke : black;
+
+.kingdomWatchers {
+    fill: #CCCC00;
+    stroke: black;
 }
-.periplaneta{
-    fill : #FF9933;
-    stroke : black;
+
+.periplaneta {
+    fill: #FF9933;
+    stroke: black;
 }
-.reduviidae{
-    fill : #FF5050;
-    stroke : black;
+
+.reduviidae {
+    fill: #FF5050;
+    stroke: black;
 }
-.guardians{
-    fill : #6666FF;
-    stroke : black;
+
+.guardians {
+    fill: #6666FF;
+    stroke: black;
 }
+
 .selected {
-    fill : #33CCFF;
-    stroke : white;
+    fill: #33CCFF;
+    stroke: white;
 }
 
 /* Map rows. */
@@ -215,15 +222,14 @@ a {
     transition: transform ease-out 200ms;
 }
 
-
-.rotate{
+.rotate {
     -webkit-transition: all 0.2s linear;
     transition: all 0.5s linear;
 }
 
-.rotate.down{
-    -webkit-transform:rotate(180deg);
-    transform:rotate(180deg);
+.rotate.down {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 .highlight {
@@ -265,17 +271,21 @@ a {
     background: -webkit-linear-gradient(#fff, #999);
 }
 
-.hidden-panel{
+.hidden-panel {
     opacity: 0;
 }
 
-.show-panel{
+.show-panel {
     animation: fadein 0.8s;
 }
 
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .deployment-panel-closed {
@@ -300,14 +310,25 @@ a {
     height: 175px;
 }
 
+.deployment-deploy-panel-open {
+    /* position: absolute; */
+    z-index: 3000;
+    bottom: 10px;
+    background: #1c456c;
+    overflow: hidden;
+    transition: all 1s ease-in-out;
+    width: 230px;
+    height: 177px;
+}
+
 .rotate {
     transition-duration: 1.5s;
-    transform:rotate(360deg);
+    transform: rotate(360deg);
 }
 
 .un_rotate {
     transition-duration: 1.5s;
-    transform:rotate(-360deg);
+    transform: rotate(-360deg);
 }
 
 .sub-panels {
@@ -327,7 +348,7 @@ a {
     float: left;
 }
 
-#commit-deploy-button {
+#commit-deploy-button, #deploy-deploy-button {
     padding: 10px 16px;
     font-size: 14px;
     line-height: 1.3333333;
@@ -337,6 +358,18 @@ a {
     margin-bottom: 0;
     vertical-align: middle;
     float: right;
+}
+
+#deploy-confirm-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1.3333333;
+    border-radius: 6px;
+    color: #ffffff;
+    background-color: #617676;
+    margin-bottom: 0;
+    vertical-align: middle;
+    float: left;
 }
 
 #deployment-panel-button-group {

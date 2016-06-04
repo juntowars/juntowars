@@ -184,7 +184,7 @@ module.exports = function (io) {
         socket.on('commitDeploymentResources', function (deploymentInfo) {
             eh.commitDeployment(deploymentInfo)
                 .then(function () {
-                    eh.checkDeploymentCommitComplete(io, deploymentInfo);
+                    return eh.checkDeploymentCommitComplete(io, deploymentInfo);
                 })
                 .catch(function (err) {
                     winston.error("commitDeploymentResources Error: " + err);

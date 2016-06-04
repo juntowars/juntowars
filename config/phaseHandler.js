@@ -1,7 +1,10 @@
+"use strict";
 var mongoose = require('mongoose');
 var winston = require('winston');
 var Games = mongoose.model('Games');
 var Base = mongoose.model('Base');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 var eh = require('./eventHandler.js');
 
 
@@ -61,8 +64,8 @@ function moveToDeploymentCommitPhase(room, io) {
     winston.info("Moving to deployment commit phase");
     Games.setPhase(room, "deploymentCommitPhase");
 
-    Games.setDeploymentListToAllPlayersWithUnits(room, function (data) {
-        winston.info("deploymentPhase: " + room);
+    Games.setCommitListToAllPlayersWithUnits(room, function (data) {
+        winston.info("deploymentCommitPhase: " + room);
         io.sockets.in(room).emit('deploymentCommitPhase', data);
     });
 }
@@ -70,13 +73,20 @@ function moveToDeploymentCommitPhase(room, io) {
 function moveToDeploymentDeployPhase(io, room) {
     winston.info("Moving to deployment !!deploy!! phase");
     Games.setPhase(room, "deploymentDeployPhase");
+    deploymentDeployCycle(io, room);
+}
 
-    // todo
-    // Set toDeploy list to people with units to deploy
-    // send first guy a deployment allotment
-    // add socket handler for action complete
-    // if next to deploy - > repeat
-    // else next phase
+function deploymentDeployCycle(io, room){
+    let game = await(Games.getGame(room));
+    let nextPlayer = game[0]._doc.deployment.racesToDeploy[0];
+    let deploymentInfo = game[0]._doc.deployment;
+
+    if(nextPlayer){
+        await(Games.removeFromRacesToDeploy(room, nextPlayer));
+        io.sockets.in(room).emit('deploymentDeployPhase', nextPlayer, deploymentInfo);
+    } else {
+        moveToNextRound(io, room);
+    }
 }
 
 function moveToNextRound(io, room) {
