@@ -98,6 +98,11 @@ function highlightDeploymentOptions(race, turnOn, infantry, ranged, tank) {
 
 function deployUnitsToTile(hexes, index, infantry, ranged, tanks) {
     let targetHex = hexes[index];
+    let deploymentValues = {
+        "infantry": infantry,
+        "ranged": ranged,
+        "tanks": tanks
+    };
 
     if (targetHex.childNodes[0].childElementCount != 0) {
         // targetHex has existing units which need updating
@@ -105,7 +110,7 @@ function deployUnitsToTile(hexes, index, infantry, ranged, tanks) {
             let unitsClassList = targetHex.childNodes[0].childNodes[i].childNodes[0].classList;
             let unitsTextElement = targetHex.childNodes[0].childNodes[i].childNodes[1];
             let unitValue = parseInt(unitsTextElement.textContent);
-
+            
             if (unitsClassList.contains("infantry")) {
                 infantry += unitValue;
             } else if (unitsClassList.contains("ranged")) {
@@ -115,10 +120,11 @@ function deployUnitsToTile(hexes, index, infantry, ranged, tanks) {
             }
         }
     }
-    targetHex.innerHTML = getSvgForUnits(getPlayersRace(), infantry, ranged, tanks);
-    //todo write server side handler for this
-    game_socket.emit('deploymentOfUnits', gameRoom, index, infantry, ranged, tanks);
-    //Update the deployment tab and check if deployment is complete
+    
+    let race = getPlayersRace();
+    targetHex.innerHTML = getSvgForUnits(race, infantry, ranged, tanks);
+    game_socket.emit('deploymentOfUnits', gameRoom, index, race, infantry, ranged, tanks, deploymentValues);
+    //todo Update the deployment tab and check if deployment is complete
 }
 
 function handleMoveAction(index, movementAction, turnOn) {
@@ -447,8 +453,11 @@ function deployingUnits(nextPlayer, deploymentInfo) {
     if (nextPlayer === playerName) {
         displayDeploymentDeployTab(deploymentInfo);
     } else {
-        displayModal("<h1>Waiting for " + nextPlayer + "</h1><p>First to commit, first to deploy</p>");
-        displayTheWaitingDeploymentDeployTab(nextPlayer, deploymentInfo);
+        displayModal("<h3>Waiting for " + nextPlayer + " to make their deployment</h3>");
+        document.getElementById('game_hud_deployment_deploy_tab').style.display = 'none';
+        if (document.getElementById('game_hud_deployment_deploy').classList.contains('activeHud')){
+            changedHUDView('game_hud');
+        }
     }
 }
 

@@ -92,19 +92,19 @@
 
 /* Terrain textures. */
 .forest {
-    background: url("/img/forest_tile.png");
+    background: url("../img/forest_tile.png");
 }
 
 .grass {
-    background: url("/img/grass_tile.png");
+    background: url("../img/grass_tile.png");
 }
 
 .water {
-    background: url("/img/water_tile.png");
+    background: url("../img/water_tile.png");
 }
 
 .desert {
-    background: url("/img/desert_tile.png");
+    background: url("../img/desert_tile.png");
 }
 
 a {
@@ -358,18 +358,6 @@ a {
     margin-bottom: 0;
     vertical-align: middle;
     float: right;
-}
-
-#deploy-confirm-button {
-    padding: 10px 16px;
-    font-size: 14px;
-    line-height: 1.3333333;
-    border-radius: 6px;
-    color: #ffffff;
-    background-color: #617676;
-    margin-bottom: 0;
-    vertical-align: middle;
-    float: left;
 }
 
 #deployment-panel-button-group {

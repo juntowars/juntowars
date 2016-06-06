@@ -1,7 +1,7 @@
-function changedHUDView(id_name) {
+function changedHUDView(idName, changeViewTo) {
 
     function DisplayHud() {
-        var hudDisplay = document.getElementById(id_name);
+        var hudDisplay = document.getElementById(idName);
 
         if (hudDisplay.classList.contains('activeHud')) {
             hudDisplay.classList.remove('activeHud');
@@ -17,7 +17,25 @@ function changedHUDView(id_name) {
         }
     }
 
-    GetHudStatistics(DisplayHud);
+    function makeHudActiveIfNotAlready(idName) {
+        var hudDisplay = document.getElementById(idName);
+
+        if (!hudDisplay.classList.contains('activeHud')) {
+            var activeHud = document.getElementsByClassName('activeHud')[0];
+            if (activeHud) {
+                activeHud.classList.remove('activeHud');
+                activeHud.classList.add('hudContainer');
+            }
+            hudDisplay.classList.remove('hudContainer');
+            hudDisplay.classList.add('activeHud');
+        }
+    }
+
+    if (changeViewTo) {
+        makeHudActiveIfNotAlready(idName);
+    } else {
+        GetHudStatistics(DisplayHud);
+    }
 }
 
 function updateUnitsStrength(data) {
@@ -155,11 +173,15 @@ function displayDeploymentCommitTab(deployData) {
 function displayDeploymentDeployTab(deploymentInfo) {
     hideModal();
     document.getElementById('game_hud_deployment_deploy_tab').style.display = 'block';
-    changedHUDView('game_hud_deploy_deploy');
+    changedHUDView('game_hud_deploy_deploy', true);
     let race = getPlayersRace();
     document.getElementById('committed-infantry-value').textContent = deploymentInfo[race].infantryToDeploy;
     document.getElementById('committed-ranged-value').textContent = deploymentInfo[race].rangedToDeploy;
     document.getElementById('committed-tank-value').textContent = deploymentInfo[race].tanksToDeploy;
+    document.getElementById('infantry-deploy-value').textContent = "0";
+    document.getElementById('ranged-deploy-value').textContent = "0";
+    document.getElementById('tank-deploy-value').textContent = "0";
+    document.getElementById("deploy-deploy-button").style.backgroundColor = "#1d9d74";
     add_onclick_events_to_deploy_elements();
 }
 
@@ -221,7 +243,6 @@ function add_onclick_events_to_deploy_elements() {
 
     document.getElementById("deploy-deploy-button").onclick = function () {
         document.getElementById("deploy-deploy-button").style.backgroundColor = "#617676";
-        document.getElementById("deploy-confirm-button").style.backgroundColor = "#1d9d74";
         document.getElementById("inc-deploy-tank").onclick = null;
         document.getElementById("dec-deploy-tank").onclick = null;
         document.getElementById("inc-deploy-ranged").onclick = null;
@@ -235,9 +256,5 @@ function add_onclick_events_to_deploy_elements() {
         let tank = parseInt(document.getElementById('tank-deploy-value').textContent);
 
         highlightDeploymentOptions(getPlayersRace(), true, infantry, ranged, tank);
-
-        document.getElementById("deploy-confirm-button").onclick = function (){
-            //send update to the server with the confirmed deployment
-        };
     };
 }

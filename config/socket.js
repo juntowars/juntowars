@@ -132,12 +132,15 @@ module.exports = function (io) {
                 });
             });
 
-            var addUnitToTarget = Games.setUnitDocForIndex(gameRoom, targetIndex, function () {
+            var addUnitToTarget = async(function (gameRoom, targetIndex, unitType, unitValue, unitRace) {
                 winston.info("updateUnitsValues " + gameRoom + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
-                Games.updateUnitsValues(gameRoom, targetIndex, unitType, unitValue, unitRace);
+                var exp = await(Games.setUnitDocForIndex(gameRoom, targetIndex));
+                exp = await(Games.updateUnitsValues(gameRoom, targetIndex, unitType, unitValue, unitRace));
+                return exp;
             });
 
-            Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
+            Promise.all([removeUnitFromOrigin,
+                addUnitToTarget(gameRoom, targetIndex, unitType, unitValue, unitRace)]).then(cb);
         });
 
         socket.on('peacefulMerge', function (movementDetails, cb) {
@@ -158,13 +161,16 @@ module.exports = function (io) {
                     }
                 });
             });
-
-            var addUnitToTarget = Games.setUnitDocForIndex(gameRoom, targetIndex, function () {
+            
+            var addUnitToTarget = async(function (gameRoom, targetIndex, unitType, unitValue, unitRace) {
+                var asyncTask = await(Games.setUnitDocForIndex(gameRoom, targetIndex));
                 winston.info("updateUnitsValues " + gameRoom + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
-                Games.addToCurrentUnitValue(gameRoom, targetIndex, unitType, unitValue, unitRace);
+                asyncTask = await(Games.addToCurrentUnitValue(gameRoom, targetIndex, unitType, unitValue, unitRace));
+                return asyncTask;
             });
 
-            Promise.all([removeUnitFromOrigin, addUnitToTarget]).then(cb);
+            Promise.all([removeUnitFromOrigin,
+                addUnitToTarget(gameRoom, targetIndex, unitType, unitValue, unitRace)]).then(cb);
         });
 
         socket.on('removeAllUnitsInTile', function (gameRoom, removeUnitsFromThisTile) {
@@ -188,6 +194,17 @@ module.exports = function (io) {
                 })
                 .catch(function (err) {
                     winston.error("commitDeploymentResources Error: " + err);
+                });
+        });
+
+        socket.on('deploymentOfUnits', function (room, index, race, infantry, ranged, tanks, deploymentValues) {
+            eh.deploymentByUserToTile(room, index, race, infantry, ranged, tanks, deploymentValues)
+                .then(function () {
+                    io.sockets.in(room).emit('refreshMapView');
+                    ph.continueWithDeployCycle(io, room);
+                })
+                .catch(function (err) {
+                    winston.error("deploymentByUserToTile Error: " + err);
                 });
         });
 

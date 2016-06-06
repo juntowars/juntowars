@@ -427,19 +427,19 @@ GamesSchema.statics = {
             cb(data[0]._doc.harvest);
         });
     },
-    setUnitDocForIndex: function (gameName, index, callback) {
+    setUnitDocForIndex: function (gameName, index) {
         var posX = index % 24;
         var posY = (index - posX) / 24;
         winston.info("setUnitDocForIndex " + index);
 
-        staticGames.find({
+        return staticGames.find({
             "name": gameName,
             "state.units": {$elemMatch: {"index": index}}
         }).exec(function (err, data) {
             if (err) return winston.info("setUnitDocForIndex failed with: " + err);
             if (data.length == 0) {
                 winston.info("No data for index " + index + " new doc required");
-                staticGames.update(
+                return staticGames.update(
                     {"name": gameName},
                     {
                         $push: {
@@ -454,9 +454,9 @@ GamesSchema.statics = {
                                 "posX": posX
                             }
                         }
-                    }).exec(callback);
+                    }).exec();
             } else {
-                callback();
+                return null;
             }
         });
     },
@@ -489,6 +489,18 @@ GamesSchema.statics = {
                     }
                 }).exec(callback);
         }
+    },
+    updateAllUnitsValuesForIndex: function (gameName, index, race, infantry, ranged, tanks) {
+        return staticGames.update(
+            {"name": gameName, "state.units": {$elemMatch: {"index": index}}},
+            {
+                $set: {
+                    "state.units.$.infantry": infantry,
+                    "state.units.$.ranged": ranged,
+                    "state.units.$.tanks": tanks,
+                    "state.units.$.race": race
+                }
+            }).exec();
     },
     addToCurrentUnitValue: function (gameName, index, unitType, unitValue, unitRace, callback) {
         if (unitType == "infantry") {
@@ -555,6 +567,18 @@ GamesSchema.statics = {
                     $inc: {"state.units.$.tanks": -1}
                 }).exec();
         }
+    },
+    removeDeployedValuesFromRace: function (gameName, race, deploymentValues) {
+        var updateValues = {};
+        updateValues['deployment.' + race + '.infantryToDeploy'] = -deploymentValues.infantry;
+        updateValues['deployment.' + race + '.rangedToDeploy'] = -deploymentValues.ranged;
+        updateValues['deployment.' + race + '.tanksToDeploy'] = -deploymentValues.tanks;
+        return staticGames.update({
+                "name": gameName
+            }, {
+                $inc: updateValues
+            }
+        ).exec();
     },
     removeUserFromOpenLobbiesQuery: function (err, gameDocs, user, cb) {
         if (err) return err;

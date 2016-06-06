@@ -7,20 +7,44 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var eh = require('./eventHandler.js');
 
+let deploymentDeployCycle = async(function (io, room) {
+    let game = await(Games.getGame(room));
+    let nextPlayer = game[0]._doc.deployment.racesToDeploy[0];
+    let deploymentInfo = game[0]._doc.deployment;
+    let nextPlayersRace = null;
+    let userList = game[0]._doc.userList;
+    if (nextPlayer == userList.guardians) {
+        nextPlayersRace = "guardians";
+    } else if (nextPlayer == userList.periplaneta) {
+        nextPlayersRace = "periplaneta";
+    } else if (nextPlayer == userList.reduviidae) {
+        nextPlayersRace = "reduviidae";
+    } else if (nextPlayer == userList.kingdomWatchers) {
+        nextPlayersRace = "kingdomWatchers";
+    } else if (nextPlayer == userList.settlers) {
+        nextPlayersRace = "settlers";
+    } else {
+        nextPlayersRace = "geoEngineers";
+    }
 
-exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
-    Games.updateWaitingOnListAndCheckIfEmpty(user, room, function (allPlayerOrdersAreSet) {
-        allPlayerOrdersAreSet ? moveToMovementPhase(room, io) : winston.info("Waiting for other players place orders . .");
-    });
-};
+    let nextPlayerHasUnitsToDeploy = (
+        game[0]._doc.deployment[nextPlayersRace].tanksToDeploy > 0 ||
+        game[0]._doc.deployment[nextPlayersRace].rangedToDeploy > 0 ||
+        game[0]._doc.deployment[nextPlayersRace].infantryToDeploy > 0
+    );
 
-exports.moveOrderComplete = function moveOrderComplete(room, user, io) {
-    nextMovementAction(room, io);
-};
+    if (!nextPlayerHasUnitsToDeploy) {
+        await(Games.removeFromRacesToDeploy(room, nextPlayer));
+        game = await(Games.getGame(room));
+        nextPlayer = game[0]._doc.deployment.racesToDeploy[0];
+    }
 
-exports.startDeploying = function startDeploying(io, room) {
-    moveToDeploymentDeployPhase(io, room);
-};
+    if (nextPlayer) {
+        return io.sockets.in(room).emit('deploymentDeployPhase', nextPlayer, deploymentInfo);
+    } else {
+        return moveToNextRound(io, room);
+    }
+});
 
 function moveToMovementPhase(room, io) {
     io.sockets.in(room).emit('refreshMapView');
@@ -73,20 +97,7 @@ function moveToDeploymentCommitPhase(room, io) {
 function moveToDeploymentDeployPhase(io, room) {
     winston.info("Moving to deployment !!deploy!! phase");
     Games.setPhase(room, "deploymentDeployPhase");
-    deploymentDeployCycle(io, room);
-}
-
-function deploymentDeployCycle(io, room){
-    let game = await(Games.getGame(room));
-    let nextPlayer = game[0]._doc.deployment.racesToDeploy[0];
-    let deploymentInfo = game[0]._doc.deployment;
-
-    if(nextPlayer){
-        await(Games.removeFromRacesToDeploy(room, nextPlayer));
-        io.sockets.in(room).emit('deploymentDeployPhase', nextPlayer, deploymentInfo);
-    } else {
-        moveToNextRound(io, room);
-    }
+    return deploymentDeployCycle(io, room);
 }
 
 function moveToNextRound(io, room) {
@@ -119,3 +130,21 @@ function enableMovesForActivePlayer(playerUUID, room, io, raceTurnOrder) {
         });
     });
 }
+
+exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
+    Games.updateWaitingOnListAndCheckIfEmpty(user, room, function (allPlayerOrdersAreSet) {
+        allPlayerOrdersAreSet ? moveToMovementPhase(room, io) : winston.info("Waiting for other players place orders . .");
+    });
+};
+
+exports.moveOrderComplete = function moveOrderComplete(room, user, io) {
+    nextMovementAction(room, io);
+};
+
+exports.startDeploying = function startDeploying(io, room) {
+    moveToDeploymentDeployPhase(io, room);
+};
+
+exports.continueWithDeployCycle = function (io, room) {
+    return deploymentDeployCycle(io, room);
+};

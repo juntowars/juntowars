@@ -169,7 +169,7 @@ module.exports = new (function () {
         }
     };
 
-    testCases['Part 7: Both players click + 1,1,1 and commit units '] = function (client) {
+    testCases['Part 7: Both players click + 2,2,2 and commit units '] = function (client) {
         client
             .waitForElementVisible('#inc-tank', wait)
             .pause(250)
@@ -188,7 +188,7 @@ module.exports = new (function () {
         if (playerNumber == 1) {
             client.click('xpath', '//*[@id="commit-deploy-button"]');
         } else {
-            client.pause(2000).click('xpath', '//*[@id="commit-deploy-button"]');
+            client.pause(1000).click('xpath', '//*[@id="commit-deploy-button"]');
         }
 
     };
