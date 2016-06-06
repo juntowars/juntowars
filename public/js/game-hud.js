@@ -185,6 +185,21 @@ function displayDeploymentDeployTab(deploymentInfo) {
     add_onclick_events_to_deploy_elements();
 }
 
+function hideAndResetDeploymentElements() {
+    document.getElementById('game_hud_deployment_deploy_tab').style.display = 'none';
+    document.getElementById('game_hud_deploy_deploy').style.display = 'none';
+    document.getElementById('infantry-deploy-value').textContent = "0";
+    document.getElementById('ranged-deploy-value').textContent = "0";
+    document.getElementById('tank-deploy-value').textContent = "0";
+    document.getElementById("inc-deploy-tank").onclick = null;
+    document.getElementById("dec-deploy-tank").onclick = null;
+    document.getElementById("inc-deploy-ranged").onclick = null;
+    document.getElementById("dec-deploy-ranged").onclick = null;
+    document.getElementById("inc-deploy-infantry").onclick = null;
+    document.getElementById("dec-deploy-infantry").onclick = null;
+    document.getElementById("deploy-deploy-button").onclick = null;
+}
+
 function add_onclick_events_to_deploy_elements() {
     document.getElementById("inc-deploy-tank").onclick = function () {
         var committedValue = parseInt(document.getElementById('committed-tank-value').textContent);

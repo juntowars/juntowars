@@ -134,9 +134,9 @@ module.exports = function (io) {
 
             var addUnitToTarget = async(function (gameRoom, targetIndex, unitType, unitValue, unitRace) {
                 winston.info("updateUnitsValues " + gameRoom + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);
-                var exp = await(Games.setUnitDocForIndex(gameRoom, targetIndex));
-                exp = await(Games.updateUnitsValues(gameRoom, targetIndex, unitType, unitValue, unitRace));
-                return exp;
+                await(Games.setUnitDocForIndex(gameRoom, targetIndex));
+                await(Games.updateUnitsValues(gameRoom, targetIndex, unitType, unitValue, unitRace));
+                return null;
             });
 
             Promise.all([removeUnitFromOrigin,

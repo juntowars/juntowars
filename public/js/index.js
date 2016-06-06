@@ -28,6 +28,10 @@ game_socket.on('deploymentDeployPhase', function (nextPlayer, deploymentInfo) {
     deployingUnits(nextPlayer, deploymentInfo);
 });
 
+game_socket.on('deploymentDeployPhaseOver', function () {
+    hideAndResetDeploymentElements();
+});
+
 game_socket.on('refreshMapView', function () {
     GetMap(RenderMap, false);
 });

@@ -42,6 +42,7 @@ let deploymentDeployCycle = async(function (io, room) {
     if (nextPlayer) {
         return io.sockets.in(room).emit('deploymentDeployPhase', nextPlayer, deploymentInfo);
     } else {
+        io.sockets.in(room).emit('deploymentDeployPhaseOver');
         return moveToNextRound(io, room);
     }
 });
