@@ -191,6 +191,9 @@ function hideAndResetDeploymentElements() {
     document.getElementById('infantry-deploy-value').textContent = "0";
     document.getElementById('ranged-deploy-value').textContent = "0";
     document.getElementById('tank-deploy-value').textContent = "0";
+    document.getElementById('infantry-value').textContent = "0";
+    document.getElementById('ranged-value').textContent = "0";
+    document.getElementById('tank-value').textContent = "0";
     document.getElementById("inc-deploy-tank").onclick = null;
     document.getElementById("dec-deploy-tank").onclick = null;
     document.getElementById("inc-deploy-ranged").onclick = null;

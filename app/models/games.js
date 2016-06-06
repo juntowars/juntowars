@@ -315,13 +315,17 @@ GamesSchema.statics = {
         });
     },
     commitDeploymentResources: function (deploymentInfo) {
-        winston.info("commitDeploymentResources 2");
         var setDeployments = {};
         setDeployments['deployment.' + deploymentInfo.playerRace + '.infantryToDeploy'] = deploymentInfo.infantryToDeploy;
         setDeployments['deployment.' + deploymentInfo.playerRace + '.rangedToDeploy'] = deploymentInfo.rangedToDeploy;
         setDeployments['deployment.' + deploymentInfo.playerRace + '.tanksToDeploy'] = deploymentInfo.tanksToDeploy;
 
         return staticGames.update({"name": deploymentInfo.gameRoom}, {$set: setDeployments}).exec();
+    },
+    removeCommittedCostFromHarvest: function (gameName, race, costToHarvest) {
+        var removeCostToHarvest = {};
+        removeCostToHarvest["harvest." + race + ".currentAmount"] = -costToHarvest;
+        return staticGames.update({"name": gameName}, {$inc: removeCostToHarvest}).exec();
     },
     getGame: function (room) {
         return staticGames.find({"name": room}).exec();
@@ -598,7 +602,7 @@ GamesSchema.statics = {
     },
     removeUserFromWaitingOnList: function (gameName, user) {
         return staticGames.update({"name": gameName}, {$pull: {"state.phase.waitingOn": user}}).exec();
-    },    
+    },
     removeFromRacesToDeploy: function (gameName, user) {
         return staticGames.update({"name": gameName}, {$pull: {"deployment.racesToDeploy": user}}).exec();
     },

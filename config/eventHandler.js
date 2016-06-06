@@ -36,8 +36,10 @@ exports.commitDeployment = function commitDeployment(deploymentInfo) {
         let harvestAvailable = eval("game[0]._doc.harvest." + deploymentInfo.playerRace + ".currentAmount");
         let defaultDeployment = eval("game[0]._doc.deployment." + deploymentInfo.playerRace + ".defaultDeployment");
 
+        let costToHarvest = totalDeploymentCost - defaultDeployment;
         if (totalDeploymentCost <= (harvestAvailable + defaultDeployment)) {
             await(Games.commitDeploymentResources(deploymentInfo));
+            await(Games.removeCommittedCostFromHarvest(deploymentInfo.gameRoom, deploymentInfo.playerRace, costToHarvest));
             await(Games.removePlayerFromToCommitList(deploymentInfo));
             if (totalDeploymentCost > 0) {
                 await(Games.addPlayerDeployList(deploymentInfo));
