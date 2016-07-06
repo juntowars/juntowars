@@ -1,0 +1,11 @@
+<div style="overflow: scroll">
+    {% for merchant in merchants %}
+    <p>Merchant name: {{ merchant.name }}</p>
+    {% for weapon in merchant.weapons %}
+    <div id="{{ weapon.name}}">
+        <p>weapon name: {{ weapon.name }}</p>
+        <img src="" style="width: 5%">
+    </div>
+    {% endfor %}
+    {% endfor %}
+</div>

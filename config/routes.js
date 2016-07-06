@@ -44,6 +44,7 @@ module.exports = function (app, passport) {
   app.get('/getHudStatistics/:game/:race', games.getHudStatistics);
   app.get('/getRaceHistory/:race', base.getRaceHistory);
   app.get('/getLeaderBio/:race/:leader', base.getLeaderBio);
+  app.get('/getMerchantStore', base.getMerchantStore);
   app.get('/games', games.index);
   app.get('/games/user/:userId', auth.requiresLogin, games.dashboard);
   app.post('/games/user/:userId', auth.requiresLogin, games.create);
@@ -66,9 +67,7 @@ module.exports = function (app, passport) {
 
   app.use(function (err, req, res, next) {
     // treat as 404
-    if (err.message
-    && (~err.message.indexOf('not found')
-    || (~err.message.indexOf('Cast to ObjectId failed')))) {
+    if (err.message && (~err.message.indexOf('not found') || (~err.message.indexOf('Cast to ObjectId failed')))) {
       return next();
     }
     winston.error(err.stack);

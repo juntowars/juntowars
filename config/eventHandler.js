@@ -1,4 +1,5 @@
-"use strict";
+/*jshint esversion: 6 */
+
 var mongoose = require('mongoose');
 var winston = require('winston');
 var async = require('asyncawait/async');

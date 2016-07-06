@@ -9,12 +9,11 @@ var passport = require('passport');
 var config = require('./config/config');
 var winston = require('winston');
 
-winston.add(winston.transports.File, { filename: 'junto_server.log', level : 'debug' });
+winston.add(winston.transports.File, {filename: 'junto_server.log', level: 'debug'});
 winston.remove(winston.transports.Console);
 
 var app = express();
 var port = process.env.PORT || 3000;
-
 
 // Connect to mongodb
 var connect = function () {

@@ -1,4 +1,5 @@
-"use strict";
+/*jshint esversion: 6 */
+
 var mongoose = require('mongoose');
 var winston = require('winston');
 var Games = mongoose.model('Games');
@@ -58,13 +59,17 @@ function moveToMovementPhase(room, io) {
 
 function nextMovementAction(room, io) {
     Games.getRacesWithMovesAvailableOrderList(room, function (racesWithMovementsLeft) {
-        racesWithMovementsLeft.length == 0 ? moveToHarvestPhase(io, room) : cycleThroughMoves(room, io, racesWithMovementsLeft);
+        if(racesWithMovementsLeft.length === 0) {
+            moveToHarvestPhase(io, room);
+        } else {
+            cycleThroughMoves(room, io, racesWithMovementsLeft);
+        }
     });
 }
 
 function cycleThroughMoves(room, io, raceTurnOrder) {
     Games.getActivePlayer(room, function (activePlayer) {
-        if (activePlayer == '') {
+        if (activePlayer === '') {
             Games.setActivePlayer(room, raceTurnOrder[0], function (activePlayer) {
                 enableMovesForActivePlayer(activePlayer, room, io, raceTurnOrder);
             });
@@ -134,7 +139,11 @@ function enableMovesForActivePlayer(playerUUID, room, io, raceTurnOrder) {
 
 exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
     Games.updateWaitingOnListAndCheckIfEmpty(user, room, function (allPlayerOrdersAreSet) {
-        allPlayerOrdersAreSet ? moveToMovementPhase(room, io) : winston.info("Waiting for other players place orders . .");
+        if(allPlayerOrdersAreSet) {
+            moveToMovementPhase(room, io);
+        }else {
+            winston.info("Waiting for other players place orders . .");
+        }
     });
 };
 

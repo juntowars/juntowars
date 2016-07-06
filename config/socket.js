@@ -207,6 +207,14 @@ module.exports = function (io) {
                     winston.error("deploymentByUserToTile Error: " + err);
                 });
         });
+        
+        socket.on('upgradeSelectedCard', function(room, race, selectedUpgrade) {
+            Games.updatePurchasedInventory(io, room, race, selectedUpgrade);
+        });
+
+        socket.on('initCardDeck', function(room, race) {
+            Games.setCardDeckOnInit(io, room, race);
+        });
 
     });
 };

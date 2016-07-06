@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 function GetMap(callback, flag) {
   var request = new XMLHttpRequest();
   var getBaseBoardUrl = location.origin + '/getBaseBoard';
@@ -219,7 +221,7 @@ function presetMoveOrder(index, isActivePlayersMenu) {
 }
 
 function displayInfantryUnits(race, numberOfUnits) {
-  if (numberOfUnits == 0) {
+  if (numberOfUnits === 0) {
     return "";
   } else {
     var infantrySvgOpen = '<g><circle cx="30" cy="60" r="15" class="';
@@ -229,7 +231,7 @@ function displayInfantryUnits(race, numberOfUnits) {
 }
 
 function displayRangedUnits(race, numberOfUnits) {
-  if (numberOfUnits == 0) {
+  if (numberOfUnits === 0) {
     return "";
   } else {
     var rangedSvgOpen = '<g><polygon points="60,5 40,40 80,40" class="';
@@ -239,7 +241,7 @@ function displayRangedUnits(race, numberOfUnits) {
 }
 
 function displayTankUnits(race, numberOfUnits) {
-  if (numberOfUnits == 0) {
+  if (numberOfUnits === 0) {
     return "";
   } else {
     var svgOpen = '<g><rect x="50" y="50" width="40" height="40" class="';
@@ -292,14 +294,16 @@ function RenderMap(boardBackgroundMap, isFirstInitializationOfMap) {
 
   // Generate a row of hexes as html.
   var rowHtml = "";
-  for (var i = 0; i < cols; i++)
+  for (let i = 0; i < cols; i++){
     rowHtml += '<div class="hex" id="x_' + i + '"><svg height="100" width="100"></svg></div>';
+  }
   rowHtml += "</div>";
 
   // Main map html.
   var mapHtml = "";
-  for (i = 0; i < rows; i++)
+  for (let i = 0; i < rows; i++){
     mapHtml += ('<div id="y_' + i + '">' + rowHtml);
+  }
 
   // Set map contents.
   mapHolder.innerHTML = mapHtml;
@@ -309,7 +313,7 @@ function RenderMap(boardBackgroundMap, isFirstInitializationOfMap) {
   var y = 0;
 
   var hexes = document.getElementsByClassName('hex');
-  for (var i = 0; i < hexes.length; i++) {
+  for (let i = 0; i < hexes.length; i++) {
     var x = i % cols;
     if (rowCounter == cols) {
       y = y + 1;
@@ -317,7 +321,7 @@ function RenderMap(boardBackgroundMap, isFirstInitializationOfMap) {
     }
     rowCounter++;
 
-    if (boardBackgroundMap[y][x] == 0)
+    if (boardBackgroundMap[y][x] === 0)
       hexes[i].className += " water";
     else if (boardBackgroundMap[y][x] == 1)
       hexes[i].className += " grass";
