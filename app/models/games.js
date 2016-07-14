@@ -42,11 +42,11 @@ var GamesSchema = new Schema({
       collectionRate: {type: Number, default: 1}
     },
     kingdomWatchers: {
-      currentAmount: {type: Number, default: 10},
+      currentAmount: {type: Number, default: 100},
       collectionRate: {type: Number, default: 1}
     },
     periplaneta: {
-      currentAmount: {type: Number, default: 11},
+      currentAmount: {type: Number, default: 100},
       collectionRate: {type: Number, default: 2}
     },
     reduviidae: {
@@ -656,7 +656,7 @@ GamesSchema.statics = {
             var purchasedInventory = data[0].purchasedInventory[race];
             var baseUpgrades = Base.schema.merchants[race].upgrades;
             var initialDeck = {};
-            for(var i = 0; i < baseUpgrades.length; i++) {
+            for (var i = 0; i < baseUpgrades.length; i++) {
               var baseCard = baseUpgrades[i];
               var cardGrade = baseCard.grade.NOT_PURCHASED !== undefined ? "NOT_PURCHASED" : "BASIC";
               initialDeck[baseCard.name] = {};
@@ -666,9 +666,9 @@ GamesSchema.statics = {
               initialDeck[baseCard.name]["next_level"] = baseCard.grade[cardGrade].nextGrade;
               initialDeck[baseCard.name]["cost_to_upgrade"] = baseCard.grade[cardGrade].cost;
             }
-            var conditions = {name: gameName}
-                , update = {}
-                , options = {};
+            var conditions = {name: gameName},
+                update = {},
+                options = {};
             update["purchasedInventory." + race + ".upgrades"] = initialDeck;
 
             staticGames.update(conditions, update, options, function (err, numAffected) {
@@ -694,39 +694,63 @@ GamesSchema.statics = {
     var nextLevelQuery = staticGames.findOne({"name": gameName}).exec();
 
     nextLevelQuery.then(function (data) {
-      var nextLevel = data._doc["purchasedInventory"][race]["upgrades"][selectedUpgrade].next_level;
-      if (nextLevel !== null) {
+      var costToUpgrade = data._doc["purchasedInventory"][race]["upgrades"][selectedUpgrade].cost_to_upgrade;
+      var currentHarvestQuery = GamesSchema.statics.getHarvestInformation(gameName, function (currentHarvest) {
+        if (costToUpgrade > currentHarvest[race].currentAmount) {
+          io.sockets.in(gameName).emit("alertUser", "Insufficient harvest tokens available to upgrade card", race);
+        } else {
+          upgradeCard();
+        }
+      });
 
-        var upgrades = Base.schema.merchants[race].upgrades;
-        for (var i = 0; i < upgrades.length; i++) {
-          if (upgrades[i].name === selectedUpgrade) {
-            var nextCard = upgrades[i];
-            var nextCardStats = nextCard.grade[nextLevel];
-            var upgradedCard = {
-              current_level: nextLevel,
-              upgrade_type: nextCard.type,
-              modifier: nextCardStats.modifier,
-              next_level: nextCardStats.nextGrade,
-              cost_to_upgrade: nextCardStats.cost
-            };
+      var upgradeCard = function() {
+        var nextLevel = data._doc["purchasedInventory"][race]["upgrades"][selectedUpgrade].next_level;
+        if (nextLevel !== null) {
+          var upgrades = Base.schema.merchants[race].upgrades;
+          for (var i = 0; i < upgrades.length; i++) {
+            if (upgrades[i].name === selectedUpgrade) {
+              var nextCard = upgrades[i];
+              var nextCardStats = nextCard.grade[nextLevel];
+              var upgradedCard = {
+                current_level: nextLevel,
+                upgrade_type: nextCard.type,
+                modifier: nextCardStats.modifier,
+                next_level: nextCardStats.nextGrade,
+                cost_to_upgrade: nextCardStats.cost
+              };
 
-            var conditions = {name: gameName}
-                , update = {}
-                , options = {};
-            update["purchasedInventory." + race + ".upgrades." + selectedUpgrade] = upgradedCard;
+              var conditions = {name: gameName},
+                  update = {},
+                  options = {};
+              update["purchasedInventory." + race + ".upgrades." + selectedUpgrade] = upgradedCard;
 
-            staticGames.update(conditions, update, options, function (err, numAffected) {
-              if (err) {
-                console.log("Game: " + gameName + ". Attempted Upgrade for card " + selectedUpgrade + "failed: " + err);
-              } else {
-                console.log("Game: " + gameName + ". " + race + " upgraded " + selectedUpgrade + ". numAffected: " + numAffected.nModified);
-                GamesSchema.statics.getCurrentPurchasedInventory(io, gameName);
-              }
-            });
+              staticGames.update(conditions, update, options, function (err, numAffected) {
+                updateCardDeckAndHarvest(err, gameName, race, numAffected, costToUpgrade);
+              });
+            }
           }
         }
-      }
+      };
     });
+
+    function broadcastUpdatedHarvestInfo(room) {
+      GamesSchema.statics.getHarvestInformation(room, function (harvestInformation) {
+        io.sockets.in(room).emit('updateHarvestInformation', harvestInformation);
+      });
+    }
+
+    function updateCardDeckAndHarvest(err, room, playerRace, numAffected, costToUpgrade) {
+      if (err) {
+        console.log("Game: " + room + ". Attempted Upgrade for card " + selectedUpgrade + "failed: " + err);
+      } else {
+        console.log("Game: " + room + ". " + playerRace + " upgraded " + selectedUpgrade + ". numAffected: " + numAffected.nModified);
+        GamesSchema.statics.getCurrentPurchasedInventory(io, room);
+        GamesSchema.statics.removeCommittedCostFromHarvest(room, playerRace, costToUpgrade);
+        GamesSchema.statics.updateHarvestCounts(room, function () {
+          broadcastUpdatedHarvestInfo(room);
+        });
+      }
+    }
   }
 };
 

@@ -120,13 +120,6 @@ function moveToNextRound(io, room) {
     Games.incrementRoundNumber(room);
 }
 
-function processHarvestTokens(room, io) {
-    Games.updateHarvestCounts(room, function () {
-        eh.updateHarvestInformation(room, io);
-        winston.info("updateHarvestInformation for Game: " + room);
-    });
-}
-
 function enableMovesForActivePlayer(playerUUID, room, io, raceTurnOrder) {
     io.sockets.in(room).emit('enableMoves', playerUUID);
     Games.getPlayersRace(room, playerUUID, function (activePlayersRace) {
@@ -136,6 +129,13 @@ function enableMovesForActivePlayer(playerUUID, room, io, raceTurnOrder) {
         });
     });
 }
+
+exports.processHarvestTokens = function(room, io) {
+    Games.updateHarvestCounts(room, function () {
+        eh.updateHarvestInformation(room, io);
+        winston.info("updateHarvestInformation for Game: " + room);
+    });
+};
 
 exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
     Games.updateWaitingOnListAndCheckIfEmpty(user, room, function (allPlayerOrdersAreSet) {

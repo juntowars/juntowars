@@ -32,6 +32,17 @@ game_socket.on('deploymentDeployPhaseOver', function () {
   hideAndResetDeploymentElements();
 });
 
+game_socket.on('alertUser', function (msg, raceToAlert) {
+  if(raceToAlert) {
+    var race = getPlayersRace();
+    if(race === raceToAlert) {
+      alert(msg);
+    }  
+  } else {
+    alert(msg);
+  }
+});
+
 game_socket.on('refreshMapView', function () {
   GetMap(RenderMap, false);
 });

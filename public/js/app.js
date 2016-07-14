@@ -439,11 +439,11 @@ function deployingUnits(nextPlayer, deploymentInfo) {
 }
 
 function updateHarvestInformation(data) {
-  //todo make this dynamic
-  document.getElementById('kingdomWatchers-harvest-count').innerHTML = String(data.kingdomWatchers.currentAmount);
-  document.getElementById('kingdomWatchers-harvest-rate').innerHTML = 'x' + String(data.kingdomWatchers.collectionRate);
-  document.getElementById('periplaneta-harvest-count').innerHTML = String(data.periplaneta.currentAmount);
-  document.getElementById('periplaneta-harvest-rate').innerHTML = 'x' + String(data.periplaneta.collectionRate);
+  var races = ["kingdomWatchers", "periplaneta"];
+  for(var race in races) {
+    document.getElementById( races[race] + '-harvest-count').innerHTML = String(data[races[race]].currentAmount);
+    document.getElementById(races[race] + '-harvest-rate').innerHTML = 'x' + String(data[races[race]].collectionRate);
+  }
 
   document.getElementById("geoEngineers-harvest").style.display = "none";
   document.getElementById("settlers-harvest").style.display = "none";

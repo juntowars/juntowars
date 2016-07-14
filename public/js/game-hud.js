@@ -366,6 +366,8 @@ var drawScrollableUpgradesCardDeck = function() {
     cardName.innerHTML = json[card].cardname;
     let cardValue = document.createElement('div');
     cardValue.innerHTML = "Modifier: " + json[card].value;
+    let costToUpgrade = document.createElement('div');
+    costToUpgrade.innerHTML = "Cost to upgrade: " + json[card].costtoupgrade;
     let cardImage = document.createElement('img');
     cardImage.src = "/img/shop/" + playerRace + "/upgrades/" + json[card].cardname + "/" +json[card].cardlevel + ".jpg";
     cardImage.style.maxHeight = "100%";
@@ -381,6 +383,7 @@ var drawScrollableUpgradesCardDeck = function() {
     let cardElement = document.createElement('div');
     cardElement.appendChild(cardName);
     cardElement.appendChild(cardValue);
+    cardElement.appendChild(costToUpgrade);
     cardElement.appendChild(cardImage);
     cardElement.appendChild(upgradeButton);
     cardElement.style.width = "200px";
