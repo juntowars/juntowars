@@ -152,7 +152,30 @@ function enableMoveActions(userToEnableMovesFor, playerName) {
     for (var i = 0; i < listOfMoves.length; i++) {
       var movementAction = listOfMoves[i];
       movementAction.parentElement.style.background = 'orange';
-      movementAction.parentElement.onclick = activateMove();
+            movementAction.parentElement.onclick = function () {
+
+                //Mark as active
+                var activeTileInputTag = this.parentElement.getElementsByTagName('input')[0];
+                var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
+                this.classList.add('ACTIVE');
+
+                // Reset other tiles
+                for (var i = 0; i < listOfMoves.length; i++) {
+                    var notSelected = !listOfMoves[i].parentElement.classList.contains('ACTIVE');
+                    if (notSelected) {
+                        listOfMoves[i].parentElement.style.background = 'green';
+                        removeOnClickEvent(listOfMoves[i].parentElement);
+                    }
+                }
+                //Handle move
+                handleMoveAction(index, this, true);
+
+                //End move with second click
+                this.onclick = function () {
+                    handleMoveAction(index, this, false);
+                    removeActionMenu(this.parentElement);
+                }
+            };
     }
   } else {
     displayModal("<h1>Hold onto your butts</h1><p>Its " + userToEnableMovesFor + " turn</p>");
@@ -532,33 +555,3 @@ function getUnitRace(element) {
 function getUnitValue(element) {
   return parseInt(element.childNodes[1].textContent);
 }
-
-var activateMove = function() {
-
-  //Mark as active
-  var activeTileInputTag = this.parentElement.getElementsByTagName('input')[0];
-  var index = parseInt(activeTileInputTag.attributes.name.value.replace("menu-open", ""));
-  this.classList.add('ACTIVE');
-
-  // Reset other tiles
-  for (var i = 0; i < listOfMoves.length; i++) {
-    var notSelected = !listOfMoves[i].parentElement.classList.contains('ACTIVE');
-    if (notSelected) {
-      listOfMoves[i].parentElement.style.background = 'green';
-      removeOnClickEvent(listOfMoves[i].parentElement);
-    }
-  }
-  //Handle move
-  handleMoveAction(index, this, true);
-
-  //End move with second click
-  this.onclick = function () {
-    handleMoveAction(index, this, false);
-    removeActionMenu(this.parentElement);
-  };
-};
-
-var handleDeploymentOptions = function(allTileElements, neighbouringTilesIndex) {
-  deployUnitsToTile(allTileElements, neighbouringTilesIndex, infantry, ranged, tank);
-  highlightDeploymentOptions(race, false);
-};

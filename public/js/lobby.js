@@ -33,9 +33,10 @@ window.onload = function () {
   socket.on('refreshLobbyStatus', function (data) {
     if (data) {
       var listOfUsers = data.playerStatus;
+      var playerNum = "";
       // Fill out the data we have
       for (var i = 0; i < listOfUsers.length; i++) {
-        var playerNum = "player" + (i + 1).toString();
+        playerNum = "player" + (i + 1).toString();
         // Display users name
         document.getElementById(playerNum).innerText = listOfUsers[i].uuid;
         // Display users Status
