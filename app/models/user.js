@@ -39,7 +39,7 @@ UserSchema
         this.hashed_password = this.encryptPassword(password);
     })
     .get(function () {
-        return this._password
+        return this._password;
     });
 
 /**

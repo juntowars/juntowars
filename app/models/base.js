@@ -2,10 +2,17 @@
  * Module dependencies.
  */
 
-var mongoose = require('mongoose');
-var config = require('../../config/config');
+var mongoose = require('mongoose'),
+    config = require('../../config/config'),
+    Schema = mongoose.Schema;
 
-var Schema = mongoose.Schema;
+var cardType = {
+  ATTACK: "Attack",
+  DEFENCE: "Defence",
+  ATTACK_AND_DEFENCE: "Attack and Defence",
+  MOVEMENT: "Movement",
+  RANGE: "Range"
+};
 
 /**
  * Base Schema
@@ -60,6 +67,166 @@ BaseSchema.statics = {
         "order": "notSet"
       }
     ];
+  },
+  getRaceSpecificMerchant: function (race) {
+    var upgrades = BaseSchema.merchants[race].upgrades;
+
+    var merchants = {
+      kingdomWatchers: function () {
+        return {
+          name: "Handelaar",
+          image: "/img/merchants/merchant_1.jpg",
+          upgrades: upgrades,
+          combatCards: [],
+          bounties: []
+        };
+      },
+      periplaneta: function () {
+        return {
+          name: "slimey",
+          image: "/img/merchants/merchant_1.jpg",
+          upgrades: upgrades,
+          combatCards: [],
+          bounties: []
+        };
+      }
+    };
+
+    return merchants[race]();
+  }
+};
+
+BaseSchema.merchants = {
+  kingdomWatchers: {
+    name: "Handelaar",
+    image: "/img/merchants/merchant_1.jpg",
+    upgrades: [
+      {
+        type: cardType.ATTACK,
+        name: "soul_flame",
+        imageFolder: "/img/shop/upgrades/soul_flame/",
+        grade: {
+          BASIC: {
+            modifier: 1,
+            cost: 15,
+            nextGrade: "DECORATED"
+          },
+          DECORATED: {
+            modifier: 3,
+            cost: 30,
+            nextGrade: "HEROIC"
+          },
+          HEROIC: {
+            modifier: 5,
+            cost: 50,
+            nextGrade: "MASTERFUL"
+          },
+          MASTERFUL: {
+            modifier: 10,
+            cost: 100,
+            nextGrade: "ELITE"
+          },
+          ELITE: {
+            modifier: 20,
+            cost: 0,
+            nextGrade: null
+          }
+        }
+      }, {
+        type: cardType.DEFENCE,
+        name: "repulsor_shield",
+        imageFolder: "/img/shop/upgrades/repulsor_shield/",
+        grade: {
+          BASIC: {
+            modifier: 1,
+            cost: 15,
+            nextGrade: "DECORATED"
+          },
+          DECORATED: {
+            modifier: 3,
+            cost: 30,
+            nextGrade: "HEROIC"
+          },
+          HEROIC: {
+            modifier: 5,
+            cost: 50,
+            nextGrade: "MASTERFUL"
+          },
+          MASTERFUL: {
+            modifier: 10,
+            cost: 100,
+            nextGrade: "ELITE"
+          },
+          ELITE: {
+            modifier: 20,
+            cost: 0,
+            nextGrade: null
+          }
+        }
+      }, {
+        type: cardType.MOVEMENT,
+        name: "teleportation",
+        imageFolder: "/img/shop/upgrades/teleportation/",
+        grade: {
+          NOT_PURCHASED: {
+            modifier: 0,
+            cost: 40,
+            nextGrade: "BLINK"
+          },
+          BLINK: {
+            modifier: 1,
+            cost: 100,
+            nextGrade: "QUANTUM"
+          },
+          QUANTUM: {
+            modifier: 2,
+            cost: 0,
+            nextGrade: null
+          }
+        }
+      }
+    ],
+    combatCards: [],
+    bounties: []
+  },
+  periplaneta: {
+    name: "slimey",
+    image: "/img/merchants/merchant_1.jpg",
+    upgrades: [{
+      type: cardType.DEFENCE,
+      name: "thick_skin",
+      imageFolder: "/img/shop/upgrades/thick_skin/",
+      grade: {
+        BASIC: {
+          modifier: 1,
+          cost: 15,
+          nextGrade: "DECORATED"
+        },
+        DECORATED: {
+          modifier: 3,
+          cost: 30,
+          nextGrade: "HEROIC"
+        },
+        HEROIC: {
+          modifier: 5,
+          cost: 50,
+          nextGrade: "MASTERFUL"
+        },
+        MASTERFUL: {
+          modifier: 10,
+          cost: 100,
+          nextGrade: "ELITE"
+        },
+        ELITE: {
+          modifier: 20,
+          cost: 0,
+          nextGrade: null
+        }
+      }
+    }],
+    combatCards: [],
+    bounties: []
+
   }
 };
 

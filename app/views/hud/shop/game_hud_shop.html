@@ -1,0 +1,28 @@
+<div class="panel panel-primary">
+    <div class="panel-body">
+        <div id="shop-canvas">
+            <div id="merchant-container">
+                <div id="merchant_bio" style="width:150px;margin-right: 20px;float: left">
+                    <div id="merchant_pic">
+                        <img src="{{ merchant.image }}" style="max-width: 150px;height: 182px;">
+                        <p>{{ merchant.name }}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="player_token_container" style="float: left">
+                <div>
+                    <a href="#" onclick="drawScrollableUpgradesCardDeck()" class="btn btn-primary"
+                       style="display: table-cell">Upgrade</a>
+                    <a href="#" onclick="displayModal('{{ raceName }}', 'upgrades')" class="btn btn-primary"
+                       style="display: table-cell">Combat Cards</a>
+                    <a href="#" onclick="displayModal('{{ raceName }}', 'bounties')" class="btn btn-primary"
+                       style="display: table-cell">Bounties</a>
+                </div>
+                <div id="scrollable_card_deck">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

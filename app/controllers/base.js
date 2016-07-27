@@ -26,5 +26,11 @@ exports.getLeaderBio = function (req, res) {
   var race = req.url.replace("/getLeaderBio/", "").replace("/" + leader, "");
   var data = Base.schema.flavourText[race].leaderBio[leader];
   res.setHeader("Content-Type", 'application/jsonp');
+  res.render(data);
+};
+
+exports.getMerchantStore = function(req, res) {
+  var data = Base.schema.merchantShop;
+  res.setHeader("Content-Type", 'application/jsonp');
   res.jsonp(data);
 };

@@ -102,7 +102,7 @@ exports.viewGame = function (req, res) {
   }
 
   function doRender(race) {
-    res.render('games/viewGame', {gameList: gameDoc, username: req.user._doc.username, raceName: race});
+    res.render('games/viewGame', {gameList: gameDoc, username: req.user._doc.username, raceName: race, merchant: Base.getRaceSpecificMerchant(race)});
   }
 
   Games.getGameByTitle(req.user._doc.username, gameTitle, setGameDoc);
@@ -214,7 +214,7 @@ function getArmyStrength(race, units, game) {
   var ranged = 0;
   var tank = 0;
   units.forEach(function (army) {
-    if (army.race != null) {
+    if (army.race !== null) {
       if (army.race.toLowerCase() == race.toLowerCase()) {
         infantry += army.infantry;
         ranged += army.ranged;
@@ -231,9 +231,7 @@ function getArmyStrength(race, units, game) {
 
 exports.update = function (req, res) {
   var Games = req.Games;
-  var images = req.files.image
-  ? [req.files.image]
-  : undefined;
+  var images = req.files.image ? [req.files.image] : undefined;
 
   // make sure no one changes the user
   delete req.body.user;

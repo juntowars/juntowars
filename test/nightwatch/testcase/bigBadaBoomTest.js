@@ -47,7 +47,7 @@ module.exports = new (function () {
         function recheckButtonClicked() {
             client.pause(2000)
                 .isVisible('#readyButton', function (result) {
-                    if (result.value == true) {
+                    if (result.value === true) {
                         client.click("#readyButton", startTheGame);
                     }
                     else {
@@ -71,127 +71,127 @@ module.exports = new (function () {
         recheckButtonClicked();
     };
 
-    testCases['Part 3: Both players proceed to place their orders'] = function (client) {
-        client
-            .waitForElementPresent('#gameModal', wait)
-            .click('#gameModal')
-            .pause(1000)
-            .elements('xpath', "//i[contains(@class, 'fa fa-plus rotate action-display')]", function (order) {
-                for (var i = 0; i < order.value.length; i++) {
-                    client.elementIdClick(order.value[i].ELEMENT);
-                }
-            })
-            .pause(100)
-            .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right move-action')]", function (moveCommand) {
-                if (playerNumber == 1) {
-                    client
-                        .elementIdClick(moveCommand.value[0].ELEMENT)   // select movement for first order
-                        .pause(100)
-                        .elementIdClick(moveCommand.value[1].ELEMENT);  // select movement for second order
-                } else {
-                    client.elementIdClick(moveCommand.value[0].ELEMENT);  // select movement for first order
-                }
-            })
-            .pause(200)
-            .elements('xpath', "//i[contains(@class, 'fa fa-diamond harvest-action')]/..", function (harvestCommand) {
-                if (playerNumber == 2) {
-                    //console.log(util.inspect(harvestCommand, false, null));
-                    client.elementIdClick(harvestCommand.value[1].ELEMENT);  // select movement for second order
-                }
-            })
-            .pause(2000);
-    };
-
-    testCases['Part 4: Player 1 takes his 1st move'] = function (client) {
-        if (playerNumber == 1) {
-            client.pause(1000).elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
-                //console.log(util.inspect(move, false, null));
-                var orderOfInterest = move.value[1].ELEMENT;
-                client
-                    .elementIdClick(orderOfInterest)
-                    .pause(100)
-                    .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click infantry unit
-                    .pause(100)
-                    .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]')                  // click empty tile below  (to test moving into an empty area)
-                    .pause(100)
-                    .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
-                    .pause(100)
-                    .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]')                  // click friendly tile above  (to test merging armies )
-                    .pause(100)
-                    .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click tank unit
-                    .pause(100)
-                    .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');                  // click Enemy tile adjacent  (to test combat )
-            });
-        } else {
-            client.waitForElementVisible('#gameModal', wait).pause(1000).click('#gameModal');
-        }
-    };
-
-    testCases['Part 5: Player 2 takes his 1st move'] = function (client) {
-        if (playerNumber == 2) {
-            client
-                .pause(2500)
-                .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
-                    var orderOfInterest = move.value[0].ELEMENT;
-                    client
-                        .elementIdClick(orderOfInterest)
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]/*[2]/*[1]/*[2]')   // click ranged unit
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]/*[2]/*[2]/*[2]')   // click tank unit
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]');                 // click friendly tile above  (to test merging armies )
-                });
-        } else {
-            client.waitForElementVisible('#gameModal', wait).click('#gameModal');
-        }
-    };
-
-    testCases['Part 6: Player 1 takes his 2nd move'] = function (client) {
-        if (playerNumber == 1) {
-            client
-                .pause(2500)
-                .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
-                    var orderOfInterest = move.value[0].ELEMENT;
-                    client
-                        .elementIdClick(orderOfInterest)
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[2]/*[2]')   // click tank unit
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[3]/*[2]')   // click infantry unit
-                        .pause(100)
-                        .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');
-                });
-        } else {
-            client.waitForElementVisible('#gameModal', wait).click('#gameModal');
-        }
-    };
-
-    testCases['Part 7: Both players click + 2,2,2 and commit units '] = function (client) {
-        client
-            .waitForElementVisible('#inc-tank', wait)
-            .pause(250)
-            .click('xpath', '//*[@id="inc-infantry"]/i[2]')
-            .pause(250)
-            .click('xpath', '//*[@id="inc-ranged"]/i[2]')
-            .pause(250)
-            .click('xpath', '//*[@id="inc-tank"]/i[2]')
-            .pause(250)
-            .click('xpath', '//*[@id="inc-infantry"]/i[2]')
-            .pause(250)
-            .click('xpath', '//*[@id="inc-ranged"]/i[2]')
-            .pause(250)
-            .click('xpath', '//*[@id="inc-tank"]/i[2]');
-
-        if (playerNumber == 1) {
-            client.click('xpath', '//*[@id="commit-deploy-button"]');
-        } else {
-            client.pause(1000).click('xpath', '//*[@id="commit-deploy-button"]');
-        }
-
-    };
+    //testCases['Part 3: Both players proceed to place their orders'] = function (client) {
+    //    client
+    //        .waitForElementPresent('#gameModal', wait)
+    //        .click('#gameModal')
+    //        .pause(1000)
+    //        .elements('xpath', "//i[contains(@class, 'fa fa-plus rotate action-display')]", function (order) {
+    //            for (var i = 0; i < order.value.length; i++) {
+    //                client.elementIdClick(order.value[i].ELEMENT);
+    //            }
+    //        })
+    //        .pause(100)
+    //        .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right move-action')]", function (moveCommand) {
+    //            if (playerNumber == 1) {
+    //                client
+    //                    .elementIdClick(moveCommand.value[0].ELEMENT)   // select movement for first order
+    //                    .pause(100)
+    //                    .elementIdClick(moveCommand.value[1].ELEMENT);  // select movement for second order
+    //            } else {
+    //                client.elementIdClick(moveCommand.value[0].ELEMENT);  // select movement for first order
+    //            }
+    //        })
+    //        .pause(200)
+    //        .elements('xpath', "//i[contains(@class, 'fa fa-diamond harvest-action')]/..", function (harvestCommand) {
+    //            if (playerNumber == 2) {
+    //                //console.log(util.inspect(harvestCommand, false, null));
+    //                client.elementIdClick(harvestCommand.value[1].ELEMENT);  // select movement for second order
+    //            }
+    //        })
+    //        .pause(2000);
+    //};
+    //
+    //testCases['Part 4: Player 1 takes his 1st move'] = function (client) {
+    //    if (playerNumber == 1) {
+    //        client.pause(1000).elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
+    //            //console.log(util.inspect(move, false, null));
+    //            var orderOfInterest = move.value[1].ELEMENT;
+    //            client
+    //                .elementIdClick(orderOfInterest)
+    //                .pause(100)
+    //                .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click infantry unit
+    //                .pause(100)
+    //                .click('xpath', '//*[@id="y_4"]//div[@id="x_4"]')                  // click empty tile below  (to test moving into an empty area)
+    //                .pause(100)
+    //                .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
+    //                .pause(100)
+    //                .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]')                  // click friendly tile above  (to test merging armies )
+    //                .pause(100)
+    //                .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click tank unit
+    //                .pause(100)
+    //                .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');                  // click Enemy tile adjacent  (to test combat )
+    //        });
+    //    } else {
+    //        client.waitForElementVisible('#gameModal', wait).pause(1000).click('#gameModal');
+    //    }
+    //};
+    //
+    //testCases['Part 5: Player 2 takes his 1st move'] = function (client) {
+    //    if (playerNumber == 2) {
+    //        client
+    //            .pause(2500)
+    //            .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
+    //                var orderOfInterest = move.value[0].ELEMENT;
+    //                client
+    //                    .elementIdClick(orderOfInterest)
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]/*[2]/*[1]/*[2]')   // click ranged unit
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]/*[2]/*[2]/*[2]')   // click tank unit
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_3"]//div[@id="x_4"]');                 // click friendly tile above  (to test merging armies )
+    //            });
+    //    } else {
+    //        client.waitForElementVisible('#gameModal', wait).click('#gameModal');
+    //    }
+    //};
+    //
+    //testCases['Part 6: Player 1 takes his 2nd move'] = function (client) {
+    //    if (playerNumber == 1) {
+    //        client
+    //            .pause(2500)
+    //            .elements('xpath', "//i[contains(@class, 'fa fa-arrow-right rotate action-display')]", function (move) {
+    //                var orderOfInterest = move.value[0].ELEMENT;
+    //                client
+    //                    .elementIdClick(orderOfInterest)
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[1]/*[2]')   // click ranged unit
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[2]/*[2]')   // click tank unit
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_2"]//div[@id="x_4"]/*[2]/*[3]/*[2]')   // click infantry unit
+    //                    .pause(100)
+    //                    .click('xpath', '//*[@id="y_2"]//div[@id="x_5"]');
+    //            });
+    //    } else {
+    //        client.waitForElementVisible('#gameModal', wait).click('#gameModal');
+    //    }
+    //};
+    //
+    //testCases['Part 7: Both players click + 2,2,2 and commit units '] = function (client) {
+    //    client
+    //        .waitForElementVisible('#inc-tank', wait)
+    //        .pause(250)
+    //        .click('xpath', '//*[@id="inc-infantry"]/i[2]')
+    //        .pause(250)
+    //        .click('xpath', '//*[@id="inc-ranged"]/i[2]')
+    //        .pause(250)
+    //        .click('xpath', '//*[@id="inc-tank"]/i[2]')
+    //        .pause(250)
+    //        .click('xpath', '//*[@id="inc-infantry"]/i[2]')
+    //        .pause(250)
+    //        .click('xpath', '//*[@id="inc-ranged"]/i[2]')
+    //        .pause(250)
+    //        .click('xpath', '//*[@id="inc-tank"]/i[2]');
+    //
+    //    if (playerNumber == 1) {
+    //        client.click('xpath', '//*[@id="commit-deploy-button"]');
+    //    } else {
+    //        client.pause(1000).click('xpath', '//*[@id="commit-deploy-button"]');
+    //    }
+    //
+    //};
 
     //testCases.after = function (client) {
     //  client.pause(10000).end();
