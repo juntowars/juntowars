@@ -745,10 +745,10 @@ GamesSchema.statics = {
       } else {
         console.log("Game: " + room + ". " + playerRace + " upgraded " + selectedUpgrade + ". numAffected: " + numAffected.nModified);
         GamesSchema.statics.getCurrentPurchasedInventory(io, room);
-        GamesSchema.statics.removeCommittedCostFromHarvest(room, playerRace, costToUpgrade);
-        GamesSchema.statics.updateHarvestCounts(room, function () {
-          broadcastUpdatedHarvestInfo(room);
-        });
+        GamesSchema.statics.removeCommittedCostFromHarvest(room, playerRace, costToUpgrade)
+            .then(function() {
+              broadcastUpdatedHarvestInfo(room);
+            });
       }
     }
   }

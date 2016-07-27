@@ -85,7 +85,10 @@ function highlightDeploymentOptions(race, turnOn, infantry, ranged, tank) {
       if (hex.className != "hex water" && neutralTile) {
         if (turnOn) {
           hex.classList.add("highlight");
-          hex.onclick = handleDeploymentOptions(allTileElements, neighbouringTilesIndex);
+                    hex.onclick = function () {
+                        deployUnitsToTile(allTileElements, neighbouringTilesIndex, infantry, ranged, tank);
+                        highlightDeploymentOptions(race, false);
+                    };
         } else {
           hex.classList.remove("highlight");
           removeOnClickEvent(hex);
