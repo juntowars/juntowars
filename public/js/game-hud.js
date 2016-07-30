@@ -364,15 +364,14 @@ var drawScrollableUpgradesCardDeck = function() {
   for(let card in json) {
     let cardName = document.createElement('div');
     cardName.innerHTML = json[card].cardname;
+    cardName.classList.add("cardName")
     let cardValue = document.createElement('div');
     cardValue.innerHTML = "Modifier: " + json[card].value;
     let costToUpgrade = document.createElement('div');
     costToUpgrade.innerHTML = "Cost to upgrade: " + json[card].costtoupgrade;
     let cardImage = document.createElement('img');
+    cardImage.classList.add("card-image");
     cardImage.src = "/img/shop/" + playerRace + "/upgrades/" + json[card].cardname + "/" +json[card].cardlevel + ".jpg";
-    cardImage.style.maxHeight = "100%";
-    cardImage.style.maxWidth = "100%";
-
     let upgradeButton = document.createElement("BUTTON");
     upgradeButton.innerHTML = "Upgrade";
     let cardStr = json[card].cardname;
@@ -381,15 +380,17 @@ var drawScrollableUpgradesCardDeck = function() {
     };
 
     let cardElement = document.createElement('div');
-    cardElement.appendChild(cardName);
-    cardElement.appendChild(cardValue);
-    cardElement.appendChild(costToUpgrade);
+    cardElement.classList.add("card_container");
+
+    let cardInfo = document.createElement('div');
+    cardInfo.classList.add("card_info");
+
+    cardInfo.appendChild(cardName);
+    cardInfo.appendChild(cardValue);
+    cardInfo.appendChild(costToUpgrade);
+    cardInfo.appendChild(upgradeButton);
+    cardElement.appendChild(cardInfo);
     cardElement.appendChild(cardImage);
-    cardElement.appendChild(upgradeButton);
-    cardElement.style.width = "200px";
-    cardElement.style.height = "500px";
-    cardElement.style.marginRight = "10px";
-    cardElement.style.float = "left";
     if(json[card].cardlevel === "NOT_PURCHASED") {
       cardElement.style.opacity = "0.5";
     }

@@ -13,8 +13,7 @@
 .activeHud {
     display: block;
     width: 100%;
-    height: 200px;
-    padding: 0;
+    padding: 5px;
     background-color: #C0C0C0;
 }
 
@@ -410,4 +409,59 @@ a {
     color: #f6f6f6;
     background-color: #3e9851;
     display: none;
+}
+
+.panel-primary {
+    overflow-y: scroll;
+}
+
+#player_token_container {
+    display: flex;
+    width: 90%;
+}
+
+.btn-block-width {
+    width: 100%;
+}
+
+#scrollable_card_deck {
+    margin: 10px 10px 10px 10px;
+    display: flex;
+    width: 90%;
+}
+
+.card-image {
+    max-width: 50%;
+    min-width: 178px;
+    /*float: right;*/
+}
+
+.card_container {
+    max-width: 35%;
+    text-align: center;
+    font-family: fantasy;
+}
+
+.card_info {
+    float: left;
+}
+
+.cardName {
+    font-size: x-large;
+}
+
+#merchant-container {
+    max-width: 9%;
+    min-width: 110px;
+}
+
+.merchant_name {
+    font-family: fantasy;
+    font-size: x-large;
+    margin: 2px 0 0px;
+    text-align: center
+}
+
+#merchant_image {
+    max-width: 100%;
 }

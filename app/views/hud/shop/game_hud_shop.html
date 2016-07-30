@@ -1,23 +1,25 @@
-<div class="panel panel-primary">
-    <div class="panel-body">
-        <div id="shop-canvas">
+<div >
+    <div >
+        <div id="shop-canvas" style="display: inline-flex;">
             <div id="merchant-container">
-                <div id="merchant_bio" style="width:150px;margin-right: 20px;float: left">
+                <div id="merchant_bio">
                     <div id="merchant_pic">
-                        <img src="{{ merchant.image }}" style="max-width: 150px;height: 182px;">
-                        <p>{{ merchant.name }}</p>
+                        <img src="{{ merchant.image }}" id="merchant_image">
+                        <p class="merchant_name">{{ merchant.name }}</p>
+                    </div>
+                    <div>
+                        <a href="#" onclick="drawScrollableUpgradesCardDeck()"
+                           class="btn btn-primary btn-block-width">Upgrade</a><br>
+                        <a href="#" onclick="displayModal('{{ raceName }}', 'upgrades')"
+                           class="btn btn-primary btn-block-width">Combat Cards</a><br>
+                        <a href="#" onclick="displayModal('{{ raceName }}', 'bounties')"
+                           class="btn btn-primary btn-block-width">Bounties</a><br>
                     </div>
                 </div>
+
             </div>
-            <div id="player_token_container" style="float: left">
-                <div>
-                    <a href="#" onclick="drawScrollableUpgradesCardDeck()" class="btn btn-primary"
-                       style="display: table-cell">Upgrade</a>
-                    <a href="#" onclick="displayModal('{{ raceName }}', 'upgrades')" class="btn btn-primary"
-                       style="display: table-cell">Combat Cards</a>
-                    <a href="#" onclick="displayModal('{{ raceName }}', 'bounties')" class="btn btn-primary"
-                       style="display: table-cell">Bounties</a>
-                </div>
+            <div id="player_token_container">
+
                 <div id="scrollable_card_deck">
 
                 </div>
