@@ -138,7 +138,7 @@ exports.allOrdersAreSet = function allOrdersAreSet(room, user, io) {
     });
 };
 
-exports.moveOrderComplete = function moveOrderComplete(room, user, io) {
+exports.moveOrderComplete = function moveOrderComplete(room, io) {
     nextMovementAction(room, io);
 };
 

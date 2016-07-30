@@ -36,6 +36,10 @@ game_socket.on('refreshMapView', function () {
     GetMap(RenderMap, false);
 });
 
+game_socket.on('battleResolved', function (user) {
+    battleResolved(user);
+});
+
 
 function initSocketSession() {
     hideModal();

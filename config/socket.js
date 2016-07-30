@@ -108,9 +108,19 @@ module.exports = function (io) {
             ph.allOrdersAreSet(room, user, io);
         });
 
+        socket.on('resolveBattle', function (gameRoom, playerName, attackersIndex, defendersIndex, attackingWith) {
+            eh.resolveBattle(io ,gameRoom, attackersIndex, defendersIndex, attackingWith)
+                .then(function () {
+                    io.sockets.in(gameRoom).emit('battleResolved', playerName);
+                })
+                .catch(function (err) {
+                    winston.error("resolveBattle Error: " + err);
+                });
+        });
+
         socket.on('moveOrderComplete', function (room, user) {
             winston.info("Player " + user + " has completed a move order");
-            ph.moveOrderComplete(room, user, io);
+            ph.moveOrderComplete(room, io);
         });
 
         socket.on('peacefulMove', function (movementDetails, cb) {
@@ -161,7 +171,7 @@ module.exports = function (io) {
                     }
                 });
             });
-            
+
             var addUnitToTarget = async(function (gameRoom, targetIndex, unitType, unitValue, unitRace) {
                 var asyncTask = await(Games.setUnitDocForIndex(gameRoom, targetIndex));
                 winston.info("updateUnitsValues " + gameRoom + " " + targetIndex + " " + unitType + " " + unitValue + " " + unitRace);

@@ -80,3 +80,90 @@ exports.checkDeploymentCommitComplete = function checkDeploymentCommitComplete(i
     return checkThatCommitIsComplete(io, deploymentInfo);
 };
 
+exports.resolveBattle = function resolveBattle(io, gameRoom, attackersIndex, defendersIndex, attackingWith) {
+    let resolveBattle = async(function (io, gameRoom, attackersIndex, defendersIndex, attackingWith) {
+        winston.info("resolving a battle in tile " + defendersIndex);
+        let game = await(Games.getGame(gameRoom));
+        let unitsOnBoard = game[0]._doc.state.units;
+        let attackerUnits = null;
+        let defenderUnits = null;
+        for (let i = 0; i < unitsOnBoard.length; i++) {
+            if (attackersIndex == unitsOnBoard[i]["index"]) {
+                attackerUnits = unitsOnBoard[i];
+            } else if (defendersIndex == unitsOnBoard[i]["index"]) {
+                defenderUnits = unitsOnBoard[i];
+            }
+        }
+        let attackersArmyStrength = calculateStrength(attackerUnits, attackingWith);
+        let defendersArmyStrength = calculateStrength(defenderUnits, "all");
+
+        if (attackersArmyStrength > defendersArmyStrength) {
+            winston.info("Attacker wins battle in tile: " + defendersIndex);
+            //    reset defenders tile
+            await(Games.setUnitDocForIndex(gameRoom, defendersIndex));
+
+            let pointsToRemove = defenderUnits.infantry + defenderUnits.ranged + defenderUnits.tanks;
+            let remainingAttackingInfantry = attackingWith.infantry;
+            let remainingAttackingRanged = attackingWith.ranged;
+            let remainingAttackingTanks = attackingWith.tanks;
+
+            while (pointsToRemove > 0) {
+                if (remainingAttackingInfantry > 0) {
+                    remainingAttackingInfantry--;
+                } else if (remainingAttackingRanged > 0) {
+                    remainingAttackingRanged--;
+                } else {
+                    remainingAttackingTanks--;
+                }
+                pointsToRemove--;
+            }
+
+            //    move in attackers selected units
+            await(Games.updateAllUnitsValuesForIndex(gameRoom, defendersIndex, attackerUnits.race,
+                remainingAttackingInfantry, remainingAttackingRanged, remainingAttackingTanks)
+            );
+
+            let attackerUnitsTileTotal = attackerUnits.infantry + attackerUnits.ranged + attackerUnits.tanks;
+            let committedUnits = attackingWith.infantry + attackingWith.ranged + attackingWith.tanks;
+
+            if ((committedUnits == attackerUnitsTileTotal)) {
+                // remove attackers tile empty
+                await(Games.removeUnitsDoc(gameRoom, attackersIndex));
+            } else {
+                // update attackers tile
+                await(Games.updateAllUnitsValuesForIndex(gameRoom, attackersIndex, attackerUnits.race,
+                    (attackerUnits.infantry - attackingWith.infantry ),
+                    (attackerUnits.ranged - attackingWith.ranged),
+                    (attackerUnits.tanks - attackingWith.tanks)));
+            }
+
+        } else if (attackersArmyStrength < defendersArmyStrength) {
+            winston.info("Defender wins battle in tile: " + defendersIndex);
+
+        } else {
+            winston.info("The battle was a draw in tile: " + defendersIndex);
+
+        }
+
+    });
+
+    return resolveBattle(io, gameRoom, attackersIndex, defendersIndex, attackingWith);
+};
+
+function calculateStrength(units, selectedUnits) {
+    if (selectedUnits == "all") {
+        return units.ranged + units.infantry + units.tanks;
+    } else {
+        let strength = 0;
+        if (selectedUnits.infantry > 0) {
+            strength += selectedUnits.infantry;
+        }
+        if (selectedUnits.ranged > 0) {
+            strength += selectedUnits.ranged;
+        }
+        if (selectedUnits.tanks > 0) {
+            strength += selectedUnits.tanks;
+        }
+        return strength;
+    }
+}

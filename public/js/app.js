@@ -110,7 +110,7 @@ function deployUnitsToTile(hexes, index, infantry, ranged, tanks) {
             let unitsClassList = targetHex.childNodes[0].childNodes[i].childNodes[0].classList;
             let unitsTextElement = targetHex.childNodes[0].childNodes[i].childNodes[1];
             let unitValue = parseInt(unitsTextElement.textContent);
-            
+
             if (unitsClassList.contains("infantry")) {
                 infantry += unitValue;
             } else if (unitsClassList.contains("ranged")) {
@@ -120,7 +120,7 @@ function deployUnitsToTile(hexes, index, infantry, ranged, tanks) {
             }
         }
     }
-    
+
     let race = getPlayersRace();
     targetHex.innerHTML = getSvgForUnits(race, infantry, ranged, tanks);
     game_socket.emit('deploymentOfUnits', gameRoom, index, race, infantry, ranged, tanks, deploymentValues);
@@ -241,18 +241,33 @@ function itsADraw(arrayOfAttackingUnits, attackingUnitsSvgElement, arrayOfDefend
     }
 }
 
+// function attackerWins(arrayOfDefendingUnits, defendingUnitsSvgElement, arrayOfAttackingUnits, attackingUnitsSvgElement, defStr) {
+//     killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
+//     var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
+//     for (var i = 0; i < unitsToMoveIn.length; i++) {
+//         moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i], function () {
+//         });
+//         removeSelectedState(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
+//     }
+//
+//     if (defendingUnitsSvgElement.parentElement.childElementCount == 2) {
+//         removeActionMenu(defendingUnitsSvgElement.parentElement.childNodes[0]);
+//     }
+// }
+
 function attackerWins(arrayOfDefendingUnits, defendingUnitsSvgElement, arrayOfAttackingUnits, attackingUnitsSvgElement, defStr) {
-    killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
-    var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
-    for (var i = 0; i < unitsToMoveIn.length; i++) {
-        moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i], function () {
-        });
-        removeSelectedState(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
+    var attackersIndex = getIndexValue(arrayOfAttackingUnits[0].parentElement);
+    var defendersIndex = getIndexValue(arrayOfDefendingUnits[0].parentElement);
+
+    var attackersSelectedUnits = attackingUnitsSvgElement.getElementsByClassName('selected');
+    var attackingWith = {
+        infantry: 0, ranged: 0, tanks: 0
+    };
+    for (var i = 0; i < attackersSelectedUnits.length; i++) {
+        attackingWith[attackersSelectedUnits[i].classList[1]] = parseInt(attackersSelectedUnits[i].parentElement.childNodes[1].textContent)
     }
 
-    if (defendingUnitsSvgElement.parentElement.childElementCount == 2) {
-        removeActionMenu(defendingUnitsSvgElement.parentElement.childNodes[0]);
-    }
+    game_socket.emit('resolveBattle', gameRoom, playerName, attackersIndex, defendersIndex, attackingWith);
 }
 
 function defenderWins(arrayOfAttackingUnits, attackingUnitsSvgElement, arrayOfDefendingUnits, defendingUnitsSvgElement, atkStr) {
@@ -371,6 +386,7 @@ function moveToNonHostileTarget(target, unit, cb) {
 
 function removeActionMenu(menu) {
     var activeMenu = menu.getElementsByTagName('label')[0].classList.contains('ACTIVE');
+    debugger;
     var index = parseInt(menu.getElementsByTagName('input')[0].name.replace("menu-open", ""));
     menu.parentElement.removeChild(menu);
     game_socket.emit('lockInOrder', "done", playerName, gameRoom, index);
@@ -455,11 +471,34 @@ function deployingUnits(nextPlayer, deploymentInfo) {
     } else {
         displayModal("<h3>Waiting for " + nextPlayer + " to make their deployment</h3>");
         document.getElementById('game_hud_deployment_deploy_tab').style.display = 'none';
-        if (document.getElementById('game_hud_deploy_deploy').classList.contains('activeHud')){
+        if (document.getElementById('game_hud_deploy_deploy').classList.contains('activeHud')) {
             document.getElementById('game_hud_deploy_deploy').style.display = 'none';
             changedHUDView('game_hud', true);
         }
     }
+}
+
+function battleResolved(user) {
+    if (user === playerName) {
+        var activeSvgElement = document.getElementsByClassName("menu-open-button ACTIVE")[0]
+            .parentElement.parentElement.childNodes[1];
+
+        if (noUnitsRemaining(activeSvgElement)) {
+            removeActionMenu(document.getElementsByClassName("menu-open-button ACTIVE")[0].parentElement);
+        } else {
+            GetMapUnits(24, function (col, units) {
+                var targetIndex = getIndexValue(activeSvgElement);
+                var neighbouringTiles = targetIndex % 2 ? [-1, +1, -24, 23, 24, 25] : [-1, +1, -23, -24, -25, 24];
+                drawAllUnitsKeepGameSession(col, units, targetIndex, neighbouringTiles);
+            });
+        }
+    }
+    // else {
+    //     var notAValidIndex = 99999999999;
+    //     GetMapUnits(24, function (col, units, notAValidIndex ) {
+    //         drawAllUnitsKeepGameSession(col, units, notAValidIndex);
+    //     });
+    // }
 }
 
 function updateHarvestInformation(data) {
