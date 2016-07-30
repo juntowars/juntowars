@@ -30,14 +30,14 @@ exports.displayOpeningModal = function displayOpeningModal(room, io, user) {
 };
 
 exports.commitDeployment = function commitDeployment(deploymentInfo) {
-  let deploymentTasks = async(function (deploymentInfo) {
-    let totalDeploymentCost = deploymentInfo.infantryToDeploy + deploymentInfo.rangedToDeploy + deploymentInfo.tanksToDeploy;
+  var deploymentTasks = async(function (deploymentInfo) {
+    var totalDeploymentCost = deploymentInfo.infantryToDeploy + deploymentInfo.rangedToDeploy + deploymentInfo.tanksToDeploy;
 
-    let game = await(Games.getGame(deploymentInfo.gameRoom));
-    let harvestAvailable = eval("game[0]._doc.harvest." + deploymentInfo.playerRace + ".currentAmount");
-    let defaultDeployment = eval("game[0]._doc.deployment." + deploymentInfo.playerRace + ".defaultDeployment");
+    var game = await(Games.getGame(deploymentInfo.gameRoom));
+    var harvestAvailable = eval("game[0]._doc.harvest." + deploymentInfo.playerRace + ".currentAmount");
+    var defaultDeployment = eval("game[0]._doc.deployment." + deploymentInfo.playerRace + ".defaultDeployment");
 
-    let costToHarvest = totalDeploymentCost - defaultDeployment;
+    var costToHarvest = totalDeploymentCost - defaultDeployment;
     if (totalDeploymentCost <= (harvestAvailable + defaultDeployment)) {
       await(Games.commitDeploymentResources(deploymentInfo));
       await(Games.removeCommittedCostFromHarvest(deploymentInfo.gameRoom, deploymentInfo.playerRace, costToHarvest));
@@ -56,7 +56,7 @@ exports.commitDeployment = function commitDeployment(deploymentInfo) {
 };
 
 exports.deploymentByUserToTile = function deploymentByUserToTile(room, index, race, infantry, ranged, tanks, deploymentValues) {
-  let commitUnitsToDb = async(function (room, index, race, infantry, ranged, tanks, deploymentValues) {
+  var commitUnitsToDb = async(function (room, index, race, infantry, ranged, tanks, deploymentValues) {
     await(Games.setUnitDocForIndex(room, index));
     await(Games.updateAllUnitsValuesForIndex(room, index, race, infantry, ranged, tanks));
     await(Games.removeDeployedValuesFromRace(room, race, deploymentValues));
@@ -65,10 +65,10 @@ exports.deploymentByUserToTile = function deploymentByUserToTile(room, index, ra
 };
 
 exports.checkDeploymentCommitComplete = function checkDeploymentCommitComplete(io, deploymentInfo) {
-  let checkThatCommitIsComplete = async(function (io, deploymentInfo) {
+  var checkThatCommitIsComplete = async(function (io, deploymentInfo) {
     winston.info("commitDeploymentResources for player" + deploymentInfo.playerName);
-    let game = await(Games.getGame(deploymentInfo.gameRoom));
-    let playersLeftToCommit = game[0]._doc.deployment.racesToCommit;
+    var game = await(Games.getGame(deploymentInfo.gameRoom));
+    var playersLeftToCommit = game[0]._doc.deployment.racesToCommit;
 
     if (playersLeftToCommit.length > 0) {
       winston.info("Still waiting on players to commit deployment totals");

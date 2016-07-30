@@ -8,12 +8,12 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var eh = require('./eventHandler.js');
 
-let deploymentDeployCycle = async(function (io, room) {
-  let game = await(Games.getGame(room));
-  let nextPlayer = game[0]._doc.deployment.racesToDeploy[0];
-  let deploymentInfo = game[0]._doc.deployment;
-  let nextPlayersRace = null;
-  let userList = game[0]._doc.userList;
+var deploymentDeployCycle = async(function (io, room) {
+  var game = await(Games.getGame(room));
+  var nextPlayer = game[0]._doc.deployment.racesToDeploy[0];
+  var deploymentInfo = game[0]._doc.deployment;
+  var nextPlayersRace = null;
+  var userList = game[0]._doc.userList;
   if (nextPlayer == userList.guardians) {
     nextPlayersRace = "guardians";
   } else if (nextPlayer == userList.periplaneta) {
@@ -28,7 +28,7 @@ let deploymentDeployCycle = async(function (io, room) {
     nextPlayersRace = "geoEngineers";
   }
 
-  let nextPlayerHasUnitsToDeploy = (
+  var nextPlayerHasUnitsToDeploy = (
       game[0]._doc.deployment[nextPlayersRace].tanksToDeploy > 0 ||
       game[0]._doc.deployment[nextPlayersRace].rangedToDeploy > 0 ||
       game[0]._doc.deployment[nextPlayersRace].infantryToDeploy > 0
