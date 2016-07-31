@@ -489,16 +489,10 @@ function battleResolved(user) {
             GetMapUnits(24, function (col, units) {
                 var targetIndex = getIndexValue(activeSvgElement);
                 var neighbouringTiles = targetIndex % 2 ? [-1, +1, -24, 23, 24, 25] : [-1, +1, -23, -24, -25, 24];
-                drawAllUnitsKeepGameSession(col, units, targetIndex, neighbouringTiles);
+                updateTilesAfterBattleMovement(col, units, targetIndex, neighbouringTiles);
             });
         }
     }
-    // else {
-    //     var notAValidIndex = 99999999999;
-    //     GetMapUnits(24, function (col, units, notAValidIndex ) {
-    //         drawAllUnitsKeepGameSession(col, units, notAValidIndex);
-    //     });
-    // }
 }
 
 function updateHarvestInformation(data) {

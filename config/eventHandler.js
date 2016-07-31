@@ -122,6 +122,7 @@ exports.resolveBattle = function resolveBattle(io, gameRoom, attackersIndex, def
             await(Games.updateAllUnitsValuesForIndex(gameRoom, defendersIndex, attackerUnits.race,
                 remainingAttackingInfantry, remainingAttackingRanged, remainingAttackingTanks)
             );
+            await(Games.setTileToOrderToDone(gameRoom,defendersIndex));
 
             let attackerUnitsTileTotal = attackerUnits.infantry + attackerUnits.ranged + attackerUnits.tanks;
             let committedUnits = attackingWith.infantry + attackingWith.ranged + attackingWith.tanks;

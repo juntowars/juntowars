@@ -277,6 +277,12 @@ GamesSchema.statics = {
             });
         });
     },
+    setTileToOrderToDone: function(gameName, index){
+        staticGames.update({
+            "name": gameName,
+            "state.units": {$elemMatch: {"index": index}}
+        }, {$set: {"state.units.$.order": "done"}}).exec()
+    },
     getUsersOpenLobbiesList: function (user, cb) {
         this.find({"lobby.status": "open", "userList.uuids": {$in: [user]}}, function (err, res) {
             err ? cb(err, null, user) : cb(null, res, user);

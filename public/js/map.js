@@ -70,25 +70,32 @@ function drawAllUnits(cols, units) {
 
 }
 
-function drawAllUnitsKeepGameSession(cols, units, targetIndex, neighbouringTiles) {
+function updateTilesAfterBattleMovement(cols, units, targetIndex, neighbouringTiles) {
     var race = getPlayersRace();
 
+    var unitsLeftInTargetIndex = false;
     for (var tileIndex = 0; tileIndex < units.length; tileIndex++) {
-        if (neighbouringTiles.indexOf(tileIndex) || tileIndex == targetIndex) {
-            drawUnits(race, cols, units[tileIndex]);
+        drawUnits(race, cols, units[tileIndex]);
+
+        if( targetIndex == units[tileIndex]["index"]){
+            unitsLeftInTargetIndex = true;
         }
     }
 
     var activeTileInputTag = document.getElementsByClassName('hex')[targetIndex].getElementsByTagName('input')[0];
-    // activeTileInputTag.classList.add('ACTIVE');
-    activeTileInputTag.parentElement.childNodes[1].classList.add('ACTIVE');
-    activeTileInputTag.parentElement.childNodes[1].style.backgroundColor = "orange";
+    if(unitsLeftInTargetIndex){
+        activeTileInputTag.parentElement.childNodes[1].classList.add('ACTIVE');
+        activeTileInputTag.parentElement.childNodes[1].style.backgroundColor = "orange";
 
-    //Handle move
-    handleMoveAction(targetIndex, activeTileInputTag , true);
+        //Handle move
+        handleMoveAction(targetIndex, activeTileInputTag, true);
 
-    //End move with second click
-    activeTileInputTag.onclick = function () {
+        //End move with second click
+        activeTileInputTag.onclick = function () {
+            handleMoveAction(targetIndex, activeTileInputTag, false);
+            removeActionMenu(activeTileInputTag.parentElement);
+        }
+    } else {
         handleMoveAction(targetIndex, activeTileInputTag, false);
         removeActionMenu(activeTileInputTag.parentElement);
     }
