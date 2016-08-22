@@ -241,20 +241,6 @@ function itsADraw(arrayOfAttackingUnits, attackingUnitsSvgElement, arrayOfDefend
     }
 }
 
-// function attackerWins(arrayOfDefendingUnits, defendingUnitsSvgElement, arrayOfAttackingUnits, attackingUnitsSvgElement, defStr) {
-//     killUnits(arrayOfDefendingUnits, defendingUnitsSvgElement, true, 0);
-//     var unitsToMoveIn = killUnits(arrayOfAttackingUnits, attackingUnitsSvgElement, false, defStr);
-//     for (var i = 0; i < unitsToMoveIn.length; i++) {
-//         moveToNonHostileTarget([defendingUnitsSvgElement], unitsToMoveIn[i], function () {
-//         });
-//         removeSelectedState(unitsToMoveIn[i].getElementsByClassName('selected')[0]);
-//     }
-//
-//     if (defendingUnitsSvgElement.parentElement.childElementCount == 2) {
-//         removeActionMenu(defendingUnitsSvgElement.parentElement.childNodes[0]);
-//     }
-// }
-
 function attackerWins(arrayOfDefendingUnits, defendingUnitsSvgElement, arrayOfAttackingUnits, attackingUnitsSvgElement, defStr) {
     var attackersIndex = getIndexValue(arrayOfAttackingUnits[0].parentElement);
     var defendersIndex = getIndexValue(arrayOfDefendingUnits[0].parentElement);
@@ -510,6 +496,16 @@ function updateHarvestInformation(data) {
     //update deployment hub view at the same time
     var playersRace = getPlayersRace();
     document.getElementById('harvest-value').innerHTML = String(data[playersRace].currentAmount);
+}
+
+function updateRoundPhaseInfo(data) {
+    document.getElementById('round-value').textContent = "#" + data.round;
+    document.getElementById('phase-value').textContent = data.phase.name;
+    if(data.activePlayer.length < 1){
+        document.getElementById('waiting-on-value').textContent = "All Players  ";
+    } else {
+        document.getElementById('waiting-on-value').textContent = data.activePlayer;
+    }
 }
 
 function displayModal(modalBody, requiredInfo) {

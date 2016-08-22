@@ -418,7 +418,7 @@ GamesSchema.statics = {
         });
     },
     setPhase: function (gameName, phase) {
-        staticGames.update({"name": gameName}, {$set: {"state.phase.name": phase}}).exec();
+        return staticGames.update({"name": gameName}, {$set: {"state.phase.name": phase}}).exec();
     },
     displayOpeningModalCheck: function (gameName, user, cb) {
         staticGames.find({"name": gameName}).exec(function (err, data) {

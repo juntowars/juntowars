@@ -52,14 +52,101 @@ function moveToMovementPhase(room, io) {
     winston.info("All player orders have been set for game " + room + "switching to movement phase");
     Games.setPhase(room, "movement");
     setTimeout(function () {
+        io.sockets.in(room).emit('updatePhaseInfo');
         nextMovementAction(room, io);
     }, 1000);
 }
 
+
+let gameHasEnteredEndingClause = async(function (io, room) {
+    let game = await(Games.getGame(room));
+
+    let racesRemaining = [];
+    // Todo place magic number in Base game info
+    let maxNumberRounds = 3;
+
+    let currentRoundNumber = game[0]._doc.state.round;
+    let arrayOfUnits = game[0]._doc.state.units;
+
+    for (let i = 0; i < arrayOfUnits.length; i++) {
+        if (racesRemaining.indexOf(arrayOfUnits[i].race) == -1) {
+            racesRemaining.push(arrayOfUnits[i].race);
+        }
+    }
+
+    return (racesRemaining.length <= 1 || (currentRoundNumber > maxNumberRounds));
+});
+
+let getLastRemainingRace = async(function (io, room) {
+    let game = await(Games.getGame(room));
+
+    let racesRemaining = [];
+
+    let arrayOfUnits = game[0]._doc.state.units;
+
+    for (let i = 0; i < arrayOfUnits.length; i++) {
+        if (racesRemaining.indexOf(arrayOfUnits[i].race) == -1) {
+            racesRemaining.push(arrayOfUnits[i].race);
+        }
+    }
+
+    return racesRemaining[0];
+});
+
+let tallyScoresAndDeclareWinner = async(function (io, room) {
+    let game = await(Games.getGame(room));
+
+    let raceScores = {
+        "kingdomWatchers": 0,
+        "periplaneta": 0
+    };
+
+    // Add up units value
+    let arrayOfUnits = game[0]._doc.state.units;
+    for (let i = 0; i < arrayOfUnits.length; i++) {
+        raceScores[arrayOfUnits[i].race] += (
+            arrayOfUnits[i].infantry +
+            arrayOfUnits[i].ranged +
+            arrayOfUnits[i].tanks * 2
+        )
+    }
+
+    let highScore = 0;
+    let winningRace = null;
+    for (var race in raceScores) {
+        if (raceScores.hasOwnProperty(race)) {
+            if (highScore < raceScores[race]) {
+                highScore = raceScores[race];
+                winningRace = race;
+            }
+        }
+    }
+
+    return {
+        "highScore": highScore,
+        "winningRace": winningRace
+    };
+});
+
+
 function nextMovementAction(room, io) {
-    Games.getRacesWithMovesAvailableOrderList(room, function (racesWithMovementsLeft) {
-        racesWithMovementsLeft.length == 0 ? moveToHarvestPhase(io, room) : cycleThroughMoves(room, io, racesWithMovementsLeft);
+    let checkIfWeShouldMove = async(function (room, io) {
+        let gameOver = await(gameHasEnteredEndingClause(io, room));
+        if (gameOver) {
+            let winningRace = await(getLastRemainingRace(io, room));
+            io.sockets.in(room).emit('displayActionModal', {
+                message: '<h1>Game Over</h1><p>Last Man Standing: ' + winningRace + '</p>'
+            });
+            //todo: Add function to mark game as over,
+            //todo: declare winner, give players a back to lobby/review game view
+        } else {
+            Games.getRacesWithMovesAvailableOrderList(room, function (racesWithMovementsLeft) {
+                racesWithMovementsLeft.length == 0 ? moveToHarvestPhase(io, room) : cycleThroughMoves(room, io, racesWithMovementsLeft);
+            });
+        }
     });
+
+    checkIfWeShouldMove(room, io);
 }
 
 function cycleThroughMoves(room, io, raceTurnOrder) {
@@ -76,9 +163,9 @@ function cycleThroughMoves(room, io, raceTurnOrder) {
 
 function moveToHarvestPhase(io, room) {
     winston.info("Moving to harvest phase");
-    Games.setPhase(room, "harvest");
     io.sockets.in(room).emit('removeHarvestTokens');
     processHarvestTokens(room, io);
+    Games.setPhase(room, "Harvest");
 
     setTimeout(function () {
         moveToDeploymentCommitPhase(room, io);
@@ -87,32 +174,51 @@ function moveToHarvestPhase(io, room) {
 
 function moveToDeploymentCommitPhase(room, io) {
     winston.info("Moving to deployment commit phase");
-    Games.setPhase(room, "deploymentCommitPhase");
+    Games.setPhase(room, "Deployment-Commit");
 
     Games.setCommitListToAllPlayersWithUnits(room, function (data) {
         winston.info("deploymentCommitPhase: " + room);
         io.sockets.in(room).emit('deploymentCommitPhase', data);
+        io.sockets.in(room).emit('updatePhaseInfo');
     });
 }
 
 function moveToDeploymentDeployPhase(io, room) {
     winston.info("Moving to deployment !!deploy!! phase");
-    Games.setPhase(room, "deploymentDeployPhase");
+    Games.setPhase(room, "Deployment-Deploy");
+    io.sockets.in(room).emit('updatePhaseInfo');
     return deploymentDeployCycle(io, room);
 }
 
 function moveToNextRound(io, room) {
-    io.sockets.in(room).emit('displayActionModal', {
-        message: '<h1>New Round</h1><img style="-webkit-user-select: none; width: 301px;cursor: zoom-in;" src="http://www.storychurch.org/wp-content/uploads/2012/09/The-Next-Chapter-1-470x264.jpg">'
-    });
-    Games.setAllOrdersToNotSet(room, function () {
-        setTimeout(function () {
-            Games.setPhase(room, "orders");
-            io.sockets.in(room).emit('refreshMapView');
-        }, 1000);
-    });
-    Games.setWaitingOnToAll(room);
     Games.incrementRoundNumber(room);
+
+    let checkIfWeShouldMoveToTheNextRound = async(function (room, io) {
+        let gameOver = await(gameHasEnteredEndingClause(io, room));
+        if (gameOver) {
+            let winningInfo = await(tallyScoresAndDeclareWinner(io, room));
+
+            io.sockets.in(room).emit('displayActionModal', {
+                message: '<h1>Game Over</h1><p>Max Rounds has been hit, high score:' +
+                winningInfo['winningRace'] + '</p><p> With a highScore of: ' + winningInfo['highScore'] + '</p>'
+            });
+        } else {
+            io.sockets.in(room).emit('displayActionModal', {
+                message: '<h1>New Round</h1><img style="-webkit-user-select: none; width: 301px;cursor: zoom-in;" src="http://www.storychurch.org/wp-content/uploads/2012/09/The-Next-Chapter-1-470x264.jpg">'
+            });
+            Games.setWaitingOnToAll(room);
+
+            Games.setAllOrdersToNotSet(room, function () {
+                setTimeout(function () {
+                    Games.setPhase(room, "Orders");
+                    io.sockets.in(room).emit('updatePhaseInfo');
+                    io.sockets.in(room).emit('refreshMapView');
+                }, 1000);
+            });
+        }
+    });
+
+    checkIfWeShouldMoveToTheNextRound(room, io);
 }
 
 function processHarvestTokens(room, io) {

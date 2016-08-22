@@ -157,6 +157,16 @@ exports.getMapUnits = function (req, res) {
   });
 };
 
+exports.getGamesRoundPhaseInfo = function (req, res) {
+  var gameName = req.url.replace("/getGamesRoundPhaseInfo/", "");
+  var _query = Games.find({"name": gameName});
+  _query.exec(function (err, data) {
+    if (err) return winston.info("getGamesRoundPhaseInfo failed with: " + err);
+    res.setHeader("Content-Type", 'application/jsonp');
+    res.jsonp(data[0].state);
+  });
+};
+
 exports.getPlayersRace = function (req, res) {
   var player = req.url.replace("/getPlayersRace/", "").replace(/\/.*/, "");
   var game = req.url.replace("/getPlayersRace/", "").replace(/.*\//, "");

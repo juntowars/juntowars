@@ -386,3 +386,32 @@ a {
     vertical-align: middle;
     width: 120px;
 }
+
+#junto-home-nav {
+    font-size: 19px;
+    color: #EF7373 !important;
+}
+
+#game-state-display {
+    width: 20%;
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+    top: 0;
+    border-width: 0 0 1px;
+    position: fixed;
+    right: 0;
+    z-index: 1031;
+    padding-right: 15px;
+    max-height: 50px;
+    min-width: 250px;
+    font-size: medium;
+}
+
+.game-state-display-text {
+    font-size: large;
+    text-align: left;
+}
+
+#round-label , #phase-label, #waiting-on-label{
+    color: #EF7373 !important;
+}

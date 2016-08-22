@@ -41,6 +41,7 @@ module.exports = function (app, passport) {
   app.get('/getBaseBoard', base.getMap);
   app.get('/getMapUnits/:game', games.getMapUnits);
   app.get('/getPlayersRace/:player/:game', games.getPlayersRace);
+  app.get('/getGamesRoundPhaseInfo/:game', games.getGamesRoundPhaseInfo);
   app.get('/getHudStatistics/:game/:race', games.getHudStatistics);
   app.get('/getRaceHistory/:race', base.getRaceHistory);
   app.get('/getLeaderBio/:race/:leader', base.getLeaderBio);

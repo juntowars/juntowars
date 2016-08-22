@@ -13,12 +13,12 @@ function GetMap(callback, flag) {
 
 function getGamePhase(room, callback) {
     var request = new XMLHttpRequest();
-    var getPhaseUrl = location.origin + '/getPhase/' + room;
+    var getPhaseUrl = location.origin + '/getGamesRoundPhaseInfo/' + room;
     request.open('GET', getPhaseUrl, true);
 
     request.onload = function () {
         if (request.status >= 200 && request.status < 400) {
-            callback(JSON.parse(request.responseText)[0].phase);
+            callback(JSON.parse(request.responseText));
         }
     };
     request.send();

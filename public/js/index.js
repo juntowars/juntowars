@@ -40,11 +40,17 @@ game_socket.on('battleResolved', function (user) {
     battleResolved(user);
 });
 
+game_socket.on('updatePhaseInfo', function () {
+    getGamePhase(gameRoom, updateRoundPhaseInfo);
+});
+
 
 function initSocketSession() {
     hideModal();
     playerName = getPlayersName();
     game_socket.emit('joinGame', gameRoom, playerName);
+
+    getGamePhase(gameRoom, updateRoundPhaseInfo);
 
     //todo: handle refreshes or disconnects by state 
     // getGamePhase(gameRoom, function (phase) {
