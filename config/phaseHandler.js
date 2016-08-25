@@ -62,8 +62,7 @@ let gameHasEnteredEndingClause = async(function (io, room) {
     let game = await(Games.getGame(room));
 
     let racesRemaining = [];
-    // Todo place magic number in Base game info
-    let maxNumberRounds = 3;
+    let maxNumberRounds = game[0]._doc.state.maxNumberOfRounds;
 
     let currentRoundNumber = game[0]._doc.state.round;
     let arrayOfUnits = game[0]._doc.state.units;
@@ -74,7 +73,7 @@ let gameHasEnteredEndingClause = async(function (io, room) {
         }
     }
 
-    return (racesRemaining.length <= 1 || (currentRoundNumber > maxNumberRounds));
+    return (racesRemaining.length <= 1 || (currentRoundNumber >= maxNumberRounds));
 });
 
 let getLastRemainingRace = async(function (io, room) {
@@ -254,4 +253,8 @@ exports.startDeploying = function startDeploying(io, room) {
 
 exports.continueWithDeployCycle = function (io, room) {
     return deploymentDeployCycle(io, room);
+};
+
+exports.moveToNextRound = function moveToNextRoundExport(io, room){
+    moveToNextRound(io, room);
 };

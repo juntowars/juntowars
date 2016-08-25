@@ -5,6 +5,8 @@
 var util = require('util');
 var mongoose = require('mongoose');
 var Promise = require("bluebird");
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 var winston = require('winston');
 var Schema = mongoose.Schema;
 
@@ -20,7 +22,8 @@ var GamesSchema = new Schema({
             waitingOn: []
         },
         activePlayer: {type: String, default: ""},
-        units: []
+        units: [],
+        maxNumberOfRounds: {type: Number, default: '3'}
     },
     userList: {
         uuids: [{type: String, default: ''}],
@@ -229,19 +232,24 @@ GamesSchema.statics = {
         });
     },
     doesTheTileContainUnits: function (gameName, index, callback) {
-        if (!(typeof index !== 'undefined' && index)) {
-            console.log("index is undefined . . ");
-            callback(true);
-        } else {
-            Promise.all([GamesSchema.statics.getTilesUnits(gameName, index)])
-                .then(function (data) {
-                    var tile = data[0][0]._doc.state.units[0];
-                    winston.info("doesTheTileContainUnits " + tile.infantry + " " + tile.ranged + " " + tile.tanks);
-                    var isTileEmpty = (tile.infantry + tile.ranged + tile.tanks) > 0;
-                    winston.info("isTileEmpty" + isTileEmpty + " value of units is " + (tile.infantry + tile.ranged + tile.tanks));
+
+        var doesTheTileContainUnitsCheck = async(function () {
+            if (!(typeof index !== 'undefined' && index)) {
+                console.log("index is undefined . . ");
+                callback(true);
+            } else {
+                var game = await(GamesSchema.statics.getTilesUnits(gameName, index));
+                if (game.length == 0) {
+                    callback(true);
+                } else {
+                    var tile = game[0]._doc.state.units[0];
                     callback((tile.infantry + tile.ranged + tile.tanks) > 0);
-                });
-        }
+                }
+            }
+        });
+
+        doesTheTileContainUnitsCheck();
+
     },
     getTilesUnits: function (gameName, index) {
         return staticGames.find({
@@ -277,7 +285,7 @@ GamesSchema.statics = {
             });
         });
     },
-    setTileToOrderToDone: function(gameName, index){
+    setTileToOrderToDone: function (gameName, index) {
         staticGames.update({
             "name": gameName,
             "state.units": {$elemMatch: {"index": index}}
