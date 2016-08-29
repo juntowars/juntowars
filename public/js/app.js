@@ -458,7 +458,8 @@ function deployingUnits(nextPlayer, deploymentInfo) {
         displayModal("<h3>Waiting for " + nextPlayer + " to make their deployment</h3>");
         document.getElementById('game_hud_deployment_deploy_tab').style.display = 'none';
         if (document.getElementById('game_hud_deploy_deploy').classList.contains('activeHud')) {
-            document.getElementById('game_hud_deploy_deploy').style.display = 'none';
+            document.getElementById('game_hud_deploy_deploy').classList.remove('activeHud');
+            document.getElementById('game_hud_deploy_deploy').classList.add('hudContainer');
             changedHUDView('game_hud', true);
         }
     }

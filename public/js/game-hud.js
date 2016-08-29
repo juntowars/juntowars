@@ -186,8 +186,9 @@ function displayDeploymentDeployTab(deploymentInfo) {
 }
 
 function hideAndResetDeploymentElements() {
+    document.getElementById('game_hud_deploy_deploy').classList.remove('activeHud');
+    document.getElementById('game_hud_deploy_deploy').classList.add('hudContainer');
     document.getElementById('game_hud_deployment_deploy_tab').style.display = 'none';
-    document.getElementById('game_hud_deploy_deploy').style.display = 'none';
     document.getElementById('infantry-deploy-value').textContent = "0";
     document.getElementById('ranged-deploy-value').textContent = "0";
     document.getElementById('tank-deploy-value').textContent = "0";

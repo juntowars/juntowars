@@ -57,7 +57,6 @@ function moveToMovementPhase(room, io) {
     }, 1000);
 }
 
-
 let gameHasEnteredEndingClause = async(function (io, room) {
     let game = await(Games.getGame(room));
 
@@ -73,7 +72,7 @@ let gameHasEnteredEndingClause = async(function (io, room) {
         }
     }
 
-    return (racesRemaining.length <= 1 || (currentRoundNumber >= maxNumberRounds));
+    return (racesRemaining.length <= 1 || (currentRoundNumber > maxNumberRounds));
 });
 
 let getLastRemainingRace = async(function (io, room) {
@@ -161,14 +160,25 @@ function cycleThroughMoves(room, io, raceTurnOrder) {
 }
 
 function moveToHarvestPhase(io, room) {
-    winston.info("Moving to harvest phase");
-    io.sockets.in(room).emit('removeHarvestTokens');
-    processHarvestTokens(room, io);
-    Games.setPhase(room, "Harvest");
 
-    setTimeout(function () {
-        moveToDeploymentCommitPhase(room, io);
-    }, 2000);
+    let handleHarvestPhase = async(function (io, room){
+        winston.info("Moving to harvest phase");
+        io.sockets.in(room).emit('removeHarvestTokens');
+        processHarvestTokens(room, io);
+        await(Games.setPhase(room, "Harvest"));
+        let game = await(Games.getGame(room));
+        var currentRound = game[0]._doc.state.round;
+        var lastRound = game[0]._doc.state.maxNumberOfRounds;
+        if (currentRound == lastRound) {
+            moveToNextRound(io, room);
+        } else {
+            setTimeout(function () {
+                moveToDeploymentCommitPhase(room, io);
+            }, 2000);
+        }
+    });
+
+    handleHarvestPhase(io, room);
 }
 
 function moveToDeploymentCommitPhase(room, io) {
@@ -198,8 +208,8 @@ function moveToNextRound(io, room) {
             let winningInfo = await(tallyScoresAndDeclareWinner(io, room));
 
             io.sockets.in(room).emit('displayActionModal', {
-                message: '<h1>Game Over</h1><p>Max Rounds has been hit, high score:' +
-                winningInfo['winningRace'] + '</p><p> With a highScore of: ' + winningInfo['highScore'] + '</p>'
+                message: '<h1>Game Over</h1><p>Max Rounds has been hit</p><p>Winning Race: ' +
+                winningInfo['winningRace'] + '!!</p><p> With a highscore of: ' + winningInfo['highScore'] + '</p>'
             });
         } else {
             io.sockets.in(room).emit('displayActionModal', {

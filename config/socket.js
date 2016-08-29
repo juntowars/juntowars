@@ -198,26 +198,13 @@ module.exports = function (io) {
         });
 
         socket.on('commitDeploymentResources', function (deploymentInfo) {
-            var commitDeploymentResourcesHandler = async(function () {
-
-                var game = await(Games.getGame(deploymentInfo.gameRoom));
-
-                var currentRound = game[0]._doc.state.round;
-                var lastRound = game[0]._doc.state.maxNumberOfRounds;
-                if (currentRound == lastRound) {
-                    ph.moveToNextRound(io, deploymentInfo.gameRoom);
-                } else {
-                    eh.commitDeployment(deploymentInfo)
-                        .then(function () {
-                            return eh.checkDeploymentCommitComplete(io, deploymentInfo);
-                        })
-                        .catch(function (err) {
-                            winston.error("commitDeploymentResources Error: " + err);
-                        });
-                }
-            });
-
-            commitDeploymentResourcesHandler();
+            eh.commitDeployment(deploymentInfo)
+                .then(function () {
+                    return eh.checkDeploymentCommitComplete(io, deploymentInfo);
+                })
+                .catch(function (err) {
+                    winston.error("commitDeploymentResources Error: " + err);
+                });
         });
 
         socket.on('deploymentOfUnits', function (room, index, race, infantry, ranged, tanks, deploymentValues) {
